@@ -90,13 +90,6 @@ class HomePage extends StatelessWidget {
               Center(child: HomeTab()),
               Center(
                 child: Text(
-                  "Cart",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              Center(
-                child: Text(
                   "Profile",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white),
@@ -118,9 +111,6 @@ const List<Tab> _tabs = [
   ),
   Tab(
     icon: Icon(Icons.shopping_bag_rounded),
-  ),
-  Tab(
-    icon: Icon(Icons.person),
   ),
 ];
 
@@ -242,9 +232,9 @@ class SecondTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String imagePath = _mainItems[heroTag]!;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Column(
+    return Container(
+      color: Colors.black,
+      child: Column(
         children: [
           Expanded(
             child: Center(
@@ -260,7 +250,7 @@ class SecondTab extends StatelessWidget {
           const Expanded(
             child: Text(
               "Content goes here",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ),
         ],
