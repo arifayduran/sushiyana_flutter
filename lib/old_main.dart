@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
 
 const Map<String, String> _mainItems = {
   "Suppen": 'assets/images/startseite/suppe.jpg',
@@ -16,43 +15,7 @@ const Map<String, String> _mainItems = {
 
 const Color yanaColor = Color.fromARGB(255, 106, 36, 119);
 
-class Extras {
-  int artikelnummer;
-  String artikelname;
-
-  Extras(this.artikelnummer, this.artikelname);
-}
-
-List<Extras> extrasList = [];
-
-Future<void> fetchExtras() async {
-  // Database configuration parameters
-  final settings = ConnectionSettings(
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: null,
-    db: 'db105950',
-  );
-
-  // Connect to the database
-  final conn = await MySqlConnection.connect(settings);
-
-  // Execute query
-  var results = await conn.query('SELECT * FROM `extras`');
-
-  // Populate extrasList with results
-  for (var row in results) {
-    extrasList.add(Extras(row[1], row[2]));
-  }
-
-  // Close connection
-  await conn.close();
-}
-
 void main() {
-  fetchExtras();
-  print(extrasList);
   runApp(const MyApp());
 }
 
@@ -61,38 +24,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: yanaColor,
-      ),
-      home: const HomePage(),
+    return const MaterialApp(
+      home: HomePage(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final PageController _pageController = PageController();
-  String? _selectedHeroTag;
-
-  void _onItemTapped(String heroTag) {
-    setState(() {
-      _selectedHeroTag = heroTag;
-    });
-    _pageController.animateToPage(1,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
-  void _onBack() {
-    _pageController.animateToPage(0,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       length: _tabs.length,
       child: Scaffold(
         backgroundColor: Colors.black,
-        bottomNavigationBar: const ImpressumBar(),
+        bottomSheet: const MyBottomSheet(),
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
@@ -143,64 +82,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ];
           },
-          body: PageView(
-            controller: _pageController,
+          body: const TabBarView(
             children: [
-              HomeTab(onItemTapped: _onItemTapped),
-              if (_selectedHeroTag != null)
-                SecondTab(heroTag: _selectedHeroTag!, onBack: _onBack),
+              HomeTab(),
+              Text(
+                "Profile",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ImpressumBar extends StatelessWidget {
-  const ImpressumBar({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: yanaColor,
-      height: 40,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              "Zurück zur Startseite",
-              style: TextStyle(fontSize: 9, color: Colors.white),
-            ),
-          ),
-          const Text(
-            "-",
-            style: TextStyle(fontSize: 9, color: Colors.white),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              "Impressum",
-              style: TextStyle(fontSize: 9, color: Colors.white),
-            ),
-          ),
-          const Text(
-            "-",
-            style: TextStyle(fontSize: 9, color: Colors.white),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              "Datenschutz",
-              style: TextStyle(fontSize: 9, color: Colors.white),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -243,21 +135,18 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class HomeTab extends StatelessWidget {
-  final Function(String) onItemTapped;
-
-  const HomeTab({super.key, required this.onItemTapped});
+  const HomeTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(30, 30, 20, 0),
+      padding: const EdgeInsets.all(40),
       constraints: const BoxConstraints(maxWidth: 500),
       alignment: Alignment.topCenter,
       child: GridView.builder(
         gridDelegate:
             const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         shrinkWrap: true,
-        padding: const EdgeInsets.only(bottom: 20),
         itemCount: _mainItems.length,
         itemBuilder: (BuildContext context, int index) {
           String title = _mainItems.keys.elementAt(index);
@@ -295,7 +184,13 @@ class HomeTab extends StatelessWidget {
                     child: InkWell(
                       highlightColor: yanaColor.withOpacity(.5),
                       splashColor: yanaColor,
-                      onTap: () => onItemTapped(title),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SecondTab(heroTag: title),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -327,58 +222,80 @@ class HomeTab extends StatelessWidget {
 
 class SecondTab extends StatelessWidget {
   final String heroTag;
-  final VoidCallback onBack;
 
-  const SecondTab({super.key, required this.heroTag, required this.onBack});
+  const SecondTab({super.key, required this.heroTag});
 
   @override
   Widget build(BuildContext context) {
     String imagePath = _mainItems[heroTag]!;
     return Container(
-      padding: EdgeInsets.all(20),
       color: Colors.black,
       child: Column(
         children: [
-          Center(
-            child: Hero(
-              tag: heroTag,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(imagePath),
+          Expanded(
+            child: Center(
+              child: Hero(
+                tag: heroTag,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(imagePath),
+                ),
               ),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: extrasList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(extrasList[index].artikelnummer.toString(),
-                        textAlign: TextAlign.end,
-                        style:
-                            const TextStyle(fontSize: 15, color: Colors.white)),
-                    trailing: Text(extrasList[index].artikelname,
-                        textAlign: TextAlign.start,
-                        style:
-                            const TextStyle(fontSize: 15, color: Colors.white)),
-                  );
-                }),
+          const Expanded(
+            child: Text(
+              "Content goes here",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
           ),
-          const Divider(
-            color: Colors.white,
-            height: 40,
-            thickness: 0.2,
+        ],
+      ),
+    );
+  }
+}
+
+class MyBottomSheet extends StatelessWidget {
+  const MyBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: yanaColor,
+      height: 30,
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              "Zurück zur Startseite",
+              style: TextStyle(fontSize: 9, color: Colors.white),
+            ),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-                onPressed: onBack,
-                style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(yanaColor),
-                    elevation: WidgetStateProperty.all(5),
-                    foregroundColor: WidgetStateProperty.all(Colors.white),
-                    shadowColor: WidgetStateProperty.all(yanaColor)),
-                child: const Icon(Icons.arrow_back_ios_new)),
+          const Text(
+            "-",
+            style: TextStyle(fontSize: 9, color: Colors.white),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              "Impressum",
+              style: TextStyle(fontSize: 9, color: Colors.white),
+            ),
+          ),
+          const Text(
+            "-",
+            style: TextStyle(fontSize: 9, color: Colors.white),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              "Datenschutz",
+              style: TextStyle(fontSize: 9, color: Colors.white),
+            ),
           ),
         ],
       ),
