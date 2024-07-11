@@ -1,97 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
 
 const Map<String, String> _mainItems = {
-  "Suppen": 'assets/images/startseite/suppe.jpg',
-  "Vorspeisen": 'assets/images/startseite/vorspeise.jpg',
-  "Salate": 'assets/images/startseite/salat.jpg',
-  "Sommerrollen": 'assets/images/startseite/sommerrolle.jpg',
-  "Sushis": 'assets/images/startseite/sushi.jpg',
-  "Warme Kücke": 'assets/images/startseite/warme.jpg',
-  "Bowls": 'assets/images/startseite/bowl.jpg',
-  "Desserts": 'assets/images/startseite/dessert.jpg',
-  "Getränke": 'assets/images/startseite/getraenke.jpg',
-  "Extras": 'assets/images/startseite/extras.jpg',
+  "Suppen": 'assets/images/gallery_sushiyana/suppe.jpg',
+  "Vorspeisen": 'assets/images/gallery_sushiyana/vorspeise.jpg',
+  "Salate": 'assets/images/gallery_sushiyana/salat.jpg',
+  "Sommerrollen": 'assets/images/gallery_sushiyana/sommerrolle.jpg',
+  "Sushis": 'assets/images/gallery_sushiyana/sushi.jpg',
+  "Warme Kücke": 'assets/images/gallery_sushiyana/warme.jpg',
+  "Bowls": 'assets/images/gallery_sushiyana/bowl.jpg',
+  "Desserts": 'assets/images/gallery_sushiyana/dessert.jpg',
+  "Getränke": 'assets/images/gallery_sushiyana/getraenke.jpg',
+  "Extras": 'assets/images/gallery_sushiyana/extras.jpg',
 };
 
 const Color yanaColor = Color.fromARGB(255, 106, 36, 119);
 
-class Extras {
-  int artikelnummer;
-  String artikelname;
-
-  Extras(this.artikelnummer, this.artikelname);
-}
-
-List<Extras> extrasList = [];
-
-Future<void> fetchExtras() async {
-  // Database configuration parameters
-  final settings = ConnectionSettings(
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: null,
-    db: 'db105950',
-  );
-
-  // Connect to the database
-  final conn = await MySqlConnection.connect(settings);
-
-  // Execute query
-  var results = await conn.query('SELECT * FROM `extras`');
-
-  // Populate extrasList with results
-  for (var row in results) {
-    extrasList.add(Extras(row[1], row[2]));
-  }
-
-  // Close connection
-  await conn.close();
-}
-
-void main() {
-  fetchExtras();
-  print(extrasList);
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class GallerySushiyana extends StatefulWidget {
+  const GallerySushiyana({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: yanaColor,
-      ),
-      home: const HomePage(),
-    );
-  }
+  _GallerySushiyanaState createState() => _GallerySushiyanaState();
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class _GallerySushiyanaState extends State<GallerySushiyana>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   final PageController _pageController = PageController();
   String? _selectedHeroTag;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        _pageController.animateToPage(
+          _tabController.index,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(String heroTag) {
     setState(() {
       _selectedHeroTag = heroTag;
     });
     _pageController.animateToPage(1,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+    _tabController.animateTo(1);
   }
 
   void _onBack() {
     _pageController.animateToPage(0,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+    _tabController.animateTo(0);
   }
 
   @override
@@ -108,6 +79,13 @@ class _HomePageState extends State<HomePage> {
                 expandedHeight: 250.0,
                 toolbarHeight: 40,
                 floating: false,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {},
+                ),
                 pinned: true,
                 stretch: true,
                 backgroundColor: Colors.black,
@@ -123,14 +101,15 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   background: Image.asset(
-                    "assets/images/logo2.png", cacheHeight: 200,
+                    "assets/images/sushiyanalogo.png", cacheHeight: 200,
                     // fit: BoxFit.cover,
                   ),
                 ),
               ),
               SliverPersistentHeader(
                 delegate: _SliverAppBarDelegate(
-                  const TabBar(
+                  TabBar(
+                    controller: _tabController,
                     indicatorSize: TabBarIndicatorSize.label,
                     indicatorColor: Colors.white,
                     indicatorWeight: 6,
@@ -145,10 +124,14 @@ class _HomePageState extends State<HomePage> {
           },
           body: PageView(
             controller: _pageController,
+            onPageChanged: (index) {
+              _tabController.animateTo(index);
+            },
             children: [
               HomeTab(onItemTapped: _onItemTapped),
               if (_selectedHeroTag != null)
                 SecondTab(heroTag: _selectedHeroTag!, onBack: _onBack),
+              const CartTab(),
             ],
           ),
         ),
@@ -172,9 +155,11 @@ class ImpressumBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+            },
             child: const Text(
-              "Zurück zur Startseite",
+              "App Schliessen",
               style: TextStyle(fontSize: 9, color: Colors.white),
             ),
           ),
@@ -183,7 +168,11 @@ class ImpressumBar extends StatelessWidget {
             style: TextStyle(fontSize: 9, color: Colors.white),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return const Impressum();
+              }));
+            },
             child: const Text(
               "Impressum",
               style: TextStyle(fontSize: 9, color: Colors.white),
@@ -194,7 +183,11 @@ class ImpressumBar extends StatelessWidget {
             style: TextStyle(fontSize: 9, color: Colors.white),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return const Datenschutz();
+              }));
+            },
             child: const Text(
               "Datenschutz",
               style: TextStyle(fontSize: 9, color: Colors.white),
@@ -329,14 +322,17 @@ class SecondTab extends StatelessWidget {
   final String heroTag;
   final VoidCallback onBack;
 
-  const SecondTab({super.key, required this.heroTag, required this.onBack});
+  const SecondTab({
+    super.key,
+    required this.heroTag,
+    required this.onBack,
+  });
 
   @override
   Widget build(BuildContext context) {
-    String imagePath = _mainItems[heroTag]!;
     return Container(
-      padding: EdgeInsets.all(20),
-      color: Colors.black,
+      padding: const EdgeInsets.all(40),
+      alignment: Alignment.center,
       child: Column(
         children: [
           Center(
@@ -344,23 +340,21 @@ class SecondTab extends StatelessWidget {
               tag: heroTag,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(imagePath),
+                child: Image.asset(_mainItems[heroTag]!),
               ),
             ),
           ),
           Expanded(
             child: ListView.builder(
-                itemCount: extrasList.length,
+                itemCount: 11,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(extrasList[index].artikelnummer.toString(),
-                        textAlign: TextAlign.end,
-                        style:
-                            const TextStyle(fontSize: 15, color: Colors.white)),
-                    trailing: Text(extrasList[index].artikelname,
+                  return const ListTile(
+                    title: Text("Beispielartikel",
                         textAlign: TextAlign.start,
-                        style:
-                            const TextStyle(fontSize: 15, color: Colors.white)),
+                        style: TextStyle(fontSize: 15, color: Colors.white)),
+                    trailing: Text("3,99 €",
+                        textAlign: TextAlign.end,
+                        style: TextStyle(fontSize: 15, color: Colors.white)),
                   );
                 }),
           ),
@@ -381,6 +375,136 @@ class SecondTab extends StatelessWidget {
                 child: const Icon(Icons.arrow_back_ios_new)),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CartTab extends StatelessWidget {
+  const CartTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        "Nichts ausgewählt",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+        ),
+      ),
+    );
+  }
+}
+
+class Impressum extends StatelessWidget {
+  const Impressum({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Row(
+          children: [
+            SizedBox(
+              height: 150,
+              child: Align(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  "assets/images/sushiyanalogo.png",
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            )
+          ],
+        ),
+        toolbarHeight: 180,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              height: 500,
+              width: 350,
+              child: const SingleChildScrollView(
+                child: Text(
+                    "Impressum\n\nVerantwortlich für die Startseite und die weiteren Informationsseiten (ohne Onlineshops) dieser Webseite ist:\n\nSushi Yana GmbH\nFlughafenstraße 76\n12049 Berlin\nbuero@sushi-yana.de\n\nGeschäftsführer: Wesam El-Saadi\nZuständiges Gericht: Amtsgericht Charlottenburg\nHandelsregister: HRB 233774 B\nSteuernummer: 29/553/32890\nUst.: DE347204498\n\nJede Sushi Yana Filiale wird von einem selbstständig tätigen Gewerbetreibenden als Franchisenehmer bewirtschaftet. Dieser organisiert Produktion und Auslieferung seiner Produkte für seinen Betrieb in eigener Verantwortung. Wenn du Fragen oder Anliegen zu deiner Lieferung hast, wende dich bitte an den Verantwortlichen des jeweiligen Betriebes, den du in vorstehender Liste finden kannst.\n\nUnsere Franchisezentrale erreichen Sie über die Mailadresse buero@sushi-yana.de. Bitte nutzen Sie diese ausschließlich für allgemeine Anfragen."),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Datenschutz extends StatelessWidget {
+  const Datenschutz({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Row(
+          children: [
+            SizedBox(
+              height: 150,
+              child: Align(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  "assets/images/sushiyanalogo.png",
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            )
+          ],
+        ),
+        toolbarHeight: 180,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              height: 500,
+              width: 350,
+              child: const SingleChildScrollView(
+                child: Text("Datenschutzerklärung\n\n………."),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
