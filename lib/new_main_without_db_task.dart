@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
 
 const Map<String, String> _mainItems = {
-  "Suppen": 'assets/images/gallery_sushiyana/suppe.jpg',
-  "Vorspeisen": 'assets/images/gallery_sushiyana/vorspeise.jpg',
-  "Salate": 'assets/images/gallery_sushiyana/salat.jpg',
-  "Sommerrollen": 'assets/images/gallery_sushiyana/sommerrolle.jpg',
-  "Sushis": 'assets/images/gallery_sushiyana/sushi.jpg',
-  "Warme Kücke": 'assets/images/gallery_sushiyana/warme.jpg',
-  "Bowls": 'assets/images/gallery_sushiyana/bowl.jpg',
-  "Desserts": 'assets/images/gallery_sushiyana/dessert.jpg',
-  "Getränke": 'assets/images/gallery_sushiyana/getraenke.jpg',
-  "Extras": 'assets/images/gallery_sushiyana/extras.jpg',
+  "Suppen": 'assets/images/startseite/suppe.jpg',
+  "Vorspeisen": 'assets/images/startseite/vorspeise.jpg',
+  "Salate": 'assets/images/startseite/salat.jpg',
+  "Sommerrollen": 'assets/images/startseite/sommerrolle.jpg',
+  "Sushis": 'assets/images/startseite/sushi.jpg',
+  "Warme Kücke": 'assets/images/startseite/warme.jpg',
+  "Bowls": 'assets/images/startseite/bowl.jpg',
+  "Desserts": 'assets/images/startseite/dessert.jpg',
+  "Getränke": 'assets/images/startseite/getraenke.jpg',
+  "Extras": 'assets/images/startseite/extras.jpg',
 };
 
 const Color yanaColor = Color.fromARGB(255, 106, 36, 119);
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: GallerySushiyana(),
+    );
+  }
+}
 
 class GallerySushiyana extends StatefulWidget {
   const GallerySushiyana({super.key});
@@ -101,7 +116,7 @@ class _GallerySushiyanaState extends State<GallerySushiyana>
                     ),
                   ),
                   background: Image.asset(
-                    "assets/images/sushiyanalogo.png", cacheHeight: 200,
+                    "assets/images/logo2.png", cacheHeight: 200,
                     // fit: BoxFit.cover,
                   ),
                 ),
@@ -405,22 +420,12 @@ class Impressum extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Row(
-          children: [
-            SizedBox(
-              height: 150,
-              child: Align(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  "assets/images/sushiyanalogo.png",
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            )
-          ],
+        title: SizedBox(
+          height: 150,
+          child: Image.asset(
+            "assets/images/logo2.png",
+            fit: BoxFit.fitHeight,
+          ),
         ),
         toolbarHeight: 180,
         centerTitle: true,
@@ -462,22 +467,12 @@ class Datenschutz extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Row(
-          children: [
-            SizedBox(
-              height: 150,
-              child: Align(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  "assets/images/sushiyanalogo.png",
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            )
-          ],
+        title: SizedBox(
+          height: 150,
+          child: Image.asset(
+            "assets/images/logo2.png",
+            fit: BoxFit.fitHeight,
+          ),
         ),
         toolbarHeight: 180,
         centerTitle: true,
