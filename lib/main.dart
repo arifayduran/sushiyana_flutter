@@ -52,7 +52,7 @@ Future<void> fetchExtras() async {
 
 void main() {
   fetchExtras();
-  print(extrasList);
+  debugPrint(extrasList.toString());
   runApp(const MyApp());
 }
 
@@ -74,7 +74,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -335,7 +335,7 @@ class SecondTab extends StatelessWidget {
   Widget build(BuildContext context) {
     String imagePath = _mainItems[heroTag]!;
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       color: Colors.black,
       child: Column(
         children: [
