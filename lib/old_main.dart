@@ -182,7 +182,7 @@ class HomeTab extends StatelessWidget {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      highlightColor: yanaColor.withOpacity(.5),
+                      highlightColor: yanaColor.withValues(alpha: .5),
                       splashColor: yanaColor,
                       onTap: () {
                         Navigator.of(context).push(
