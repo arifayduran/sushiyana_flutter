@@ -1,18 +1,33 @@
 <?php
+// Enable error reporting
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+
+// Custom error handler to return errors in JSON format
+function customError($errno, $errstr) {
+    echo json_encode(array("error" => "Error [$errno]: $errstr"));
+    die();
+}
+
+set_error_handler("customError");
+
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // Laden der Umgebungsvariablen aus der .env-Datei
-$env = parse_ini_file('assets/.env');
+$env = parse_ini_file('/home/sites/site100036969/web/flutter/assets/.env');
+
+if (!file_exists('assets/.env')) {
+    die(json_encode(array("error" => "Die .env-Datei konnte nicht gefunden werden.")));
+}
 
 // Prüfen, ob die .env-Datei erfolgreich geladen wurde
 if (!$env) {
     die(json_encode(array("error" => "Fehler beim Laden der .env-Datei")));
 }
+
 
 // Datenbankverbindungsinformationen aus der .env-Datei
 $servername = $env['DB_HOST'];
