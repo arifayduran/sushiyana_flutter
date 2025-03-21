@@ -9,6 +9,11 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 // Laden der Umgebungsvariablen aus der .env-Datei
 $env = parse_ini_file('assets/.env');
 
+// Prüfen, ob die .env-Datei erfolgreich geladen wurde
+if (!$env) {
+    die(json_encode(array("error" => "Fehler beim Laden der .env-Datei")));
+}
+
 // Datenbankverbindungsinformationen aus der .env-Datei
 $servername = $env['DB_HOST'];
 $usernameDB = $env['DB_USER'];

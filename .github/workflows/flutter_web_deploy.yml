@@ -32,15 +32,6 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release  # Erstellen der Flutter-Web-App im Release-Modus
 
-      - name: Upload API (api.php) to Manitu
-        uses: tomasbkk/action-ftp-upload@v1.0
-        with:
-          host: ${{ secrets.MANITU_FTP_SERVER }}  # FTP-Server-Adresse (als Secret gespeichert)
-          user: ${{ secrets.MANITU_FTP_USERNAME }}  # FTP-Benutzername (als Secret gespeichert)
-          password: ${{ secrets.MANITU_FTP_PASSWORD }}  # FTP-Passwort (als Secret gespeichert)
-          src: ./lib/application/api.php  # Der Pfad zur api.php in Ihrem Projekt
-          dest: /web/flutter/api.php  # Zielverzeichnis auf dem Manitu-Server
-
       - name: Deploy Flutter Web to Manitu (via FTP)
         uses: airvzxf/ftp-deployment-action@latest  # Verwendung der FTP-Deployment-Action
         with:
@@ -50,3 +41,12 @@ jobs:
           local_dir: ./build/web  # Lokales Verzeichnis mit den Web-Build-Dateien
           remote_dir: /web/flutter  # Zielverzeichnis auf dem Manitu-Server
           delete: true  # Löschen von Dateien im Remote-Verzeichnis, die nicht im lokalen Verzeichnis vorhanden sind
+
+      - name: Upload API (api.php) to Manitu
+        uses: tomasbkk/action-ftp-upload@v1.0
+        with:
+          host: ${{ secrets.MANITU_FTP_SERVER }}  # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }}  # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }}  # FTP-Passwort (als Secret gespeichert)
+          src: ./lib/application/api.php  # Der Pfad zur api.php in Ihrem Projekt
+          dest: /web/flutter/api.php  # Zielverzeichnis auf dem Manitu-Server

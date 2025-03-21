@@ -16,20 +16,19 @@ class ApiException implements Exception {
 class DatabaseService {
   final String baseUrl = 'https://flutter.sushiyanaspeisekarte.com';
 
-
   Future<List<dynamic>> fetchData(String table) async {
-   try {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api.php?table=$table'),
+      );
 
-    final response = await http.get(
-      Uri.parse('$baseUrl/api.php?table=$table'),
-    );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw ApiException(
-          'Fehler beim Laden der Daten: ${response.body}', response.statusCode);
-    }} catch (e) {
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw ApiException('Fehler beim Laden der Daten: ${response.body}',
+            response.statusCode);
+      }
+    } catch (e) {
       throw ApiException('Fehler beim Laden der Daten: $e', 500);
     }
   }
