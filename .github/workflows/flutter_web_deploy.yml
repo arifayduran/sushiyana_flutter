@@ -22,7 +22,7 @@ jobs:
         run: flutter pub get  # Installation der Flutter-Abhängigkeiten
 
       - name: Build Flutter Web
-        run: flutter build web --release --web-renderer html # --release # canvaskit  # Erstellen der Flutter-Web-App im Release-Modus
+        run: flutter build web --release # html # canvaskit  # Erstellen der Flutter-Web-App im Release-Modus
 
       - name: Deploy to Manitu (via FTP)
         uses: airvzxf/ftp-deployment-action@latest  # Verwendung der FTP-Deployment-Action
