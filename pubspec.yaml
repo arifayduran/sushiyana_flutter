@@ -62,7 +62,7 @@ flutter:
     - assets/images/sushi/
     - assets/images/warmekueche/
     - assets/images/
-    - assets/.env
+    - .env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
