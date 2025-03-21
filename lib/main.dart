@@ -11,7 +11,7 @@ void main() async {
 
   String subdomain = getSubdomain(BranchProvider());
 
-  await dotenv.load(fileName: "assets/.env");
+  await dotenv.load();
 
   DatabaseService dbService = DatabaseService();
   await dbService.fetchData("extras");

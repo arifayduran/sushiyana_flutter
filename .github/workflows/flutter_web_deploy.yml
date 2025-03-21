@@ -42,14 +42,14 @@ jobs:
           remote_dir: /web/flutter  # Zielverzeichnis auf dem Manitu-Server
           delete: true  # Löschen von Dateien im Remote-Verzeichnis, die nicht im lokalen Verzeichnis vorhanden sind
 
-      - name: Upload API (api.php) to Manitu
+      - name: Upload API (.env) to Manitu
         uses: tomasbkk/action-ftp-upload@v1.0
         with:
           host: ${{ secrets.MANITU_FTP_SERVER }}  # FTP-Server-Adresse (als Secret gespeichert)
           user: ${{ secrets.MANITU_FTP_USERNAME }}  # FTP-Benutzername (als Secret gespeichert)
           password: ${{ secrets.MANITU_FTP_PASSWORD }}  # FTP-Passwort (als Secret gespeichert)
-          src: assets/.env  # Der Pfad zur api.php in Ihrem Projekt
-          dest: /web/flutter/assets/assets/.env  # Zielverzeichnis auf dem Manitu-Server
+          src: assets/.env  # Der Pfad zur .env in Ihrem Projekt
+          dest: /web/flutter/assets/.env  # Zielverzeichnis auf dem Manitu-Server
 
       - name: Upload API (api.php) to Manitu
         uses: tomasbkk/action-ftp-upload@v1.0
