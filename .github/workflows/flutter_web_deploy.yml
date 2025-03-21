@@ -49,7 +49,7 @@ jobs:
           user: ${{ secrets.MANITU_FTP_USERNAME }}  # FTP-Benutzername (als Secret gespeichert)
           password: ${{ secrets.MANITU_FTP_PASSWORD }}  # FTP-Passwort (als Secret gespeichert)
           src: assets/.env  # Der Pfad zur api.php in Ihrem Projekt
-          dest: /web/flutter/assets/.env  # Zielverzeichnis auf dem Manitu-Server
+          dest: /web/flutter/assets/assets/.env  # Zielverzeichnis auf dem Manitu-Server
 
       - name: Upload API (api.php) to Manitu
         uses: tomasbkk/action-ftp-upload@v1.0
