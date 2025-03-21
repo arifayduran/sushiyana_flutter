@@ -1,5 +1,5 @@
 name: sushiyana_flutter
-description: "A new Flutter project."
+description: "Digitale Speisekarte Sushi Yana"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   http: ^1.2.1
   flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.5
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
