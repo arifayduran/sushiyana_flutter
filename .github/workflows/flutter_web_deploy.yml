@@ -11,20 +11,37 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Klonen des Repositories auf den GitHub-Runner
+        uses: actions/checkout@v3  # Klonen des Repositories auf den GitHub-Runner
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2  # Installation von Flutter auf dem Runner
+        uses: subosito/flutter-action@v1  # Installation von Flutter auf dem Runner
         with:
           flutter-version: '3.29.2'  # Angabe der Flutter-Version
+
+      - name: Create .env file
+        run: |
+          echo "DB_HOST=${{ secrets.DB_HOST }}" > assets/.env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> assets/.env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> assets/.env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> assets/.env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> assets/.env
 
       - name: Install dependencies
         run: flutter pub get  # Installation der Flutter-Abhängigkeiten
 
       - name: Build Flutter Web
-        run: flutter build web --release # html # canvaskit  # Erstellen der Flutter-Web-App im Release-Modus
+        run: flutter build web --release  # Erstellen der Flutter-Web-App im Release-Modus
 
-      - name: Deploy to Manitu (via FTP)
+      - name: Upload API (api.php) to Manitu
+        uses: airvzxf/ftp-deployment-action@latest
+        with:
+          server: ${{ secrets.MANITU_FTP_SERVER }}  # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }}  # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }}  # FTP-Passwort (als Secret gespeichert)
+          local_dir: ./lib/application/api.php  # Der Pfad zur api.php in Ihrem Projekt
+          remote_dir: /web/flutter  # Zielverzeichnis auf dem Manitu-Server
+
+      - name: Deploy Flutter Web to Manitu (via FTP)
         uses: airvzxf/ftp-deployment-action@latest  # Verwendung der FTP-Deployment-Action
         with:
           server: ${{ secrets.MANITU_FTP_SERVER }}  # FTP-Server-Adresse (als Secret gespeichert)

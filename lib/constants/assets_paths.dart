@@ -4,7 +4,7 @@ const Map<String, String> mainItems = {
   "Salate": 'assets/images/startseite/salat.jpg',
   "Sommerrollen": 'assets/images/startseite/sommerrolle.jpg',
   "Sushis": 'assets/images/startseite/sushi.jpg',
-  "Warme Kücke": 'assets/images/startseite/warme.jpg',
+  "Warme Küche": 'assets/images/startseite/warme.jpg',
   "Bowls": 'assets/images/startseite/bowl.jpg',
   "Desserts": 'assets/images/startseite/dessert.jpg',
   "Getränke": 'assets/images/startseite/getraenke.jpg',
