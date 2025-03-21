@@ -15,12 +15,12 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-if (!file_exists('/home/sites/site100036969/web/flutter/.env')) {
+if (!file_exists('/home/sites/site100036969/web/flutter/assets/.env')) {
     die(json_encode(array("error" => "Die .env-Datei konnte nicht gefunden werden.")));
 }
 
 // Laden der Umgebungsvariablen aus der .env-Datei
-$env = parse_ini_file('/home/sites/site100036969/web/flutter/.env');
+$env = parse_ini_file('/home/sites/site100036969/web/flutter/assets/.env');
 
 // Prüfen, ob die .env-Datei erfolgreich geladen wurde
 if (!$env) {

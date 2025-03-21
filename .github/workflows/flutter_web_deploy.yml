@@ -18,13 +18,14 @@ jobs:
         with:
           flutter-version: '3.29.2'  # Angabe der Flutter-Version
 
-      - name: Create .env file
+      - name: Create .env file (building will copy automatically in assets)
         run: |
           echo "DB_HOST=${{ secrets.DB_HOST }}" > .env
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+      
 
       - name: Install dependencies
         run: flutter pub get  # Installation der Flutter-Abhängigkeiten
@@ -41,15 +42,6 @@ jobs:
           local_dir: ./build/web  # Lokales Verzeichnis mit den Web-Build-Dateien
           remote_dir: /web/flutter  # Zielverzeichnis auf dem Manitu-Server
           delete: true  # Löschen von Dateien im Remote-Verzeichnis, die nicht im lokalen Verzeichnis vorhanden sind
-
-      # - name: Upload API (.env) to Manitu
-      #   uses: tomasbkk/action-ftp-upload@v1.0
-      #   with:
-      #     host: ${{ secrets.MANITU_FTP_SERVER }}  # FTP-Server-Adresse (als Secret gespeichert)
-      #     user: ${{ secrets.MANITU_FTP_USERNAME }}  # FTP-Benutzername (als Secret gespeichert)
-      #     password: ${{ secrets.MANITU_FTP_PASSWORD }}  # FTP-Passwort (als Secret gespeichert)
-      #     src: .env  # Der Pfad zur .env in Ihrem Projekt
-      #     dest: /web/flutter/.env  # Zielverzeichnis auf dem Manitu-Server
 
       - name: Upload API (api.php) to Manitu
         uses: tomasbkk/action-ftp-upload@v1.0

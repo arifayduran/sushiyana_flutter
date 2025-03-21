@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/application/database_service.dart';
@@ -10,8 +9,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   String subdomain = getSubdomain(BranchProvider());
-
-  await dotenv.load();
 
   DatabaseService dbService = DatabaseService();
   await dbService.fetchData("extras");
