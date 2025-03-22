@@ -13,7 +13,7 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: yanaColor,
+      color: barColors, // yanaColor
       height: 50,
       child: Center(
         child: SingleChildScrollView(
@@ -28,7 +28,12 @@ class Footer extends StatelessWidget {
                 style: TextStyle(fontSize: 9, color: Colors.white),
               ),
               TextButton(
-                onPressed: onResetHome,
+                onPressed: () {
+                  Navigator.of(context).popUntil(
+                    (route) => route.isFirst,
+                  );
+                  onResetHome();
+                },
                 child: const Text(
                   "Startseite",
                   style: TextStyle(fontSize: 9, color: Colors.white),
@@ -41,7 +46,10 @@ class Footer extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    FadePageRoute(page: const ImpressumScreen()),
+                    FadePageRoute(
+                        page: ImpressumScreen(
+                      onResetHome: onResetHome,
+                    )),
                   );
                 },
                 child: const Text(
@@ -56,7 +64,10 @@ class Footer extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    FadePageRoute(page: const DatenschutzScreen()),
+                    FadePageRoute(
+                        page: DatenschutzScreen(
+                      onResetHome: onResetHome,
+                    )),
                   );
                 },
                 child: const Text(

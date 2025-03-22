@@ -10,8 +10,8 @@ void main() async {
 
   String subdomain = getSubdomain(BranchProvider());
 
-  DatabaseService dbService = DatabaseService();
-  await dbService.fetchData("extras");
+  // DatabaseService dbService = DatabaseService();
+  // await dbService.fetchData("extras");
 
   runApp(
     MultiProvider(
@@ -44,6 +44,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      // theme: ThemeData(
+      //   fontFamily: "Julee",
+      // ),
       title: 'Sushi Yana - Digitale Speisekarte',
       // theme: ThemeData(
       //   primarySwatch: yanaColor,

@@ -39,6 +39,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   flutter_native_splash: ^2.4.5
   provider: ^6.1.2
+  lottie: ^3.3.1
 
 dev_dependencies:
   flutter_test:
@@ -57,11 +58,50 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/images/startseite/
-    - assets/images/sushi/
-    - assets/images/warmekueche/
+    - assets/animations/
     - assets/images/
+    - assets/fonts/
+    - assets/images/startseite/
+    - assets/images/sushis/
+    - assets/images/warmeKueche/
+    - assets/images/items/
+    - assets/images/items/bowls/
+    - assets/images/items/extras/
+    - assets/images/items/fingerfood_desserts/
+    - assets/images/items/getraenke/
+    - assets/images/items/gyoza/
+    - assets/images/items/salate/
+    - assets/images/items/sommerrollen/
+    - assets/images/items/suppen/
+    - assets/images/items/sushis/
+    - assets/images/items/sushis/insideoout/
+    - assets/images/items/sushis/makis/
+    - assets/images/items/sushis/menus/
+    - assets/images/items/sushis/miniyanarolls/
+    - assets/images/items/sushis/nigiris/
+    - assets/images/items/sushis/sashimis/
+    - assets/images/items/sushis/specialroll/
+    - assets/images/items/sushis/temakis/
+    - assets/images/items/sushis/yanarolls/
+    - assets/images/items/warmeküche/
+    - assets/images/items/warmeküche/chopsuey/
+    - assets/images/items/warmeküche/erdnussgerichte/
+    - assets/images/items/warmeküche/extrasWarm/
+    - assets/images/items/warmeküche/gebratenenudel/
+    - assets/images/items/warmeküche/gebratenerreis/
+    - assets/images/items/warmeküche/gebratengemüse/
+    - assets/images/items/warmeküche/mangocutney/
+    - assets/images/items/warmeküche/redcurry/
+    - assets/images/items/warmeküche/suesssauersauce/
+    - assets/images/items/warmeküche/yellowcurry/
+    - assets/images/items/warmgetraenke/
+    - assets/icons/
     - .env
+
+  fonts:
+    - family: Julee
+      fonts:
+        - asset: assets/fonts/Julee-Regular.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

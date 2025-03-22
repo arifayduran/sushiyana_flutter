@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql12.manitu.net
--- Erstellungszeit: 21. Mrz 2025 um 04:17
+-- Erstellungszeit: 21. Mrz 2025 um 10:58
 -- Server-Version: 10.11.10-MariaDB-log
 -- PHP-Version: 8.1.29
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Datenbank: `db105950`
 --
-CREATE DATABASE IF NOT EXISTS `db105950` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `db105950`;
 
 -- --------------------------------------------------------
 
@@ -1338,12 +1336,12 @@ CREATE TABLE `warmgetraenke` (
 --
 
 INSERT INTO `warmgetraenke` (`id`, `artikelnummer`, `artikelname`, `preis`, `beschreibung`, `allergene_zusatz`, `pikant`, `vegetarisch`, `vegan`, `charlottenburg`, `friedrichshain`, `lichtenrade`, `mitte`, `moabit`, `neukoelln`, `potsdam`, `rudow`, `spandau`, `tegel`, `weissensee`, `zehlendorf`, `FFO`) VALUES
-(1, 1, 'Café Crème', '3,00 €', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1),
-(2, 2, 'Cappucino', '3,20 €', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1),
-(3, 3, 'Cappucino Plus', '3,40 €', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1),
-(6, 6, 'Ingwer Tee', '3,20 €', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1),
-(5, 5, 'Latte Macciato', '3,50 €', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1),
-(4, 4, 'Espresso', '2,50 €', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1);
+(1, 1, 'Café Crème', '3,00 €', '', '', 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0),
+(2, 2, 'Cappucino', '3,20 €', '', '', 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0),
+(3, 3, 'Cappucino Plus', '3,40 €', '', '', 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0),
+(6, 6, 'Ingwer Tee', '3,20 €', '', '', 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0),
+(5, 5, 'Latte Macciato', '3,50 €', '', '', 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0),
+(4, 4, 'Espresso', '2,50 €', '', '', 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
