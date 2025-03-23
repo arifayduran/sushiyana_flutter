@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
-import 'package:sushiyana_flutter/application/database_service.dart';
 // import 'package:sushiyana_flutter/presentation/d__splash_screen.dart';
 import 'package:sushiyana_flutter/presentation/home_screen.dart';
 

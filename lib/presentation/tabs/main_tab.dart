@@ -20,31 +20,125 @@ class _MainTabState extends State<MainTab> {
     final branchProvider = Provider.of<BranchProvider>(context);
 
     if (MainTab.mainTabMode == 1) {
-      return Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Text("Sushis",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: "Julee",
-                      color: Colors.white,
-                      letterSpacing: 2)),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 20),
-                  itemCount: localDatabase["Sushis"]["categories"].length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index == 0) {
+      // ignore: deprecated_member_use
+      return WillPopScope(
+        onWillPop: () async {
+          setState(() {
+            MainTab.mainTabMode = 0;
+          });
+          return false;
+        },
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Text("Sushis",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: "Julee",
+                        color: Colors.white,
+                        letterSpacing: 2)),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 19),
+                    itemCount: localDatabase["Sushis"]["categories"].length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return Container(
+                          margin: const EdgeInsets.all(10),
+                          clipBehavior: Clip.antiAlias,
+                          width: 150,
+                          height: 150,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: yanaColor,
+                              width: 2,
+                            ),
+                          ),
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(28),
+                                    topRight: Radius.circular(28),
+                                  ),
+                                  child: Container(
+                                      color: Colors.black,
+                                      child: Center(
+                                          child: const Icon(
+                                        Icons.reply,
+                                        color: Colors.white,
+                                        size: 70,
+                                      ))),
+                                ),
+                              ),
+                              Positioned.fill(
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    highlightColor:
+                                        yanaColor.withValues(alpha: .5),
+                                    splashColor: yanaColor,
+                                    onTap: () {
+                                      setState(() {
+                                        MainTab.mainTabMode = 0;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: 20,
+                                  width: double.infinity,
+                                  decoration: const BoxDecoration(
+                                    color: yanaColor,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Zurück",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: "Julee",
+                                        fontSize: 13,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
+                      int adjustedIndex = index - 1;
+                      if (adjustedIndex < 0 ||
+                          adjustedIndex >=
+                              localDatabase["Sushis"]["categories"].length) {
+                        return const SizedBox();
+                      }
+
+                      String title = localDatabase["Sushis"]["categories"]
+                          .keys
+                          .elementAt(adjustedIndex);
+                      String imagePath = localDatabase["Sushis"]["categories"]
+                          .values
+                          .elementAt(adjustedIndex)["imagePath"];
+
                       return Container(
                         margin: const EdgeInsets.all(10),
                         clipBehavior: Clip.hardEdge,
@@ -60,17 +154,31 @@ class _MainTabState extends State<MainTab> {
                         child: Stack(
                           children: [
                             Positioned.fill(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(28),
+                                  topRight: Radius.circular(28),
+                                ),
+                                child: Container(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Positioned.fill(
                               bottom: 20,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Container(
-                                    color: Colors.black,
-                                    child: Center(
-                                        child: const Icon(
-                                      Icons.reply,
-                                      color: Colors.white,
-                                      size: 50,
-                                    ))),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(28),
+                                  topRight: Radius.circular(28),
+                                ),
+                                child: Hero(
+                                  tag: title,
+                                  child: Image.asset(
+                                    imagePath,
+                                    alignment: Alignment.center,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                             Positioned.fill(
@@ -80,114 +188,39 @@ class _MainTabState extends State<MainTab> {
                                   highlightColor:
                                       yanaColor.withValues(alpha: .5),
                                   splashColor: yanaColor,
-                                  onTap: () {
-                                    setState(() {
-                                      MainTab.mainTabMode = 0;
-                                    });
-                                  },
+                                  onTap: () => widget.onItemTapped(title),
                                 ),
                               ),
                             ),
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
+                                height: 20,
                                 width: double.infinity,
                                 decoration: const BoxDecoration(
                                   color: yanaColor,
                                 ),
-                                child: Text(
-                                  "Zurück",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Julee",
-                                    fontSize: 13,
+                                child: Center(
+                                  child: Text(
+                                    title,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Julee",
+                                      fontSize: 13,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
                           ],
                         ),
                       );
-                    }
-
-                    int adjustedIndex = index - 1;
-                    if (adjustedIndex < 0 ||
-                        adjustedIndex >=
-                            localDatabase["Sushis"]["categories"].length) {
-                      return const SizedBox();
-                    }
-
-                    String title = localDatabase["Sushis"]["categories"]
-                        .keys
-                        .elementAt(adjustedIndex);
-                    String imagePath = localDatabase["Sushis"]["categories"]
-                        .values
-                        .elementAt(adjustedIndex)["imagePath"];
-
-                    return Container(
-                      margin: const EdgeInsets.all(10),
-                      clipBehavior: Clip.hardEdge,
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: yanaColor,
-                          width: 2,
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            bottom: 20,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: Hero(
-                                tag: title,
-                                child: Image.asset(
-                                  imagePath,
-                                  alignment: Alignment.center,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned.fill(
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                highlightColor: yanaColor.withValues(alpha: .5),
-                                splashColor: yanaColor,
-                                onTap: () => widget.onItemTapped(title),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              width: double.infinity,
-                              decoration: const BoxDecoration(
-                                color: yanaColor,
-                              ),
-                              child: Text(
-                                title,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Julee",
-                                  fontSize: 13,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
@@ -213,7 +246,7 @@ class _MainTabState extends State<MainTab> {
                   ),
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 20),
+                      left: 20, right: 20, top: 10, bottom: 19),
                   itemCount:
                       localDatabase["Warme Küche"]["categories"].length + 1,
                   itemBuilder: (BuildContext context, int index) {
@@ -233,16 +266,18 @@ class _MainTabState extends State<MainTab> {
                         child: Stack(
                           children: [
                             Positioned.fill(
-                              bottom: 20,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(28),
+                                  topRight: Radius.circular(28),
+                                ),
                                 child: Container(
                                     color: Colors.black,
                                     child: Center(
                                         child: const Icon(
                                       Icons.reply,
                                       color: Colors.white,
-                                      size: 50,
+                                      size: 70,
                                     ))),
                               ),
                             ),
@@ -264,18 +299,21 @@ class _MainTabState extends State<MainTab> {
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
+                                height: 20,
                                 width: double.infinity,
                                 decoration: const BoxDecoration(
                                   color: yanaColor,
                                 ),
-                                child: Text(
-                                  "Zurück",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Julee",
-                                    fontSize: 13,
+                                child: Center(
+                                  child: Text(
+                                    "Zurück",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Julee",
+                                      fontSize: 13,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -314,9 +352,23 @@ class _MainTabState extends State<MainTab> {
                       child: Stack(
                         children: [
                           Positioned.fill(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(28),
+                                topRight: Radius.circular(28),
+                              ),
+                              child: Container(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Positioned.fill(
                             bottom: 20,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(28),
+                                topRight: Radius.circular(28),
+                              ),
                               child: Hero(
                                 tag: title,
                                 child: Image.asset(
@@ -340,18 +392,21 @@ class _MainTabState extends State<MainTab> {
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: Container(
+                              height: 20,
                               width: double.infinity,
                               decoration: const BoxDecoration(
                                 color: yanaColor,
                               ),
-                              child: Text(
-                                title,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Julee",
-                                  fontSize: 13,
+                              child: Center(
+                                child: Text(
+                                  title,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Julee",
+                                    fontSize: 13,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),
@@ -398,9 +453,23 @@ class _MainTabState extends State<MainTab> {
                 child: Stack(
                   children: [
                     Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(28),
+                          topRight: Radius.circular(28),
+                        ),
+                        child: Container(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
                       bottom: 20,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(28),
+                          topRight: Radius.circular(28),
+                        ),
                         child: Hero(
                           tag: title,
                           child: Image.asset(
@@ -423,18 +492,21 @@ class _MainTabState extends State<MainTab> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
+                        height: 20,
                         width: double.infinity,
                         decoration: const BoxDecoration(
                           color: yanaColor,
                         ),
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: "Julee",
-                            fontSize: 13,
+                        child: Center(
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: "Julee",
+                              fontSize: 13,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),

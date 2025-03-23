@@ -59,7 +59,7 @@ class ImpressumScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: Container(
-          color: barColors,
+          color: yanaColor,
           height: 50,
           child: Center(
             child: SingleChildScrollView(

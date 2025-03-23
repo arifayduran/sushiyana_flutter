@@ -4,8 +4,11 @@ import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
 import 'package:sushiyana_flutter/presentation/footer.dart';
+import 'package:sushiyana_flutter/presentation/lottie_animation_duration.dart';
 import 'package:sushiyana_flutter/presentation/tabs/items_tab.dart';
 import 'package:sushiyana_flutter/presentation/tabs/main_tab.dart';
+
+final GlobalKey<NestedScrollViewState> scrollControlerKey = GlobalKey();
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,12 +23,17 @@ class _HomeScreenState extends State<HomeScreen>
   final PageController _pageController = PageController();
   String? _selectedHeroTag;
 
+  double offset = 0;
+
   String dynamicLogo = "assets/images/logo2.png";
   String appBarTitle = "Willkommen in Sushi Yana!";
+
+  int previousIndex = 0;
 
   @override
   void initState() {
     super.initState();
+
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(() {
       if (mounted) {
@@ -45,20 +53,78 @@ class _HomeScreenState extends State<HomeScreen>
         );
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        setState(() {
+          innerController.addListener(
+            () {
+              offset = innerController.offset;
+            },
+          );
+        });
+      },
+    );
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    _pageController.dispose();
-    super.dispose();
+  ScrollController get outerController {
+    return scrollControlerKey.currentState!.outerController;
+  }
+
+  ScrollController get innerController {
+    return scrollControlerKey.currentState!.innerController;
+  }
+
+  void _scrollToTop() {
+    if (innerController.hasClients) {
+      innerController.animateTo(
+        0.0,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+
+    if (outerController.hasClients && outerController.offset > 0) {
+      outerController.animateTo(
+        0.0,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _scrollToBottom() {
+    if (outerController.hasClients) {
+      outerController.animateTo(
+        outerController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+
+    if (innerController.hasClients) {
+      double innerTargetOffset = innerController.position.maxScrollExtent;
+      if (outerController.offset >= outerController.position.maxScrollExtent) {
+        innerTargetOffset = 202;
+      }
+
+      innerController.animateTo(
+        innerTargetOffset,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   void _resetToHome() {
+    _scrollToTop();
+
     setState(() {
       MainTab.mainTabMode = 0;
-      _selectedHeroTag = null;
       dynamicLogo = "assets/images/logo2.png";
+      Future.delayed(Duration(milliseconds: 500), () {
+        _selectedHeroTag = null;
+      });
     });
 
     _pageController.animateToPage(
@@ -119,6 +185,14 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    _pageController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final branchProvider = Provider.of<BranchProvider>(context);
 
@@ -133,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     Color indicatorColor =
-        (_tabController.index == 1) ? yanaColorOld : Colors.white;
+        (_tabController.index == 1) ? yanaColor : Colors.white;
 
     Color unselectedLabelColor = (_tabController.index == 1)
         ? const Color.fromARGB(255, 127, 127, 127)
@@ -142,11 +216,13 @@ class _HomeScreenState extends State<HomeScreen>
     return DefaultTabController(
       length: _tabs.length,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: tabBackground,
         bottomNavigationBar: Footer(
           onResetHome: _resetToHome,
         ),
         body: NestedScrollView(
+          floatHeaderSlivers: false,
+          key: scrollControlerKey,
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
@@ -195,6 +271,17 @@ class _HomeScreenState extends State<HomeScreen>
                     dividerColor: indicatorColor,
                     unselectedLabelColor: unselectedLabelColor,
                     tabs: _tabs,
+                    onTap: (value) {
+                      print(previousIndex);
+                      if (value == 0 && previousIndex == 0) {
+                        _resetToHome();
+                      }
+
+                      if (value == 1 && previousIndex == 1) {
+                        _scrollToTop();
+                      }
+                      previousIndex = value;
+                    },
                   ),
                   _tabController.index,
                 ),
@@ -202,17 +289,57 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ];
           },
-          body: PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              _tabController.animateTo(index);
-            },
+          body: Stack(
             children: [
-              MainTab(onItemTapped: _onItemTapped),
-              _selectedHeroTag != null
-                  ? ItemsTab(heroTag: _selectedHeroTag!, onBack: _onBack)
-                  : EmptyTab(
-                      onBack: _onBack,
+              PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  _tabController.animateTo(index);
+                },
+                children: [
+                  MainTab(
+                    onItemTapped: _onItemTapped,
+                  ),
+                  _selectedHeroTag != null
+                      ? ItemsTab(
+                          heroTag: _selectedHeroTag!,
+                          onBack: _onBack,
+                        )
+                      : EmptyTab(
+                          onBack: _onBack,
+                        ),
+                ],
+              ),
+              _tabController.index == 1 && _selectedHeroTag == null
+                  ? SizedBox()
+                  : Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: GestureDetector(
+                          onTap: () {
+                            _scrollToBottom();
+                          },
+                          child: LottieAnimationDuration(
+                              duration: Duration(seconds: 3),
+                              path:
+                                  "assets/animations/scroll_down_white.json")),
+                    ),
+              _tabController.index == 1 && _selectedHeroTag == null
+                  ? SizedBox()
+                  : Positioned(
+                      top: offset * 0.25,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          _scrollToTop();
+                        },
+                        child: RotatedBox(
+                          quarterTurns: 2,
+                          child: LottieAnimationDuration(
+                              duration: Duration(seconds: 3),
+                              path: "assets/animations/scroll_down_white.json"),
+                        ),
+                      ),
                     ),
             ],
           ),

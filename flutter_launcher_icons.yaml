@@ -1,14 +1,14 @@
 flutter_launcher_icons:
-  android: true
+  android: false
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/images/logo.webp"
+  image_path: "assets/images/app_logo1024.png"
   windows:
-    generate: true
+    generate: false
   web:
     generate: true
   macos:
-    generate: true
+    generate: false
 # flutter_launcher_icons:
 #   android: "launcher_icon"
 #   ios: true

@@ -24,7 +24,7 @@ class BranchSelector extends StatelessWidget {
         fontSize: fontSize,
         color: color,
       ),
-      dropdownColor: barColors.withValues(alpha: 0.9),
+      dropdownColor: barColor.withValues(alpha: 0.9),
       items: branchProvider.branches.keys.map((String key) {
         return DropdownMenuItem<String>(
           value: key,

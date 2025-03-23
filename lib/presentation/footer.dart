@@ -13,7 +13,7 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: barColors, // yanaColor
+      color: barColor, // yanaColor
       height: 50,
       child: Center(
         child: SingleChildScrollView(

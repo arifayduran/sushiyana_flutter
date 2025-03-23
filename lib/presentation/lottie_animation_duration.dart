@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class LottieAnimationSushi extends StatefulWidget {
-  const LottieAnimationSushi({super.key});
+class LottieAnimationDuration extends StatefulWidget {
+  const LottieAnimationDuration(
+      {super.key, required this.duration, required this.path});
+
+  final Duration duration;
+  final String path;
 
   @override
-  State<LottieAnimationSushi> createState() => _LottieAnimationSushiState();
+  State<LottieAnimationDuration> createState() =>
+      _LottieAnimationDurationState();
 }
 
-class _LottieAnimationSushiState extends State<LottieAnimationSushi>
+class _LottieAnimationDurationState extends State<LottieAnimationDuration>
     with SingleTickerProviderStateMixin {
   late final AnimationController animationController;
 
@@ -17,7 +22,7 @@ class _LottieAnimationSushiState extends State<LottieAnimationSushi>
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: widget.duration,
     )..repeat();
   }
 
@@ -30,7 +35,7 @@ class _LottieAnimationSushiState extends State<LottieAnimationSushi>
   @override
   Widget build(BuildContext context) {
     return Lottie.asset(
-      "assets/animations/no_selection_sushi.json",
+      widget.path,
       controller: animationController,
     );
   }
