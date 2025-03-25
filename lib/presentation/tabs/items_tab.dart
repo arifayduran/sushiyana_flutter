@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/item_assets.dart';
+import 'package:sushiyana_flutter/presentation/home_screen.dart';
 import 'package:sushiyana_flutter/presentation/lottie_animation_duration.dart';
 
 class ItemsTab extends StatelessWidget {
   final String heroTag;
   final VoidCallback onBack;
-
   const ItemsTab({
     super.key,
     required this.heroTag,
@@ -229,6 +229,7 @@ class EmptyTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomeScreen.previousIndex = 0;
     return Container(
       color: tabBackground,
       child: Column(

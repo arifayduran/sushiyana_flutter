@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
+import 'package:sushiyana_flutter/config/scroll_configuration_behavior.dart';
 // import 'package:sushiyana_flutter/presentation/d__splash_screen.dart';
 import 'package:sushiyana_flutter/presentation/home_screen.dart';
 
@@ -50,7 +51,8 @@ class MyApp extends StatelessWidget {
       // theme: ThemeData(
       //   primarySwatch: yanaColor,
       // ),
-      home: const HomeScreen(),
+      home: ScrollConfiguration(
+          behavior: ScrollConfigurationBehavior(), child: const HomeScreen()),
       //  home: FadePageRoute(page: const HomeScreen()),
     );
   }

@@ -3,12 +3,18 @@ import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
+import 'package:sushiyana_flutter/presentation/home_screen.dart';
 
 class MainTab extends StatefulWidget {
+  final VoidCallback scrollToTop;
   final Function(String) onItemTapped;
   static int mainTabMode = 0;
 
-  const MainTab({super.key, required this.onItemTapped});
+  const MainTab({
+    super.key,
+    required this.onItemTapped,
+    required this.scrollToTop,
+  });
 
   @override
   State<MainTab> createState() => _MainTabState();
@@ -20,6 +26,7 @@ class _MainTabState extends State<MainTab> {
     final branchProvider = Provider.of<BranchProvider>(context);
 
     if (MainTab.mainTabMode == 1) {
+      HomeScreen.previousIndex = 0;
       // ignore: deprecated_member_use
       return WillPopScope(
         onWillPop: () async {
@@ -225,6 +232,7 @@ class _MainTabState extends State<MainTab> {
         ),
       );
     } else if (MainTab.mainTabMode == 2) {
+      HomeScreen.previousIndex = 0;
       return Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),

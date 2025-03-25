@@ -13,6 +13,8 @@ final GlobalKey<NestedScrollViewState> scrollControlerKey = GlobalKey();
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  static int previousIndex = 0;
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -28,8 +30,6 @@ class _HomeScreenState extends State<HomeScreen>
   String dynamicLogo = "assets/images/logo2.png";
   String appBarTitle = "Willkommen in Sushi Yana!";
 
-  int previousIndex = 0;
-
   @override
   void initState() {
     super.initState();
@@ -44,7 +44,10 @@ class _HomeScreenState extends State<HomeScreen>
             dynamicLogo = getHeroImagePath(_selectedHeroTag ?? "");
           }
         });
+
+        _scrollToTop(true, true); // Hier wird _scrollToTop aufgerufen
       }
+
       if (_tabController.indexIsChanging) {
         _pageController.animateToPage(
           _tabController.index,
@@ -75,49 +78,79 @@ class _HomeScreenState extends State<HomeScreen>
     return scrollControlerKey.currentState!.innerController;
   }
 
-  void _scrollToTop() {
-    if (innerController.hasClients) {
-      innerController.animateTo(
-        0.0,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
+  void _scrollToTop(bool outer, bool animateInner) {
+    const duration = Duration(milliseconds: 500);
+    const curve = Curves.easeInOut;
+
+    if (innerController.hasClients && innerController.offset != 0) {
+      if (animateInner) {
+        innerController.animateTo(
+          0.0,
+          duration: duration,
+          curve: curve,
+        );
+      } else {
+        innerController.jumpTo(0.0);
+      }
     }
 
-    if (outerController.hasClients && outerController.offset > 0) {
-      outerController.animateTo(
-        0.0,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
+    if (outerController.hasClients &&
+        outerController.offset >= outerController.position.minScrollExtent) {
+      if (outer) {
+        outerController.animateTo(
+          outerController.position.minScrollExtent,
+          duration: duration,
+          curve: curve,
+        );
+      } else {
+        outerController.animateTo(
+          outerController.position.maxScrollExtent,
+          duration: duration,
+          curve: curve,
+        );
+      }
     }
   }
 
-  void _scrollToBottom() {
+  void _scrollToBottom(bool outer, bool animateInner) {
+    const duration = Duration(milliseconds: 500);
+    const curve = Curves.easeInOut;
+
     if (outerController.hasClients) {
-      outerController.animateTo(
-        outerController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    }
-
-    if (innerController.hasClients) {
-      double innerTargetOffset = innerController.position.maxScrollExtent;
-      if (outerController.offset >= outerController.position.maxScrollExtent) {
-        innerTargetOffset = 202;
+      if (outer) {
+        outerController.animateTo(
+          outerController.position.maxScrollExtent,
+          duration: duration,
+          curve: curve,
+        );
+      } else {
+        outerController.animateTo(
+          outerController.position.minScrollExtent,
+          duration: duration,
+          curve: curve,
+        );
       }
-
-      innerController.animateTo(
-        innerTargetOffset,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
+    }
+    double innerTargetOffset = innerController.position.maxScrollExtent;
+    if (outerController.offset >= outerController.position.maxScrollExtent) {
+      innerTargetOffset = innerController.position.maxScrollExtent -
+          outerController.position.maxScrollExtent;
+    }
+    if (animateInner) {
+      if (innerController.hasClients) {
+        innerController.animateTo(
+          innerTargetOffset,
+          duration: duration,
+          curve: curve,
+        );
+      } else {
+        innerController.jumpTo(0.0);
+      }
     }
   }
 
   void _resetToHome() {
-    _scrollToTop();
+    _scrollToTop(true, false);
 
     setState(() {
       MainTab.mainTabMode = 0;
@@ -136,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _onItemTapped(String heroTag) {
+    HomeScreen.previousIndex = 1;
     if (heroTag == "Sushis") {
       setState(() {
         MainTab.mainTabMode = 1;
@@ -158,6 +192,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _onBack() {
+    HomeScreen.previousIndex = 0;
     setState(() {
       dynamicLogo = "assets/images/logo2.png";
     });
@@ -272,15 +307,15 @@ class _HomeScreenState extends State<HomeScreen>
                     unselectedLabelColor: unselectedLabelColor,
                     tabs: _tabs,
                     onTap: (value) {
-                      print(previousIndex);
-                      if (value == 0 && previousIndex == 0) {
+                      if (value == 0 && HomeScreen.previousIndex == 0) {
                         _resetToHome();
                       }
 
-                      if (value == 1 && previousIndex == 1) {
-                        _scrollToTop();
+                      if (value == 1 && HomeScreen.previousIndex == 1) {
+                        _scrollToTop(true, true);
                       }
-                      previousIndex = value;
+
+                      HomeScreen.previousIndex = value;
                     },
                   ),
                   _tabController.index,
@@ -299,6 +334,7 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   MainTab(
                     onItemTapped: _onItemTapped,
+                    scrollToTop: () => _scrollToTop(true, false),
                   ),
                   _selectedHeroTag != null
                       ? ItemsTab(
@@ -317,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen>
                       right: 0,
                       child: GestureDetector(
                           onTap: () {
-                            _scrollToBottom();
+                            _scrollToBottom(true, true);
                           },
                           child: LottieAnimationDuration(
                               duration: Duration(seconds: 3),
@@ -331,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen>
                       right: 0,
                       child: GestureDetector(
                         onTap: () {
-                          _scrollToTop();
+                          _scrollToTop(true, true);
                         },
                         child: RotatedBox(
                           quarterTurns: 2,
