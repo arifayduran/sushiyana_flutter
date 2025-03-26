@@ -32,6 +32,9 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release # Erstellen der Flutter-Web-App im Release-Modus
 
+      - name: Create empty directory
+        run: mkdir -p empty-dir
+
       - name: Clear remote directory on Manitu
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
