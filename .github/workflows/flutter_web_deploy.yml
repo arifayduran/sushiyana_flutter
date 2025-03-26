@@ -3,20 +3,20 @@ name: Flutter Web Deploy
 on:
   push:
     branches:
-      - main  # Der Workflow wird bei jedem Push auf den 'main'-Branch ausgelöst
+      - main # Der Workflow wird bei jedem Push auf den 'main'-Branch ausgelöst
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Verwendung von Ubuntu als Runner
+    runs-on: ubuntu-latest # Verwendung von Ubuntu als Runner
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Klonen des Repositories auf den GitHub-Runner
+        uses: actions/checkout@v3 # Klonen des Repositories auf den GitHub-Runner
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v1  # Installation von Flutter auf dem Runner
+        uses: subosito/flutter-action@v1 # Installation von Flutter auf dem Runner
         with:
-          flutter-version: '3.29.2'  # Angabe der Flutter-Version
+          flutter-version: "3.29.2" # Angabe der Flutter-Version
 
       - name: Create .env file (building will copy automatically in assets)
         run: |
@@ -25,29 +25,38 @@ jobs:
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-      
 
       - name: Install dependencies
-        run: flutter pub get  # Installation der Flutter-Abhängigkeiten
+        run: flutter pub get # Installation der Flutter-Abhängigkeiten
 
       - name: Build Flutter Web
-        run: flutter build web --release  # Erstellen der Flutter-Web-App im Release-Modus
+        run: flutter build web --release # Erstellen der Flutter-Web-App im Release-Modus
+
+      - name: Clear remote directory on Manitu
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.MANITU_FTP_SERVER }}
+          username: ${{ secrets.MANITU_FTP_USERNAME }}
+          password: ${{ secrets.MANITU_FTP_PASSWORD }}
+          local-dir: ./empty-dir/ # Ein leerer Ordner, um alles zu löschen
+          server-dir: /web/flutter/
+          dangerous-clean-slate: true # Erzwingt das komplette Löschen des Verzeichnisses
 
       - name: Deploy Flutter Web to Manitu (via FTP)
-        uses: airvzxf/ftp-deployment-action@latest  # Verwendung der FTP-Deployment-Action
+        uses: airvzxf/ftp-deployment-action@latest # Verwendung der FTP-Deployment-Action
         with:
-          server: ${{ secrets.MANITU_FTP_SERVER }}  # FTP-Server-Adresse (als Secret gespeichert)
-          user: ${{ secrets.MANITU_FTP_USERNAME }}  # FTP-Benutzername (als Secret gespeichert)
-          password: ${{ secrets.MANITU_FTP_PASSWORD }}  # FTP-Passwort (als Secret gespeichert)
-          local_dir: ./build/web  # Lokales Verzeichnis mit den Web-Build-Dateien
-          remote_dir: /web/flutter  # Zielverzeichnis auf dem Manitu-Server
-          delete: true  # Löschen von Dateien im Remote-Verzeichnis, die nicht im lokalen Verzeichnis vorhanden sind
+          server: ${{ secrets.MANITU_FTP_SERVER }} # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }} # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
+          local_dir: ./build/web # Lokales Verzeichnis mit den Web-Build-Dateien
+          remote_dir: /web/flutter # Zielverzeichnis auf dem Manitu-Server
+          delete: true # Löschen von Dateien im Remote-Verzeichnis, die nicht im lokalen Verzeichnis vorhanden sind
 
       - name: Upload API (api.php) to Manitu
         uses: tomasbkk/action-ftp-upload@v1.0
         with:
-          host: ${{ secrets.MANITU_FTP_SERVER }}  # FTP-Server-Adresse (als Secret gespeichert)
-          user: ${{ secrets.MANITU_FTP_USERNAME }}  # FTP-Benutzername (als Secret gespeichert)
-          password: ${{ secrets.MANITU_FTP_PASSWORD }}  # FTP-Passwort (als Secret gespeichert)
-          src: ./lib/application/api.php  # Der Pfad zur api.php in Ihrem Projekt
-          dest: /web/flutter/api.php  # Zielverzeichnis auf dem Manitu-Server
+          host: ${{ secrets.MANITU_FTP_SERVER }} # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }} # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
+          src: ./lib/application/api.php # Der Pfad zur api.php in Ihrem Projekt
+          dest: /web/flutter/api.php # Zielverzeichnis auf dem Manitu-Server

@@ -13,7 +13,11 @@ void main() async {
   String subdomain = getSubdomain(BranchProvider());
 
   DatabaseService dbService = DatabaseService();
-  await dbService.fetchAndStoreItems();
+ try {
+    await dbService.fetchAndStoreItems();
+  } catch (e) {
+    debugPrint("Error fetching and storing items: $e");
+  }
 
   runApp(
     MultiProvider(
