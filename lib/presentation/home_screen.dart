@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
+        _scrollToTop(true, true);
         innerController.addListener(
           () {
             if (mounted) {
@@ -78,10 +79,16 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   ScrollController get outerController {
+    if (scrollControlerKey.currentState == null) {
+      throw Exception("NestedScrollView's state is not initialized yet.");
+    }
     return scrollControlerKey.currentState!.outerController;
   }
 
   ScrollController get innerController {
+    if (scrollControlerKey.currentState == null) {
+      throw Exception("NestedScrollView's state is not initialized yet.");
+    }
     return scrollControlerKey.currentState!.innerController;
   }
 

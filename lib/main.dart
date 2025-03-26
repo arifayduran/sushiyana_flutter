@@ -13,7 +13,7 @@ void main() async {
   String subdomain = getSubdomain(BranchProvider());
 
   DatabaseService dbService = DatabaseService();
-  await dbService.fetchAndStoreItems();
+  // await dbService.fetchAndStoreItems();
 
   runApp(
     MultiProvider(
