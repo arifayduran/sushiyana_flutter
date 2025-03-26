@@ -143,8 +143,8 @@ class ImpressumScreen extends StatelessWidget {
               ),
               Container(
                 constraints: BoxConstraints(maxWidth: 600, minHeight: 400),
-                padding: EdgeInsets.all(20),
-                margin: EdgeInsets.all(20),
+                padding: EdgeInsets.all(25),
+                margin: EdgeInsets.all(25),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -178,9 +178,10 @@ class ImpressumScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 30),
                     Text(branchProvider.branchData["contact"]),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
                     Text(
                       "Jede Sushi Yana Filiale wird von einem selbstständig tätigen Gewerbetreibenden als Franchisenehmer bewirtschaftet. Dieser organisiert Produktion und Auslieferung seiner Produkte für seinen Betrieb in eigener Verantwortung. Wenn du Fragen oder Anliegen zu deiner Lieferung hast, wende dich bitte an den Verantwortlichen des jeweiligen Betriebes, den du in vorstehender Liste finden kannst.",
+                      style: TextStyle(fontSize: 12),
                     ),
                     SizedBox(
                       height: 30,
