@@ -62,8 +62,8 @@ flutter:
     - assets/images/
     - assets/fonts/
     - assets/images/startseite/
-    - assets/images/sushis/
-    - assets/images/warmeKueche/
+    - assets/images/maincategory_sushis/
+    - assets/images/maincategory_warmekueche/
     - assets/images/items/
     - assets/images/items/bowls/
     - assets/images/items/extras/

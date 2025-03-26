@@ -398,7 +398,14 @@ class _HomeScreenState extends State<HomeScreen>
 
                       if (value == 0 && HomeScreen.previousIndex == 0) {
                         // _resetToHome(true);
-                        _scrollToTop(true, false);
+
+                        if (MainTab.mainTabMode == 1 ||
+                            MainTab.mainTabMode == 2) {
+                          MainTab.mainTabMode = 0;
+                          _scrollToTop(true, true);
+                        } else {
+                          _scrollToTop(true, true);
+                        }
                       }
 
                       if (value == 1 && HomeScreen.previousIndex == 1) {
@@ -415,143 +422,146 @@ class _HomeScreenState extends State<HomeScreen>
             ];
           },
           body: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  PageView(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      _tabController.animateTo(index);
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    _tabController.animateTo(index);
 
-                      if (index == 0) {
-                        _onBack();
-                      } else {
-                        _onItemTapped(_selectedHeroTag ?? "null");
-                      }
+                    if (index == 0) {
+                      _onBack();
+                    } else {
+                      _onItemTapped(_selectedHeroTag ?? "null");
+                    }
 
-                      _scrollToTop(true, false);
-                      scrollStateProvider.setBotScrollButtonEnabled(true);
-                    },
-                    children: [
-                      MainTab(
-                        onItemTapped: _onItemTapped,
-                        scrollToTopOnBack: () => _scrollToTop(true, true),
-                      ),
-                      _selectedHeroTag == null || _selectedHeroTag == "null"
-                          ? EmptyTab(
-                              onBack: _onBack,
-                            )
-                          : ItemsTab(
-                              heroTag: _selectedHeroTag!,
-                              onBack: _onBack,
-                            ),
-                    ],
-                  ),
-                  scrollStateProvider.isBotScrollButtonEnabled
-                      ? _tabController.index == 1 &&
-                              (_selectedHeroTag == null ||
-                                  _selectedHeroTag == "null") &&
-                              innerOffset <
-                                  innerController.position.maxScrollExtent
-                          ? SizedBox()
-                          : Positioned(
-                              bottom: 0,
-                              right: logicalWidth > 640 ? -45 : -18,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _scrollToBottom(true, true);
+                    _scrollToTop(true, false);
+                    scrollStateProvider.setBotScrollButtonEnabled(true);
+                  },
+                  children: [
+                    MainTab(
+                      onItemTapped: _onItemTapped,
+                      scrollToTopOnBack: () => _scrollToTop(true, true),
+                    ),
+                    _selectedHeroTag == null || _selectedHeroTag == "null"
+                        ? EmptyTab(
+                            onBack: _onBack,
+                          )
+                        : ItemsTab(
+                            heroTag: _selectedHeroTag!,
+                            onBack: _onBack,
+                          ),
+                  ],
+                ),
+                scrollStateProvider.isBotScrollButtonEnabled
+                    ? _tabController.index == 1 &&
+                            (_selectedHeroTag == null ||
+                                _selectedHeroTag == "null") &&
+                            innerOffset <
+                                innerController.position.maxScrollExtent
+                        ? SizedBox()
+                        : Positioned(
+                            bottom: 0,
+                            right: logicalWidth > 650
+                                ? logicalWidth / 2 - 45 - 300
+                                : -18,
+                            child: GestureDetector(
+                              onTap: () {
+                                _scrollToBottom(true, true);
 
-                                  setState(() {
-                                    scrollStateProvider
-                                        .setBotScrollButtonEnabled(false);
-                                    isBotScrollButtonLocked = true;
-                                  });
-
-                                  Future.delayed(Duration(milliseconds: 2000),
-                                      () {
-                                    if (mounted) {
-                                      setState(() {
-                                        isBotScrollButtonLocked = false;
-                                      });
-                                    }
-                                  });
-                                },
-                                child: SizedBox(
-                                    width: 70,
-                                    child: LottieAnimationDuration(
-                                        duration: Duration(seconds: 3),
-                                        path:
-                                            "assets/animations/scroll_down_white.json")),
-                              ),
-                            )
-                      : SizedBox(),
-                  scrollStateProvider.isTopScrollButtonEnabled
-                      ? _tabController.index == 1 &&
-                              _selectedHeroTag == null &&
-                              _selectedHeroTag == "null"
-                          ? SizedBox()
-                          : Positioned(
-                              top: 80,
-                              right: logicalWidth > 640 ? -45 : -18,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _scrollToTop(true, true);
+                                setState(() {
                                   scrollStateProvider
-                                      .setTopScrollButtonEnabled(false);
-                                  setState(() {
-                                    isTopScrollButtonLocked = true;
-                                  });
+                                      .setBotScrollButtonEnabled(false);
+                                  isBotScrollButtonLocked = true;
+                                });
 
-                                  Future.delayed(Duration(milliseconds: 500),
-                                      () {
-                                    if (mounted) {
-                                      setState(() {
-                                        isTopScrollButtonLocked = false;
-                                      });
-                                    }
-                                  });
-                                },
-                                child: RotatedBox(
-                                  quarterTurns: 2,
-                                  child: SizedBox(
-                                    width: 70,
-                                    child: LottieAnimationDuration(
-                                        duration: Duration(seconds: 3),
-                                        path:
-                                            "assets/animations/scroll_down_white.json"),
-                                  ),
+                                Future.delayed(Duration(milliseconds: 2000),
+                                    () {
+                                  if (mounted) {
+                                    setState(() {
+                                      isBotScrollButtonLocked = false;
+                                    });
+                                  }
+                                });
+                              },
+                              child: SizedBox(
+                                  width: 70,
+                                  child: LottieAnimationDuration(
+                                      duration: Duration(seconds: 3),
+                                      path:
+                                          "assets/animations/scroll_down_white.json")),
+                            ),
+                          )
+                    : SizedBox(),
+                scrollStateProvider.isTopScrollButtonEnabled
+                    ? _tabController.index == 1 &&
+                            _selectedHeroTag == null &&
+                            _selectedHeroTag == "null"
+                        ? SizedBox()
+                        : Positioned(
+                            top: 80,
+                            right: logicalWidth > 650
+                                ? logicalWidth / 2 - 45 - 300
+                                : -18,
+                            child: GestureDetector(
+                              onTap: () {
+                                _scrollToTop(true, true);
+                                scrollStateProvider
+                                    .setTopScrollButtonEnabled(false);
+                                setState(() {
+                                  isTopScrollButtonLocked = true;
+                                });
+
+                                Future.delayed(Duration(milliseconds: 500), () {
+                                  if (mounted) {
+                                    setState(() {
+                                      isTopScrollButtonLocked = false;
+                                    });
+                                  }
+                                });
+                              },
+                              child: RotatedBox(
+                                quarterTurns: 2,
+                                child: SizedBox(
+                                  width: 70,
+                                  child: LottieAnimationDuration(
+                                      duration: Duration(seconds: 3),
+                                      path:
+                                          "assets/animations/scroll_down_white.json"),
                                 ),
                               ),
-                            )
-                      : SizedBox(),
-                  _tabController.index == 1
-                      ? _selectedHeroTag == null || _selectedHeroTag == "null"
-                          ? SizedBox()
-                          : Positioned(
-                              bottom: 10,
-                              // MediaQuery.of(context).size.height / 2 - 100,
-                              left: logicalWidth > 700 ? -60 : -5,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _onBack();
-                                },
-                                child: RotatedBox(
-                                  quarterTurns: 1,
-                                  child: SizedBox(
-                                    width: logicalWidth > 700 ? 70 : 45,
-                                    child: LottieAnimationDuration(
-                                        duration: Duration(seconds: 3),
-                                        path:
-                                            "assets/animations/scroll_down_white.json"),
-                                  ),
+                            ),
+                          )
+                    : SizedBox(),
+                _tabController.index == 1
+                    ? _selectedHeroTag == null || _selectedHeroTag == "null"
+                        ? SizedBox()
+                        : Positioned(
+                            bottom: 10,
+                            // MediaQuery.of(context).size.height / 2 - 100,
+
+                            left: logicalWidth > 650
+                                ? logicalWidth / 2 - 45 - 300
+                                : -5,
+                            child: GestureDetector(
+                              onTap: () {
+                                _onBack();
+                              },
+                              child: RotatedBox(
+                                quarterTurns: 1,
+                                child: SizedBox(
+                                  width: logicalWidth > 650 ? 70 : 45,
+                                  child: LottieAnimationDuration(
+                                      duration: Duration(seconds: 3),
+                                      path:
+                                          "assets/animations/scroll_down_white.json"),
                                 ),
                               ),
-                            )
-                      : SizedBox(),
-                ],
-              ),
+                            ),
+                          )
+                    : SizedBox(),
+              ],
             ),
           ),
         ),

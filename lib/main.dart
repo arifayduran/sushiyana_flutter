@@ -15,7 +15,6 @@ void main() async {
   DatabaseService dbService = DatabaseService();
   await dbService.fetchAndStoreItems();
 
-
   runApp(
     MultiProvider(
       providers: [

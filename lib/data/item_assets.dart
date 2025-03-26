@@ -10,7 +10,6 @@ Map<String, String> itemAssets = {
   "503": "assets/images/items/suppen/miso_suppe.jpg",
   "504": "assets/images/items/suppen/lachssuppe.jpg",
   "514": "assets/images/items/fingerfood_desserts/krabbenchips.jpg",
-  "515": "assets/images/items/fingerfood_desserts/kokosnuss_baellchen.jpg",
   "505": "assets/images/items/fingerfood_desserts/sesambaellchen.jpg",
   "508": "assets/images/items/fingerfood_desserts/gebackene_banane.jpg",
   "510": "assets/images/items/fingerfood_desserts/gebackene_ananas.jpg",
@@ -193,7 +192,8 @@ Map<String, String> itemAssets = {
   "805": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_ebi.jpg",
   "8051": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_ebi_avo.jpg",
   "806": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_sake.jpg",
-  "807": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_sake_avocado.jpg",
+  "807":
+      "assets/images/items/sushis/miniyanarolls/mini_yana_roll_sake_avocado.jpg",
   "808": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_kappa.jpg",
   "809": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_tekka.jpg",
   "8091":
@@ -325,7 +325,8 @@ Map<String, String> itemAssets = {
       "assets/images/items/warmekueche/yellowcurry/yellow_curry_mit_gross_garnele.jpg",
   "51":
       "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_gemuese.jpg",
-  "52": "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_tofu.jpg",
+  "52":
+      "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_tofu.jpg",
   "53":
       "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_haehnchen.jpg",
   "54":
@@ -353,7 +354,8 @@ Map<String, String> itemAssets = {
   "71": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_gemuese.jpg",
   "72": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_tofu.jpg",
   "73": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_haehnchen.jpg",
-  "74": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_rindfleisch.jpg",
+  "74":
+      "assets/images/items/warmekueche/chopsuey/chop_suey_mit_rindfleisch.jpg",
   "75": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_ente_kross.jpg",
   "76":
       "assets/images/items/warmekueche/chopsuey/chop_suey_mit_haehnchen_kross.jpg",
@@ -362,7 +364,8 @@ Map<String, String> itemAssets = {
   "81": "assets/images/items/warmekueche/redcurry/red_curry_mit_gemuese.jpg",
   "82": "assets/images/items/warmekueche/redcurry/red_curry_mit_tofu.jpg",
   "83": "assets/images/items/warmekueche/redcurry/red_curry_mit_haehnchen.jpg",
-  "84": "assets/images/items/warmekueche/redcurry/red_curry_mit_rindfleisch.jpg",
+  "84":
+      "assets/images/items/warmekueche/redcurry/red_curry_mit_rindfleisch.jpg",
   "85": "assets/images/items/warmekueche/redcurry/red_curry_mit_ente_kross.jpg",
   "86":
       "assets/images/items/warmekueche/redcurry/red_curry_mit_haehnchen_kross.jpg",

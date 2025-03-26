@@ -31,51 +31,51 @@ Map<String, dynamic> localDatabase = {
     "categories": {
       "Menüs": {
         "origin": "menues",
-        "imagePath": 'assets/images/sushis/Ebi_Menu.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/Ebi_Menu.jpg',
         "items": <Item>[],
       },
       "Sashimis": {
         "origin": "sashimi",
-        "imagePath": 'assets/images/sushis/Sashimi_Sake.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/Sashimi_Sake.jpg',
         "items": <Item>[],
       },
       "Makis": {
         "origin": "makis",
-        "imagePath": 'assets/images/sushis/maki.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/maki.jpg',
         "items": <Item>[],
       },
       "Inside Out Rolls": {
         "origin": "insideoutrolls",
-        "imagePath": 'assets/images/sushis/ioroll.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/ioroll.jpg',
         "items": <Item>[],
       },
       "Mini Yana Rolls": {
         "origin": "miniyanarolls",
-        "imagePath": 'assets/images/sushis/miniyanaroll.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/miniyanaroll.jpg',
         "items": <Item>[],
       },
       "Yana Rolls": {
         "origin": "yanarolls",
-        "imagePath": 'assets/images/sushis/yanaroll.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/yanaroll.jpg',
         "items": <Item>[],
       },
       "Nigiris": {
         "origin": "nigiris",
-        "imagePath": 'assets/images/sushis/Nigiris_Head.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/Nigiris_Head.jpg',
         "items": <Item>[],
       },
       "Special Rolls": {
         "origin": "specialRolls",
-        "imagePath": 'assets/images/sushis/special.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/special.jpg',
         "items": <Item>[],
       },
       "Temakis": {
         "origin": "temaki",
-        "imagePath": 'assets/images/sushis/temaki.jpg',
+        "imagePath": 'assets/images/maincategory_sushis/temaki.jpg',
         "items": <Item>[],
       },
       // "Vegetarisch / Vegan": {
-      //   "imagePath": 'assets/images/sushis/--vegetarisch.jpg',
+      //   "imagePath": 'assets/images/maincategory_sushis/--vegetarisch.jpg',
       //   "items": <Item>[],
       // },
     },
@@ -85,52 +85,57 @@ Map<String, dynamic> localDatabase = {
     "categories": {
       "Gebratene Nudeln": {
         "origin": "nudeln",
-        "imagePath": 'assets/images/warmeKueche/gebratene_nudeln.jpg',
+        "imagePath":
+            'assets/images/maincategory_warmekueche/gebratene_nudeln.jpg',
         "items": <Item>[],
       },
       "Gebratener Reis": {
         "origin": "reis",
-        "imagePath": 'assets/images/warmeKueche/gebratener_reis.jpg',
+        "imagePath":
+            'assets/images/maincategory_warmekueche/gebratener_reis.jpg',
         "items": <Item>[],
       },
       "Gebratenes Gemüse": {
         "origin": "gemuese",
-        "imagePath": 'assets/images/warmeKueche/gebratenes_gemuese.jpg',
+        "imagePath":
+            'assets/images/maincategory_warmekueche/gebratenes_gemuese.jpg',
         "items": <Item>[],
       },
       "Yellow Curry": {
         "origin": "yellowcurry",
-        "imagePath": 'assets/images/warmeKueche/yellow_curry.jpg',
+        "imagePath": 'assets/images/maincategory_warmekueche/yellow_curry.jpg',
         "items": <Item>[],
       },
       "Mango Chutney": {
         "origin": "mangochutney",
-        "imagePath": 'assets/images/warmeKueche/mango_chutney.jpg',
+        "imagePath": 'assets/images/maincategory_warmekueche/mango_chutney.jpg',
         "items": <Item>[],
       },
       "Erdnussgericht": {
         "origin": "erdnussgericht",
-        "imagePath": 'assets/images/warmeKueche/erdnussgericht.jpg',
+        "imagePath":
+            'assets/images/maincategory_warmekueche/erdnussgericht.jpg',
         "items": <Item>[],
       },
       "Chop Suey": {
         "origin": "chopsuey",
-        "imagePath": 'assets/images/warmeKueche/chop_suey.jpg',
+        "imagePath": 'assets/images/maincategory_warmekueche/chop_suey.jpg',
         "items": <Item>[],
       },
       "Red Curry": {
         "origin": "redcurry",
-        "imagePath": 'assets/images/warmeKueche/red_curry.jpg',
+        "imagePath": 'assets/images/maincategory_warmekueche/red_curry.jpg',
         "items": <Item>[],
       },
       "Süß-Sauer Sauce": {
         "origin": "suesssauersauce",
-        "imagePath": 'assets/images/warmeKueche/suess_sauer_sauce.jpg',
+        "imagePath":
+            'assets/images/maincategory_warmekueche/suess_sauer_sauce.jpg',
         "items": <Item>[],
       },
       "Extras": {
         "origin": "extrasWarm",
-        "imagePath": 'assets/images/warmeKueche/Extras.jpg',
+        "imagePath": 'assets/images/maincategory_warmekueche/Extras.jpg',
         "items": <Item>[],
       },
     },
@@ -161,8 +166,6 @@ Map<String, dynamic> localDatabase = {
     "items": <Item>[],
   },
 };
-
-
 
 List<String> dbOriginCategories = [
   "bowls",
