@@ -32,18 +32,18 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release # Erstellen der Flutter-Web-App im Release-Modus
 
-      - name: Create empty directory
-        run: mkdir -p empty-dir
+      # - name: Create empty directory
+      #   run: mkdir -p empty-dir
 
-      - name: Clear remote directory on Manitu
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.MANITU_FTP_SERVER }}
-          username: ${{ secrets.MANITU_FTP_USERNAME }}
-          password: ${{ secrets.MANITU_FTP_PASSWORD }}
-          local-dir: ./empty-dir/ # Ein leerer Ordner, um alles zu löschen
-          server-dir: /web/flutter/
-          dangerous-clean-slate: true # Erzwingt das komplette Löschen des Verzeichnisses
+      # - name: Clear remote directory on Manitu
+      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      #   with:
+      #     server: ${{ secrets.MANITU_FTP_SERVER }}
+      #     username: ${{ secrets.MANITU_FTP_USERNAME }}
+      #     password: ${{ secrets.MANITU_FTP_PASSWORD }}
+      #     local-dir: ./empty-dir/ # Ein leerer Ordner, um alles zu löschen
+      #     server-dir: /web/flutter/
+      #     dangerous-clean-slate: true # Erzwingt das komplette Löschen des Verzeichnisses
 
       - name: Deploy Flutter Web to Manitu (via FTP)
         uses: airvzxf/ftp-deployment-action@latest # Verwendung der FTP-Deployment-Action

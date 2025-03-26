@@ -136,175 +136,181 @@ class _ItemsTabState extends State<ItemsTab> {
         color: tabBackground,
         padding: const EdgeInsets.only(top: 20, left: 25, right: 25, bottom: 0),
         alignment: Alignment.center,
-        child: Expanded(
-          child: ListView.builder(
-              itemCount: _items.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: 40,
-                    ),
-                    // SizedBox(
-                    //   width: 600, child:
-                    Image.asset(
-                      itemAssets[_items[index].id.toString()] ??
-                          "assets/images/noimage_sushiyana.jpg",
-                      fit: BoxFit.contain,
-                    ),
-                    // ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    SizedBox(
-                      child: Text(
-                        _items[index].artikelnummer,
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: "Julee",
-                            fontWeight: FontWeight.w900,
-                            fontSize: 12),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    SizedBox(
-                      width: 500,
-                      child: Text(
-                        _items[index].artikelname,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: "Julee",
-                            fontWeight: FontWeight.w700,
-                            fontSize: 15),
-                      ),
-                    ),
-                    _items[index].allergeneZusatz.isNotEmpty
-                        ? SizedBox(
-                            height: 10,
-                          )
-                        : SizedBox(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      // spacing: 5,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                  itemCount: _items.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
                       children: [
-                        _items[index].pikant
-                            ? Tooltip(
-                                message: "Pikant",
-                                child: SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: Image.asset("assets/icons/pikant.png"),
-                                ),
-                              )
-                            : SizedBox(),
                         SizedBox(
-                          width: _items[index].vegetarisch ? 5 : 0,
+                          height: 40,
                         ),
-                        _items[index].vegetarisch
-                            ? Tooltip(
-                                message: "Vegetarisch",
-                                child: SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: Image.asset(
-                                      "assets/icons/vegetarisch.png"),
-                                ),
-                              )
-                            : SizedBox(),
+                        // SizedBox(
+                        //   width: 600, child:
+                        Image.asset(
+                          itemAssets[_items[index].id.toString()] ??
+                              "assets/images/noimage_sushiyana.jpg",
+                          fit: BoxFit.contain,
+                        ),
+                        // ),
                         SizedBox(
-                          width: _items[index].vegan ? 5 : 0,
+                          height: 30,
                         ),
-                        _items[index].vegan
-                            ? Tooltip(
-                                message: "Vegan",
-                                child: SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: Image.asset("assets/icons/vegan.png"),
-                                ),
-                              )
-                            : SizedBox(),
+                        SizedBox(
+                          child: Text(
+                            _items[index].artikelnummer,
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: "Julee",
+                                fontWeight: FontWeight.w900,
+                                fontSize: 12),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        SizedBox(
+                          width: 500,
+                          child: Text(
+                            _items[index].artikelname,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "Julee",
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15),
+                          ),
+                        ),
                         _items[index].allergeneZusatz.isNotEmpty
-                            ? Tooltip(
-                                message: "Allergene und Zusatzstoffe",
-                                child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    iconSize: 25,
-                                    onPressed: () {
-                                      _showAllergenDialog(context, index);
-                                    },
-                                    icon: Icon(
-                                      Icons.info,
-                                      color: yanaColor,
-                                    )),
+                            ? SizedBox(
+                                height: 10,
                               )
                             : SizedBox(),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    _items[index].beschreibung.isEmpty
-                        ? SizedBox()
-                        : SizedBox(
-                            width: 500,
-                            child: Center(
-                              child: convertToRichText(
-                                _items[index].beschreibung,
-                                const Color.fromARGB(255, 184, 184, 184),
-                                14,
-                                "Julee",
-                                FontWeight.w100,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          // spacing: 5,
+                          children: [
+                            _items[index].pikant
+                                ? Tooltip(
+                                    message: "Pikant",
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: Image.asset(
+                                          "assets/icons/pikant.png"),
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              width: _items[index].vegetarisch ? 5 : 0,
+                            ),
+                            _items[index].vegetarisch
+                                ? Tooltip(
+                                    message: "Vegetarisch",
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: Image.asset(
+                                          "assets/icons/vegetarisch.png"),
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              width: _items[index].vegan ? 5 : 0,
+                            ),
+                            _items[index].vegan
+                                ? Tooltip(
+                                    message: "Vegan",
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child:
+                                          Image.asset("assets/icons/vegan.png"),
+                                    ),
+                                  )
+                                : SizedBox(),
+                            _items[index].allergeneZusatz.isNotEmpty
+                                ? Tooltip(
+                                    message: "Allergene und Zusatzstoffe",
+                                    child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        iconSize: 25,
+                                        onPressed: () {
+                                          _showAllergenDialog(context, index);
+                                        },
+                                        icon: Icon(
+                                          Icons.info,
+                                          color: yanaColor,
+                                        )),
+                                  )
+                                : SizedBox(),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _items[index].beschreibung.isEmpty
+                            ? SizedBox()
+                            : SizedBox(
+                                width: 500,
+                                child: Center(
+                                  child: convertToRichText(
+                                    _items[index].beschreibung,
+                                    const Color.fromARGB(255, 184, 184, 184),
+                                    14,
+                                    "Julee",
+                                    FontWeight.w100,
+                                  ),
+                                ),
+                              ),
+                        _items[index].beschreibung.isEmpty
+                            ? SizedBox(
+                                height: 20,
+                              )
+                            : SizedBox(
+                                height: 25,
+                              ),
+                        Text(
+                          _items[index].preis.replaceAll(".", ","),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              letterSpacing: 2,
+                              fontFamily: "Julee",
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15),
+                        ),
+                        SizedBox(
+                          height: 35,
+                        ),
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Divider(
+                              color: Colors.white,
+                              thickness: 0.3,
+                              height: 12,
+                            ),
+                            Positioned(
+                              top: 0,
+                              child: CircleAvatar(
+                                radius: 6,
+                                backgroundColor: Colors.red,
                               ),
                             ),
-                          ),
-                    _items[index].beschreibung.isEmpty
-                        ? SizedBox(
-                            height: 20,
-                          )
-                        : SizedBox(
-                            height: 25,
-                          ),
-                    Text(
-                      _items[index].preis.replaceAll(".", ","),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 2,
-                          fontFamily: "Julee",
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 35,
-                    ),
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Divider(
-                          color: Colors.white,
-                          thickness: 0.3,
-                          height: 12,
+                          ],
                         ),
-                        Positioned(
-                          top: 0,
-                          child: CircleAvatar(
-                            radius: 6,
-                            backgroundColor: Colors.red,
-                          ),
-                        ),
+                        SizedBox(
+                          height: 30,
+                        )
                       ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    )
-                  ],
-                );
-              }),
+                    );
+                  }),
+            ),
+          ],
         ),
       ),
     );
