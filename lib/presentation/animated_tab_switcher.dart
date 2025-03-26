@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sushiyana_flutter/constants/colors.dart';
 
 class AnimatedTabSwitcher extends StatefulWidget {
   final int mainTabMode;

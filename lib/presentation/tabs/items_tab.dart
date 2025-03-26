@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sushiyana_flutter/application/branch_provider.dart';
+import 'package:sushiyana_flutter/application/convert_to_rich_text.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/item_assets.dart';
+import 'package:sushiyana_flutter/data/local_database.dart';
+import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/presentation/home_screen.dart';
 import 'package:sushiyana_flutter/presentation/lottie_animation_duration.dart';
 
-class ItemsTab extends StatelessWidget {
+class ItemsTab extends StatefulWidget {
   final String heroTag;
   final VoidCallback onBack;
   const ItemsTab({
@@ -13,33 +18,124 @@ class ItemsTab extends StatelessWidget {
     required this.onBack,
   });
 
-  //  Positioned(
-  //         top: 10,
-  //         left: 20,
-  //         child: ElevatedButton(
-  //             onPressed: onBack,
-  //             style: ButtonStyle(
-  //                 backgroundColor: WidgetStateProperty.all(yanaColor),
-  //                 elevation: WidgetStateProperty.all(5),
-  //                 foregroundColor: WidgetStateProperty.all(Colors.white),
-  //                 shadowColor: WidgetStateProperty.all(yanaColor)),
-  //             child: const Icon(Icons.arrow_back_ios_new)),
-  //       ),
+  @override
+  State<ItemsTab> createState() => _ItemsTabState();
+}
+
+class _ItemsTabState extends State<ItemsTab> {
+  List<Item> _items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getItems();
+
+    final branchProvider = Provider.of<BranchProvider>(context, listen: false);
+    branchProvider.addListener(_getItems);
+  }
+
+  void _getItems() {
+    List<Item> items;
+
+    if (localDatabase["Sushis"]["categories"].containsKey(widget.heroTag)) {
+      items = List<Item>.from(
+          localDatabase["Sushis"]["categories"][widget.heroTag]["items"]);
+    } else if (localDatabase["Warme Küche"]["categories"]
+        .containsKey(widget.heroTag)) {
+      items = List<Item>.from(
+          localDatabase["Warme Küche"]["categories"][widget.heroTag]["items"]);
+    } else {
+      items = List<Item>.from(localDatabase[widget.heroTag]["items"]);
+    }
+
+    final filteredItems = items.where((item) {
+      return item.bestellbar && _isItemAvailableInCurrentBranch(item);
+    }).toList();
+
+    setState(() {
+      _items = filteredItems;
+    });
+  }
+
+  bool _isItemAvailableInCurrentBranch(
+    Item item,
+  ) {
+    final branchProvider = Provider.of<BranchProvider>(context, listen: false);
+    switch (branchProvider.currentBranch) {
+      case 'charlottenburg':
+        return item.charlottenburg;
+      case 'friedrichshain':
+        return item.friedrichshain;
+      case 'lichtenrade':
+        return item.lichtenrade;
+      case 'mitte':
+        return item.mitte;
+      case 'moabit':
+        return item.moabit;
+      case 'neukoelln':
+        return item.neukoelln;
+      case 'potsdam':
+        return item.potsdam;
+      case 'rudow':
+        return item.rudow;
+      case 'spandau':
+        return item.spandau;
+      case 'tegel':
+        return item.tegel;
+      case 'weissensee':
+        return item.weissensee;
+      case 'zehlendorf':
+        return item.zehlendorf;
+      case 'ffo':
+        return item.ffo;
+      default:
+        return false;
+    }
+  }
+
+  void _showAllergenDialog(BuildContext context, index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // ignore: deprecated_member_use
+        return WillPopScope(
+          onWillPop: () async {
+            Navigator.of(context).pop();
+            return false;
+          },
+          child: AlertDialog(
+            title: Text(
+              "Allergene und Zusatzstoffe",
+              style: TextStyle(fontFamily: "Julee"),
+            ),
+            content: convertToRichText(_items[index].allergeneZusatz,
+                Colors.black, 13, "Julee", FontWeight.normal),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Schließen"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Device Width
     double deviceWidth = MediaQuery.of(context).size.width;
 
-    // Berechnung der Breite (maximal 500)
     double calculatedWidth = deviceWidth * 0.8;
     double finalWidth = calculatedWidth > 600 ? 600 : calculatedWidth;
 
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
-        onBack();
-        return false; // Verhindert das automatische Schließen des Screens
+        widget.onBack();
+        return false;
       },
       child: Container(
         color: tabBackground,
@@ -47,33 +143,12 @@ class ItemsTab extends StatelessWidget {
         alignment: Alignment.center,
         child: Column(
           children: [
-            // SizedBox(
-            //   height: 20,
-            // ),
-            // Align(
-            //     alignment: Alignment.centerLeft,
-            //     child: Text(
-            //       heroTag,
-            //       style: TextStyle(
-            //           color: Colors.white,
-            //           letterSpacing: 2.5,
-            //           fontFamily: "Julee",
-            //           fontSize: 23),
-            //     )),
-            // SizedBox(
-            //   height: 20,
-            // ),
-            // const Divider(
-            //   color: Colors.white,
-            //   thickness: 0.3,
-            //   height: 0,
-            // ),
             SizedBox(
               height: 20,
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: 11,
+                  itemCount: _items.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
                       children: [
@@ -83,9 +158,11 @@ class ItemsTab extends StatelessWidget {
                         ConstrainedBox(
                           constraints: BoxConstraints(
                             maxWidth: 500,
+                            maxHeight: 250,
                           ),
                           child: Image.asset(
-                            itemAssets.values.toList()[index + 120],
+                            itemAssets[_items[index].id.toString()] ??
+                                "assets/images/noimage_sushiyana.jpg",
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -94,7 +171,7 @@ class ItemsTab extends StatelessWidget {
                         ),
                         SizedBox(
                           child: Text(
-                            "222",
+                            _items[index].artikelnummer,
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontFamily: "Julee",
@@ -108,7 +185,7 @@ class ItemsTab extends StatelessWidget {
                         SizedBox(
                           width: finalWidth,
                           child: Text(
-                            "Garnelen-Kokosmilch-Suppe (sauer-scharf)",
+                            _items[index].artikelname,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,
@@ -123,54 +200,90 @@ class ItemsTab extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          spacing: 5,
+                          // spacing: 5,
                           children: [
+                            _items[index].pikant
+                                ? Tooltip(
+                                    message: "Pikant",
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: Image.asset(
+                                          "assets/icons/pikant.png"),
+                                    ),
+                                  )
+                                : SizedBox(),
                             SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: Image.asset("assets/icons/pikant.png")),
+                              width: _items[index].vegetarisch ? 5 : 0,
+                            ),
+                            _items[index].vegetarisch
+                                ? Tooltip(
+                                    message: "Vegetarisch",
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: Image.asset(
+                                          "assets/icons/vegetarisch.png"),
+                                    ),
+                                  )
+                                : SizedBox(),
                             SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: Image.asset(
-                                    "assets/icons/vegetarisch.png")),
-                            SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: Image.asset("assets/icons/vegan.png")),
-                            IconButton(
-                                iconSize: 25,
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.info,
-                                  color: yanaColor,
-                                )),
+                              width: _items[index].vegan ? 5 : 0,
+                            ),
+                            _items[index].vegan
+                                ? Tooltip(
+                                    message: "Vegan",
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child:
+                                          Image.asset("assets/icons/vegan.png"),
+                                    ),
+                                  )
+                                : SizedBox(),
+                            Tooltip(
+                              message: "Allergene und Zusatzstoffe",
+                              child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  iconSize: 25,
+                                  onPressed: () {
+                                    _showAllergenDialog(context, index);
+                                  },
+                                  icon: Icon(
+                                    Icons.info,
+                                    color: yanaColor,
+                                  )),
+                            ),
                           ],
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        SizedBox(
-                          width: finalWidth,
-                          child: Center(
-                            child: Text(
-                              "4 Stück Inside-Out California - Masago\n6 Stück Maki Sake Avocado\n6 Stück Yana Roll Lachs\n1 Stück Nigiri Sake\n1 Stück Nigiri White Butterfisch",
-                              style: TextStyle(
-                                  color:
-                                      const Color.fromARGB(255, 184, 184, 184),
-                                  fontFamily: "Julee",
-                                  fontWeight: FontWeight.w100,
-                                  fontSize: 13),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 35,
-                        ),
+                        _items[index].beschreibung.isEmpty
+                            ? SizedBox()
+                            : SizedBox(
+                                width: finalWidth,
+                                child: Center(
+                                  child: convertToRichText(
+                                    _items[index].beschreibung,
+                                    const Color.fromARGB(255, 184, 184, 184),
+                                    14,
+                                    "Julee",
+                                    FontWeight.w100,
+                                  ),
+                                ),
+                              ),
+                        _items[index].beschreibung.isEmpty
+                            ? SizedBox(
+                                height: 20,
+                              )
+                            : SizedBox(
+                                height: 25,
+                              ),
                         SizedBox(
                           width: finalWidth,
                           child: Text(
-                            "9,99 €",
+                            _items[index].preis.replaceAll(".", ","),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,

@@ -83,17 +83,17 @@ flutter:
     - assets/images/items/sushis/specialroll/
     - assets/images/items/sushis/temakis/
     - assets/images/items/sushis/yanarolls/
-    - assets/images/items/warmeküche/
-    - assets/images/items/warmeküche/chopsuey/
-    - assets/images/items/warmeküche/erdnussgerichte/
-    - assets/images/items/warmeküche/extrasWarm/
-    - assets/images/items/warmeküche/gebratenenudel/
-    - assets/images/items/warmeküche/gebratenerreis/
-    - assets/images/items/warmeküche/gebratengemüse/
-    - assets/images/items/warmeküche/mangocutney/
-    - assets/images/items/warmeküche/redcurry/
-    - assets/images/items/warmeküche/suesssauersauce/
-    - assets/images/items/warmeküche/yellowcurry/
+    - assets/images/items/warmekueche/
+    - assets/images/items/warmekueche/chopsuey/
+    - assets/images/items/warmekueche/erdnussgerichte/
+    - assets/images/items/warmekueche/extrasWarm/
+    - assets/images/items/warmekueche/gebratenenudel/
+    - assets/images/items/warmekueche/gebratenerreis/
+    - assets/images/items/warmekueche/gebratengemuse/
+    - assets/images/items/warmekueche/mangocutney/
+    - assets/images/items/warmekueche/redcurry/
+    - assets/images/items/warmekueche/suesssauersauce/
+    - assets/images/items/warmekueche/yellowcurry/
     - assets/images/items/warmgetraenke/
     - assets/icons/
     - .env

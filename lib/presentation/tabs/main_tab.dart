@@ -443,7 +443,7 @@ class _MainTabState extends State<MainTab> {
               itemCount: branchProvider.currentBranch == "neukoelln" ||
                       branchProvider.currentBranch == "lichtenrade"
                   ? localDatabase.length
-                  : localDatabase.length - 1,
+                  : localDatabase.length -1,
               itemBuilder: (BuildContext context, int index) {
                 String title = localDatabase.keys.elementAt(index);
                 String imagePath =

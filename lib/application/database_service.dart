@@ -1,6 +1,9 @@
-import 'package:flutter/widgets.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:sushiyana_flutter/data/local_database.dart';
+import 'package:sushiyana_flutter/domain/item.dart';
 
 class DatabaseService {
   final String baseUrl = 'https://flutter.sushiyanaspeisekarte.com';
@@ -14,7 +17,7 @@ class DatabaseService {
         try {
           // Ensure the response is in valid JSON format
           final data = json.decode(response.body);
-          debugPrint(data.toString());
+          // debugPrint(data.toString());
 
           // Check if data is a list or map
           if (data is List) {
@@ -38,7 +41,23 @@ class DatabaseService {
     }
   }
 
-  Future<List<dynamic>> fetchExtras() async {
-    return fetchData('extras');
+  Future<void> fetchAndStoreItems() async {
+    Future<void> fetchItemsForCategory(Map<String, dynamic> category) async {
+      if (category.containsKey('origin')) {
+        String origin = category['origin'];
+        List fetchedData = await fetchData(origin);
+        category['items'] =
+            fetchedData.map((json) => Item.fromJson(json)).toList();
+      }
+    }
+
+    for (var category in localDatabase.values) {
+      await fetchItemsForCategory(category);
+      if (category.containsKey('categories')) {
+        for (var subcategory in category['categories'].values) {
+          await fetchItemsForCategory(subcategory);
+        }
+      }
+    }
   }
 }

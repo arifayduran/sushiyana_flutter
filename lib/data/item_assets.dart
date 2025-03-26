@@ -81,7 +81,7 @@ Map<String, String> itemAssets = {
   "17":
       "assets/images/items/getraenke/fritz_limo_zitronenlimonade.jpg", // Fritz Limo Zitrone 0,33L
   "18":
-      "assets/images/items/getraenke/fritz_limo_melone.jpg", // Fritz Limo Melone 0,33L
+      "assets/images/items/getraenke/fritz_limo_honigmelone.jpg", // Fritz Limo Melone 0,33L
   "19":
       "assets/images/items/getraenke/fritz_spritz_bio_apfelsaftschorle.jpg", // Fritz Bio Apfelschorle 0,33L
   "20":
@@ -193,11 +193,11 @@ Map<String, String> itemAssets = {
   "805": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_ebi.jpg",
   "8051": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_ebi_avo.jpg",
   "806": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_sake.jpg",
-  "807": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_sake_avo.jpg",
+  "807": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_sake_avocado.jpg",
   "808": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_kappa.jpg",
   "809": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_tekka.jpg",
   "8091":
-      "assets/images/items/sushis/miniyanarolls/mini_yana_roll_tekka_avo.jpg",
+      "assets/images/items/sushis/miniyanarolls/mini_yana_roll_tekka_avocado.jpg",
   "810": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_avocado.jpg",
   "811": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_chicken.jpg",
   "812": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_tuna.jpg",
@@ -209,7 +209,7 @@ Map<String, String> itemAssets = {
   "817": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_kampyo.jpg",
   "818":
       "assets/images/items/sushis/miniyanarolls/mini_yana_white_butterfish.jpg",
-  "819": "assets/images/items/sushis/miniyanarolls/mini_yana_roll_inari.jpg",
+  "819": "assets/images/items/sushis/miniyanarolls/mini_yana_inari.jpg",
 
   "401": "assets/images/items/sushis/yanarolls/yana_roll_chicken.jpg",
   "402": "assets/images/items/sushis/yanarolls/yana_roll_garnele.jpg",
@@ -268,118 +268,118 @@ Map<String, String> itemAssets = {
   "624": "assets/images/items/bowls/yana_poke_bowl_natur.jpg",
 
   "4001":
-      "assets/images/items/warmeküche/gebratenenudel/gebratene_nudeln_mit_gemuese.jpg",
+      "assets/images/items/warmekueche/gebratenenudel/gebratene_nudeln_mit_gemuese.jpg",
   "4002":
-      "assets/images/items/warmeküche/gebratenenudel/gebratene_nudeln_mit_tofu.jpg",
+      "assets/images/items/warmekueche/gebratenenudel/gebratene_nudeln_mit_tofu.jpg",
   "4003":
-      "assets/images/items/warmeküche/gebratenenudel/gebratene_nudeln_mit_haehnchen.jpg",
+      "assets/images/items/warmekueche/gebratenenudel/gebratene_nudeln_mit_haehnchen.jpg",
   "4004":
-      "assets/images/items/warmeküche/gebratenenudel/gebratene_nudeln_mit_rindfleisch.jpg",
+      "assets/images/items/warmekueche/gebratenenudel/gebratene_nudeln_mit_rindfleisch.jpg",
   "4005":
-      "assets/images/items/warmeküche/gebratenenudel/gebratene_nudeln_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/gebratenenudel/gebratene_nudeln_mit_ente_kross.jpg",
   "4006":
-      "assets/images/items/warmeküche/gebratenenudel/gebratene_nudeln_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/gebratenenudel/gebratene_nudeln_mit_haehnchen_kross.jpg",
   "4007":
-      "assets/images/items/warmeküche/gebratenenudel/gebratene_nudeln_mit_gross_garnele.jpg",
+      "assets/images/items/warmekueche/gebratenenudel/gebratene_nudeln_mit_gross_garnele.jpg",
   "251":
-      "assets/images/items/warmeküche/gebratenerreis/gebratener_reis_mit_gemuese.jpg",
+      "assets/images/items/warmekueche/gebratenerreis/gebratener_reis_mit_gemuese.jpg",
   "252":
-      "assets/images/items/warmeküche/gebratenerreis/gebratener_reis_mit_tofu.jpg",
+      "assets/images/items/warmekueche/gebratenerreis/gebratener_reis_mit_tofu.jpg",
   "253":
-      "assets/images/items/warmeküche/gebratenerreis/gebratener_reis_mit_haehnchen.jpg",
+      "assets/images/items/warmekueche/gebratenerreis/gebratener_reis_mit_haehnchen.jpg",
   "254":
-      "assets/images/items/warmeküche/gebratenerreis/gebratener_reis_mit_rindfleisch.jpg",
+      "assets/images/items/warmekueche/gebratenerreis/gebratener_reis_mit_rindfleisch.jpg",
   "255":
-      "assets/images/items/warmeküche/gebratenerreis/gebratener_reis_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/gebratenerreis/gebratener_reis_mit_ente_kross.jpg",
   "256":
-      "assets/images/items/warmeküche/gebratenerreis/gebratener_reis_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/gebratenerreis/gebratener_reis_mit_haehnchen_kross.jpg",
   "257":
-      "assets/images/items/warmeküche/gebratenerreis/gebratener_reis_mit_gross_garnele.jpg",
+      "assets/images/items/warmekueche/gebratenerreis/gebratener_reis_mit_gross_garnele.jpg",
 
   "381":
-      "assets/images/items/warmeküche/gebratengemüse/gebratenes_gemuese_mit_gemuese.jpg",
+      "assets/images/items/warmekueche/gebratengemuse/gebratenes_gemuese_mit_gemuese.jpg",
   "382":
-      "assets/images/items/warmeküche/gebratengemüse/gebratenes_gemuese_mit_tofu.jpg",
+      "assets/images/items/warmekueche/gebratengemuse/gebratenes_gemuese_mit_tofu.jpg",
   "383":
-      "assets/images/items/warmeküche/gebratengemüse/gebratenes_gemuese_mit_haehnchen.jpg",
+      "assets/images/items/warmekueche/gebratengemuse/gebratenes_gemuese_mit_haehnchen.jpg",
   "384":
-      "assets/images/items/warmeküche/gebratengemüse/gebratenes_gemuese_mit_rindfleisch.jpg",
+      "assets/images/items/warmekueche/gebratengemuse/gebratenes_gemuese_mit_rindfleisch.jpg",
   "385":
-      "assets/images/items/warmeküche/gebratengemüse/gebratenes_gemuese_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/gebratengemuse/gebratenes_gemuese_mit_ente_kross.jpg",
   "386":
-      "assets/images/items/warmeküche/gebratengemüse/gebratenes_gemuese_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/gebratengemuse/gebratenes_gemuese_mit_haehnchen_kross.jpg",
   "387":
-      "assets/images/items/warmeküche/gebratengemüse/gebratenes_gemuese_mit_gross_garnele.jpg",
+      "assets/images/items/warmekueche/gebratengemuse/gebratenes_gemuese_mit_gross_garnele.jpg",
   "41":
-      "assets/images/items/warmeküche/yellowcurry/yellow_curry_mit_gemuese.jpg",
-  "42": "assets/images/items/warmeküche/yellowcurry/yellow_curry_mit_tofu.jpg",
+      "assets/images/items/warmekueche/yellowcurry/yellow_curry_mit_gemuese.jpg",
+  "42": "assets/images/items/warmekueche/yellowcurry/yellow_curry_mit_tofu.jpg",
   "43":
-      "assets/images/items/warmeküche/yellowcurry/yellow_curry_mit_haehnchen.jpg",
+      "assets/images/items/warmekueche/yellowcurry/yellow_curry_mit_haehnchen.jpg",
   "44":
-      "assets/images/items/warmeküche/yellowcurry/yellow_curry_mit_rindfleisch.jpg",
+      "assets/images/items/warmekueche/yellowcurry/yellow_curry_mit_rindfleisch.jpg",
   "45":
-      "assets/images/items/warmeküche/yellowcurry/yellow_curry_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/yellowcurry/yellow_curry_mit_ente_kross.jpg",
   "46":
-      "assets/images/items/warmeküche/yellowcurry/yellow_curry_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/yellowcurry/yellow_curry_mit_haehnchen_kross.jpg",
   "47":
-      "assets/images/items/warmeküche/yellowcurry/yellow_curry_mit_gross_garnele.jpg",
+      "assets/images/items/warmekueche/yellowcurry/yellow_curry_mit_gross_garnele.jpg",
   "51":
-      "assets/images/items/warmeküche/mangocutney/mango_chutney_mit_gemuese.jpg",
-  "52": "assets/images/items/warmeküche/mangocutney/mango_chutney_mit_tofu.jpg",
+      "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_gemuese.jpg",
+  "52": "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_tofu.jpg",
   "53":
-      "assets/images/items/warmeküche/mangocutney/mango_chutney_mit_haehnchen.jpg",
+      "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_haehnchen.jpg",
   "54":
-      "assets/images/items/warmeküche/mangocutney/mango_chutney_mit_rindfleisch.jpg",
+      "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_rindfleisch.jpg",
   "55":
-      "assets/images/items/warmeküche/mangocutney/mango_chutney_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_ente_kross.jpg",
   "56":
-      "assets/images/items/warmeküche/mangocutney/mango_chutney_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_haehnchen_kross.jpg",
   "57":
-      "assets/images/items/warmeküche/mangocutney/mango_chutney_mit_gross_garnele.jpg",
+      "assets/images/items/warmekueche/mangocutney/mango_chutney_mit_gross_garnele.jpg",
   "61":
-      "assets/images/items/warmeküche/erdnussgerichte/erdnussgericht_mit_gemuese.jpg",
+      "assets/images/items/warmekueche/erdnussgerichte/erdnussgericht_mit_gemuese.jpg",
   "62":
-      "assets/images/items/warmeküche/erdnussgerichte/erdnussgericht_mit_tofu.jpg",
+      "assets/images/items/warmekueche/erdnussgerichte/erdnussgericht_mit_tofu.jpg",
   "63":
-      "assets/images/items/warmeküche/erdnussgerichte/erdnussgericht_mit_haehnchen.jpg",
+      "assets/images/items/warmekueche/erdnussgerichte/erdnussgericht_mit_haehnchen.jpg",
   "64":
-      "assets/images/items/warmeküche/erdnussgerichte/erdnussgericht_mit_rindfleisch.jpg",
+      "assets/images/items/warmekueche/erdnussgerichte/erdnussgericht_mit_rindfleisch.jpg",
   "65":
-      "assets/images/items/warmeküche/erdnussgerichte/erdnussgericht_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/erdnussgerichte/erdnussgericht_mit_ente_kross.jpg",
   "66":
-      "assets/images/items/warmeküche/erdnussgerichte/erdnussgericht_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/erdnussgerichte/erdnussgericht_mit_haehnchen_kross.jpg",
   "67":
-      "assets/images/items/warmeküche/erdnussgerichte/erdnussgericht_mit_gross_garnele.jpg",
-        "71": "assets/images/items/warmeküche/chopsuey/chop_suey_mit_gemuese.jpg",
-  "72": "assets/images/items/warmeküche/chopsuey/chop_suey_mit_tofu.jpg",
-  "73": "assets/images/items/warmeküche/chopsuey/chop_suey_mit_haehnchen.jpg",
-  "74": "assets/images/items/warmeküche/chopsuey/chop_suey_mit_rindfleisch.jpg",
-  "75": "assets/images/items/warmeküche/chopsuey/chop_suey_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/erdnussgerichte/erdnussgericht_mit_gross_garnele.jpg",
+  "71": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_gemuese.jpg",
+  "72": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_tofu.jpg",
+  "73": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_haehnchen.jpg",
+  "74": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_rindfleisch.jpg",
+  "75": "assets/images/items/warmekueche/chopsuey/chop_suey_mit_ente_kross.jpg",
   "76":
-      "assets/images/items/warmeküche/chopsuey/chop_suey_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/chopsuey/chop_suey_mit_haehnchen_kross.jpg",
   "77":
-      "assets/images/items/warmeküche/chopsuey/chop_suey_mit_gross_garnele.jpg",
-       "81": "assets/images/items/warmeküche/redcurry/red_curry_mit_gemuese.jpg",
-  "82": "assets/images/items/warmeküche/redcurry/red_curry_mit_tofu.jpg",
-  "83": "assets/images/items/warmeküche/redcurry/red_curry_mit_haehnchen.jpg",
-  "84": "assets/images/items/warmeküche/redcurry/red_curry_mit_rindfleisch.jpg",
-  "85": "assets/images/items/warmeküche/redcurry/red_curry_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/chopsuey/chop_suey_mit_gross_garnele.jpg",
+  "81": "assets/images/items/warmekueche/redcurry/red_curry_mit_gemuese.jpg",
+  "82": "assets/images/items/warmekueche/redcurry/red_curry_mit_tofu.jpg",
+  "83": "assets/images/items/warmekueche/redcurry/red_curry_mit_haehnchen.jpg",
+  "84": "assets/images/items/warmekueche/redcurry/red_curry_mit_rindfleisch.jpg",
+  "85": "assets/images/items/warmekueche/redcurry/red_curry_mit_ente_kross.jpg",
   "86":
-      "assets/images/items/warmeküche/redcurry/red_curry_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/redcurry/red_curry_mit_haehnchen_kross.jpg",
   "87":
-      "assets/images/items/warmeküche/redcurry/red_curry_mit_gross_garnele.jpg",
-      "951":
-      "assets/images/items/warmeküche/suesssauersauce/suess_sauer_sauce_mit_gemuese.jpg",
+      "assets/images/items/warmekueche/redcurry/red_curry_mit_gross_garnele.jpg",
+  "951":
+      "assets/images/items/warmekueche/suesssauersauce/suess_sauer_sauce_mit_gemuese.jpg",
   "952":
-      "assets/images/items/warmeküche/suesssauersauce/suess_sauer_sauce_mit_tofu.jpg",
+      "assets/images/items/warmekueche/suesssauersauce/suess_sauer_sauce_mit_tofu.jpg",
   "953":
-      "assets/images/items/warmeküche/suesssauersauce/suess_sauer_sauce_mit_haehnchen.jpg",
+      "assets/images/items/warmekueche/suesssauersauce/suess_sauer_sauce_mit_haehnchen.jpg",
   "954":
-      "assets/images/items/warmeküche/suesssauersauce/suess_sauer_sauce_mit_rindfleisch.jpg",
+      "assets/images/items/warmekueche/suesssauersauce/suess_sauer_sauce_mit_rindfleisch.jpg",
   "955":
-      "assets/images/items/warmeküche/suesssauersauce/suess_sauer_sauce_mit_ente_kross.jpg",
+      "assets/images/items/warmekueche/suesssauersauce/suess_sauer_sauce_mit_ente_kross.jpg",
   "956":
-      "assets/images/items/warmeküche/suesssauersauce/suess_sauer_sauce_mit_haehnchen_kross.jpg",
+      "assets/images/items/warmekueche/suesssauersauce/suess_sauer_sauce_mit_haehnchen_kross.jpg",
   "957":
-      "assets/images/items/warmeküche/suesssauersauce/suess_sauer_sauce_mit_gross_garnele.jpg",
+      "assets/images/items/warmekueche/suesssauersauce/suess_sauer_sauce_mit_gross_garnele.jpg",
 };

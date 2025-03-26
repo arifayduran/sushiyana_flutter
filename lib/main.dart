@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
+import 'package:sushiyana_flutter/application/database_service.dart';
 import 'package:sushiyana_flutter/application/scroll_state_provider.dart';
 import 'package:sushiyana_flutter/config/scroll_configuration_behavior.dart';
 // import 'package:sushiyana_flutter/presentation/d__splash_screen.dart';
@@ -11,8 +12,9 @@ void main() async {
 
   String subdomain = getSubdomain(BranchProvider());
 
-  // DatabaseService dbService = DatabaseService();
-  // await dbService.fetchData("extras");
+  DatabaseService dbService = DatabaseService();
+  await dbService.fetchAndStoreItems();
+
 
   runApp(
     MultiProvider(
