@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class BranchProvider extends ChangeNotifier {
+  final _storage = FlutterSecureStorage();
+
   String get currentBranch => _currentBranch;
   Map<String, dynamic> get branchData => _branchData;
   Map<String, Map<String, String>> get branches => _branches;
@@ -96,6 +99,19 @@ class BranchProvider extends ChangeNotifier {
     },
   };
 
+  BranchProvider() {
+    _initializeBranch();
+  }
+
+  Future<void> _initializeBranch() async {
+    String? savedBranch = await _storage.read(key: 'currentBranch');
+    if (savedBranch != null && _branches.containsKey(savedBranch)) {
+      setBranch(savedBranch);
+    } else {
+      setBranch("neukoelln");
+    }
+  }
+
   void setBranch(String subdomain) {
     _currentBranch = subdomain;
     _branchData["name"] =
@@ -106,6 +122,8 @@ class BranchProvider extends ChangeNotifier {
         _branches["neukoelln"]!["contact"])!;
     _branchData["email"] =
         (_branches[subdomain]?["email"] ?? _branches["neukoelln"]!["email"])!;
+
+    _storage.write(key: 'currentBranch', value: subdomain);
     notifyListeners();
   }
 }
