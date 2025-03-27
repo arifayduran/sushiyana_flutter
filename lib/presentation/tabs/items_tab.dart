@@ -291,7 +291,7 @@ class _ItemsTabState extends State<ItemsTab> {
                           children: [
                             Divider(
                               color: Colors.white,
-                              thickness: 0.3,
+                              thickness: 0.5,
                               height: 12,
                             ),
                             Positioned(
@@ -327,49 +327,66 @@ class EmptyTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomeScreen.previousIndex = 0;
-    return Container(
-      color: tabBackground,
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: LottieAnimationDuration(
-                  duration: Duration(seconds: 3),
-                  path: "assets/animations/no_selection_sushi.json"),
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: LottieAnimationDuration(
+                duration: Duration(seconds: 3),
+                path: "assets/animations/no_selection_sushi.json"),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Keine Kategorie ausgewählt.",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: "Julee",
+                      fontSize: 18,
+                      height: 0),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Divider(
+                      color: Colors.white,
+                      thickness: 0.5,
+                      height: 12,
+                      endIndent: 25,
+                      indent: 25,
+                    ),
+                    Positioned(
+                      top: 0,
+                      child: CircleAvatar(
+                        radius: 6,
+                        backgroundColor: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: onBack,
+                  style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(yanaColor),
+                      elevation: WidgetStateProperty.all(5),
+                      foregroundColor: WidgetStateProperty.all(Colors.white),
+                      shadowColor: WidgetStateProperty.all(yanaColor)),
+                  child: const Icon(Icons.arrow_back_ios_new),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Keine Kategorie ausgewählt.",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Julee",
-                        fontSize: 18,
-                        height: 0),
-                  ),
-                  const Divider(
-                    color: Colors.white,
-                    height: 40,
-                    thickness: 0.2,
-                  ),
-                  ElevatedButton(
-                    onPressed: onBack,
-                    style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(yanaColor),
-                        elevation: WidgetStateProperty.all(5),
-                        foregroundColor: WidgetStateProperty.all(Colors.white),
-                        shadowColor: WidgetStateProperty.all(yanaColor)),
-                    child: const Icon(Icons.arrow_back_ios_new),
-                  ),
-                ],
-              ),
-            )
-          ]),
-    );
+          )
+        ]);
   }
 }

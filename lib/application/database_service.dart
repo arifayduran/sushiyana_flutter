@@ -9,7 +9,7 @@ class DatabaseService {
   final String baseUrl = 'https://flutter.sushiyanaspeisekarte.com';
 
   Future<List<dynamic>> fetchData(String table) async {
-    try {
+
       final response =
           await http.get(Uri.parse('$baseUrl/api.php?table=$table'));
 
@@ -33,12 +33,9 @@ class DatabaseService {
           throw 'Fehler beim Parsen der JSON-Daten: $e';
         }
       } else {
-        throw 'Fehler beim Laden der Daten: ${response.body} ${response.statusCode}';
+        throw '${response.body} ${response.statusCode}';
       }
-    } catch (e) {
-      // Handle any network or connection errors
-      throw 'Fehler beim Laden der Daten: $e';
-    }
+    
   }
 
   Future<void> fetchAndStoreItems() async {

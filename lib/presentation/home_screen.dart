@@ -1,9 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
+import 'package:sushiyana_flutter/application/fetch_data_with_retry.dart';
 import 'package:sushiyana_flutter/application/scroll_state_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
+import 'package:sushiyana_flutter/data/is_data_fetched.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
+import 'package:sushiyana_flutter/presentation/animated_text_widget.dart';
 import 'package:sushiyana_flutter/presentation/footer.dart';
 import 'package:sushiyana_flutter/presentation/lottie_animation_duration.dart';
 import 'package:sushiyana_flutter/presentation/tabs/items_tab.dart';
@@ -22,61 +27,27 @@ class HomeScreen extends StatefulWidget {
 
 //  isBotScrollButtonEnabled = true; in maintabs
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   final PageController _pageController = PageController();
   String? _selectedHeroTag;
 
-  double innerOffset = 0;
+  double _innerOffset = 0;
 
-  String dynamicLogo = "assets/images/logo2.png";
-  String appBarTitle = "Willkommen in Sushi Yana!";
+  late AnimationController _pulsingController;
+
+  String _dynamicLogo = "assets/images/logo2.png";
+  String _appBarTitle = "Willkommen in Sushi Yana!";
 
   // bool isTopScrollButtonEnabled = false;
-  bool isTopScrollButtonLocked = false;
+  bool _isTopScrollButtonLocked = false;
 
   // bool isBotScrollButtonEnabled = true;
-  bool isBotScrollButtonLocked = false;
+  bool _isBotScrollButtonLocked = false;
 
-  @override
-  void initState() {
-    super.initState();
-
-    _tabController = TabController(length: _tabs.length, vsync: this);
-    _tabController.addListener(() {
-      if (mounted) {
-        setState(() {
-          if (_tabController.index == 0) {
-            dynamicLogo = "assets/images/logo2.png";
-          } else {
-            dynamicLogo = getHeroImagePath(_selectedHeroTag ?? "");
-          }
-        });
-      }
-
-      if (_tabController.indexIsChanging) {
-        _pageController.animateToPage(
-          _tabController.index,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        _scrollToTop(true, true);
-        innerController.addListener(
-          () {
-            if (mounted) {
-              _updateScrollState();
-            }
-          },
-        );
-      },
-    );
-  }
+  bool _isControllerInitialized = false;
+  bool _isFetchingData = true;
+  // bool _isFirstAnimationDone = false;
 
   ScrollController get outerController {
     if (scrollControlerKey.currentState == null) {
@@ -92,23 +63,76 @@ class _HomeScreenState extends State<HomeScreen>
     return scrollControlerKey.currentState!.innerController;
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController.addListener(() {
+      if (mounted) {
+        setState(() {
+          if (_tabController.index == 0) {
+            _dynamicLogo = "assets/images/logo2.png";
+          } else {
+            _dynamicLogo = getHeroImagePath(_selectedHeroTag ?? "");
+          }
+        });
+      }
+
+      if (_tabController.indexIsChanging) {
+        _pageController.animateToPage(
+          _tabController.index,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+
+    _pulsingController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000), // Pulsfrequenz
+      lowerBound: 0.9,
+      upperBound: 1.1,
+    )..repeat(reverse: true);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      setState(() {
+        _isFetchingData = true;
+      });
+      await fetchDataWithRetry(context);
+      setState(() {
+        _isFetchingData = false;
+      });
+      // _scrollToTop(true, true);
+
+      _isControllerInitialized = true;
+
+      innerController.addListener(() {
+        if (mounted) {
+          _updateScrollState();
+        }
+      });
+      // _isFirstAnimationDone = true;
+    });
+  }
+
   void _updateScrollState() {
     final scrollStateProvider =
         Provider.of<ScrollStateProvider>(context, listen: false);
 
     setState(() {
-      innerOffset = innerController.positions.last.pixels;
+      _innerOffset = innerController.positions.last.pixels;
     });
 
-    if (!isTopScrollButtonLocked) {
-      if (innerOffset > 0) {
+    if (!_isTopScrollButtonLocked) {
+      if (_innerOffset > 0) {
         scrollStateProvider.setTopScrollButtonEnabled(true);
       } else {
         scrollStateProvider.setTopScrollButtonEnabled(false);
       }
     }
-    if (!isBotScrollButtonLocked) {
-      if (innerOffset <= innerController.position.maxScrollExtent - 50) {
+    if (!_isBotScrollButtonLocked) {
+      if (_innerOffset <= innerController.position.maxScrollExtent - 50) {
         scrollStateProvider.setBotScrollButtonEnabled(true);
       } else {
         scrollStateProvider.setBotScrollButtonEnabled(false);
@@ -230,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     setState(() {
       MainTab.mainTabMode = 0;
-      dynamicLogo = "assets/images/logo2.png";
+      _dynamicLogo = "assets/images/logo2.png";
       Future.delayed(Duration(milliseconds: 500), () {
         setState(() {
           _selectedHeroTag = null;
@@ -278,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     HomeScreen.previousIndex = 0;
     setState(() {
-      dynamicLogo = "assets/images/logo2.png";
+      _dynamicLogo = "assets/images/logo2.png";
     });
     _pageController.animateToPage(
       0,
@@ -307,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     _tabController.dispose();
     _pageController.dispose();
-
+    _pulsingController.dispose();
     super.dispose();
   }
 
@@ -319,13 +343,13 @@ class _HomeScreenState extends State<HomeScreen>
     double logicalWidth = MediaQuery.of(context).size.width;
 
     if (_tabController.index == 0) {
-      appBarTitle =
+      _appBarTitle =
           "Willkommen in Sushi Yana ${branchProvider.branchData["name"]}!";
     } else if (_tabController.index == 1 &&
         (_selectedHeroTag != null && _selectedHeroTag != "null")) {
-      appBarTitle = "$_selectedHeroTag";
+      _appBarTitle = "$_selectedHeroTag";
     } else {
-      appBarTitle =
+      _appBarTitle =
           "Willkommen in Sushi Yana ${branchProvider.branchData["name"]}!";
     }
 
@@ -367,19 +391,53 @@ class _HomeScreenState extends State<HomeScreen>
                   titlePadding: const EdgeInsets.all(3),
                   centerTitle: true,
                   collapseMode: CollapseMode.parallax,
-                  title: Text(
-                    appBarTitle,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Julee",
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w100),
-                  ),
+                  title: AnimatedTextWidget(
+                      text: _appBarTitle,
+                      initColor: Colors.white,
+                      hoverColor: Colors.white,
+                      minSize: 20,
+                      midSize: 15,
+                      maxSize: 12,
+                      fontFamily: "Julee",
+                      enableFirstAnimation: true, // !_isFirstAnimationDone,
+                      fontWeight: FontWeight.w100),
+
+                  //  Text(
+                  //   _appBarTitle,
+                  //   style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontFamily: "Julee",
+                  //       fontSize: 11.5,
+                  //       fontWeight: FontWeight.w100),
+                  // ),
                   background: Align(
                     alignment: Alignment.topCenter,
-                    child: Image.asset(
-                      dynamicLogo,
-                      cacheHeight: 130,
+                    child: AnimatedSwitcher(
+                      duration:
+                          const Duration(milliseconds: 600), // Sanfter Wechsel
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child:
+                              ScaleTransition(scale: animation, child: child),
+                        );
+                      },
+                      child: AnimatedBuilder(
+                        animation: _pulsingController,
+                        builder: (context, child) {
+                          return Transform.scale(
+                            scale: _pulsingController
+                                .value, // Endlose Puls-Animation
+                            child: child,
+                          );
+                        },
+                        child: Image.asset(
+                          _dynamicLogo,
+                          key: ValueKey<String>(
+                              _dynamicLogo), // Logo-Wechsel auslösen
+                          cacheHeight: 130,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -393,33 +451,42 @@ class _HomeScreenState extends State<HomeScreen>
                     indicatorWeight: 6,
                     labelColor: indicatorColor,
                     dividerColor: indicatorColor,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: logicalWidth > 650 ? logicalWidth / 8 : 0),
                     unselectedLabelColor: unselectedLabelColor,
                     tabs: _tabs,
                     onTap: (value) {
-                      if (value == 0 && HomeScreen.previousIndex == 1) {
-                        _scrollToTop(true, false);
-                      }
-                      if (value == 1 && HomeScreen.previousIndex == 0) {
-                        _scrollToTop(true, false);
-                      }
+                      if (!isDataFetched ||
+                          _isFetchingData ||
+                          !_isControllerInitialized) {
+                        // Prevent tab bar interaction
+                        _tabController.animateTo(0);
+                      } else {
+                        if (value == 0 && HomeScreen.previousIndex == 1) {
+                          _scrollToTop(true, false);
+                        }
+                        if (value == 1 && HomeScreen.previousIndex == 0) {
+                          _scrollToTop(true, false);
+                        }
 
-                      if (value == 0 && HomeScreen.previousIndex == 0) {
-                        // _resetToHome(true);
+                        if (value == 0 && HomeScreen.previousIndex == 0) {
+                          // _resetToHome(true);
 
-                        if (MainTab.mainTabMode == 1 ||
-                            MainTab.mainTabMode == 2) {
-                          MainTab.mainTabMode = 0;
-                          _scrollToTop(true, true);
-                        } else {
+                          if (MainTab.mainTabMode == 1 ||
+                              MainTab.mainTabMode == 2) {
+                            MainTab.mainTabMode = 0;
+                            _scrollToTop(true, true);
+                          } else {
+                            _scrollToTop(true, true);
+                          }
+                        }
+
+                        if (value == 1 && HomeScreen.previousIndex == 1) {
                           _scrollToTop(true, true);
                         }
-                      }
 
-                      if (value == 1 && HomeScreen.previousIndex == 1) {
-                        _scrollToTop(true, true);
+                        HomeScreen.previousIndex = value;
                       }
-
-                      HomeScreen.previousIndex = value;
                     },
                   ),
                   _tabController.index,
@@ -435,21 +502,148 @@ class _HomeScreenState extends State<HomeScreen>
                 PageView(
                   controller: _pageController,
                   onPageChanged: (index) {
-                    _tabController.animateTo(index);
-
-                    if (index == 0) {
-                      _onBack();
+                    if (!isDataFetched ||
+                        _isFetchingData ||
+                        !_isControllerInitialized) {
+                      // Prevent swiping to other tabs
+                      _pageController.jumpToPage(0);
                     } else {
-                      _onItemTapped(_selectedHeroTag ?? "null");
-                    }
+                      _tabController.animateTo(index);
 
-                    _scrollToTop(true, false);
-                    scrollStateProvider.setBotScrollButtonEnabled(true);
+                      if (index == 0) {
+                        _onBack();
+                      } else {
+                        _onItemTapped(_selectedHeroTag ?? "null");
+                      }
+
+                      _scrollToTop(true, false);
+                      scrollStateProvider.setBotScrollButtonEnabled(true);
+                    }
                   },
+                  physics: (!isDataFetched ||
+                          _isFetchingData ||
+                          !_isControllerInitialized)
+                      ? const NeverScrollableScrollPhysics()
+                      : null,
                   children: [
-                    MainTab(
-                      onItemTapped: _onItemTapped,
-                      scrollToTopOnBack: () => _scrollToTop(true, true),
+                    Stack(
+                      children: [
+                        MainTab(
+                          onItemTapped: _onItemTapped,
+                          scrollToTopOnBack: () => _scrollToTop(true, true),
+                        ),
+                        if (!isDataFetched || _isFetchingData)
+                          BackdropFilter(
+                            filter:
+                                ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                            child: Container(
+                              color: Colors.black.withValues(
+                                  alpha: !_isFetchingData && !isDataFetched
+                                      ? 0.6
+                                      : 0.2),
+                            ),
+                          ),
+                        if (_isFetchingData)
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(
+                                  height: 50,
+                                ),
+                                Text(
+                                  "Daten werden geladen...",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: "Julee",
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (!_isFetchingData && !isDataFetched)
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Icon(
+                                      Icons.error_outline_outlined,
+                                      color: yanaColor,
+                                      size: 50,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "Daten konnten nicht geladen werden.",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: "Julee",
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                const Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Divider(
+                                      color: Colors.white,
+                                      thickness: 0.5,
+                                      height: 12,
+                                      endIndent: 25,
+                                      indent: 25,
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      child: CircleAvatar(
+                                        radius: 6,
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      _isFetchingData = true;
+                                    });
+
+                                    await fetchDataWithRetry(context);
+
+                                    setState(() {
+                                      _isFetchingData = false;
+                                    });
+                                  },
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          WidgetStateProperty.all(yanaColor),
+                                      elevation: WidgetStateProperty.all(5),
+                                      foregroundColor:
+                                          WidgetStateProperty.all(Colors.white),
+                                      shadowColor:
+                                          WidgetStateProperty.all(yanaColor)),
+                                  child: const Text("Wiederholen"),
+                                ),
+                                const SizedBox(
+                                  height: 100,
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
                     ),
                     _selectedHeroTag == null || _selectedHeroTag == "null"
                         ? EmptyTab(
@@ -465,7 +659,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ? _tabController.index == 1 &&
                             (_selectedHeroTag == null ||
                                 _selectedHeroTag == "null") &&
-                            innerOffset <
+                            _innerOffset <
                                 innerController.position.maxScrollExtent
                         ? SizedBox()
                         : Positioned(
@@ -480,14 +674,14 @@ class _HomeScreenState extends State<HomeScreen>
                                 setState(() {
                                   scrollStateProvider
                                       .setBotScrollButtonEnabled(false);
-                                  isBotScrollButtonLocked = true;
+                                  _isBotScrollButtonLocked = true;
                                 });
 
                                 Future.delayed(Duration(milliseconds: 2000),
                                     () {
                                   if (mounted) {
                                     setState(() {
-                                      isBotScrollButtonLocked = false;
+                                      _isBotScrollButtonLocked = false;
                                     });
                                   }
                                 });
@@ -517,13 +711,13 @@ class _HomeScreenState extends State<HomeScreen>
                                 scrollStateProvider
                                     .setTopScrollButtonEnabled(false);
                                 setState(() {
-                                  isTopScrollButtonLocked = true;
+                                  _isTopScrollButtonLocked = true;
                                 });
 
                                 Future.delayed(Duration(milliseconds: 500), () {
                                   if (mounted) {
                                     setState(() {
-                                      isTopScrollButtonLocked = false;
+                                      _isTopScrollButtonLocked = false;
                                     });
                                   }
                                 });

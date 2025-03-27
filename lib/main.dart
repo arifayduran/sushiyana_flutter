@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
-import 'package:sushiyana_flutter/application/database_service.dart';
 import 'package:sushiyana_flutter/application/scroll_state_provider.dart';
 import 'package:sushiyana_flutter/config/scroll_configuration_behavior.dart';
 // import 'package:sushiyana_flutter/presentation/d__splash_screen.dart';
@@ -10,14 +9,7 @@ import 'package:sushiyana_flutter/presentation/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  String subdomain = getSubdomain(BranchProvider());
-
-  DatabaseService dbService = DatabaseService();
- try {
-    await dbService.fetchAndStoreItems();
-  } catch (e) {
-    debugPrint("Error fetching and storing items: $e");
-  }
+  String subdomain = _getSubdomain(BranchProvider());
 
   runApp(
     MultiProvider(
@@ -31,7 +23,7 @@ void main() async {
   );
 }
 
-String getSubdomain(dynamic branchProvider) {
+String _getSubdomain(dynamic branchProvider) {
   String host = Uri.base.host;
   List<String> parts = host.split(".");
 
@@ -46,7 +38,7 @@ String getSubdomain(dynamic branchProvider) {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
