@@ -63,40 +63,40 @@ flutter:
     - assets/animations/
     - assets/images/
     - assets/fonts/
-    - assets/images/startseite/
-    - assets/images/maincategory_sushis/
-    - assets/images/maincategory_warmekueche/
-    - assets/images/items/
-    - assets/images/items/bowls/
-    - assets/images/items/extras/
-    - assets/images/items/fingerfood_desserts/
-    - assets/images/items/getraenke/
-    - assets/images/items/gyoza/
-    - assets/images/items/salate/
-    - assets/images/items/sommerrollen/
-    - assets/images/items/suppen/
-    - assets/images/items/sushis/
-    - assets/images/items/sushis/insideoout/
-    - assets/images/items/sushis/makis/
-    - assets/images/items/sushis/menus/
-    - assets/images/items/sushis/miniyanarolls/
-    - assets/images/items/sushis/nigiris/
-    - assets/images/items/sushis/sashimis/
-    - assets/images/items/sushis/specialroll/
-    - assets/images/items/sushis/temakis/
-    - assets/images/items/sushis/yanarolls/
-    - assets/images/items/warmekueche/
-    - assets/images/items/warmekueche/chopsuey/
-    - assets/images/items/warmekueche/erdnussgerichte/
-    - assets/images/items/warmekueche/extrasWarm/
-    - assets/images/items/warmekueche/gebratenenudel/
-    - assets/images/items/warmekueche/gebratenerreis/
-    - assets/images/items/warmekueche/gebratengemuse/
-    - assets/images/items/warmekueche/mangocutney/
-    - assets/images/items/warmekueche/redcurry/
-    - assets/images/items/warmekueche/suesssauersauce/
-    - assets/images/items/warmekueche/yellowcurry/
-    - assets/images/items/warmgetraenke/
+    # - assets/images/startseite/
+    # - assets/images/maincategory_sushis/
+    # - assets/images/maincategory_warmekueche/
+    # - assets/images/items/
+    # - assets/images/items/bowls/
+    # - assets/images/items/extras/
+    # - assets/images/items/fingerfood_desserts/
+    # - assets/images/items/getraenke/
+    # - assets/images/items/gyoza/
+    # - assets/images/items/salate/
+    # - assets/images/items/sommerrollen/
+    # - assets/images/items/suppen/
+    # - assets/images/items/warmgetraenke/
+    # - assets/images/items/sushis/
+    # - assets/images/items/sushis/insideoout/
+    # - assets/images/items/sushis/makis/
+    # - assets/images/items/sushis/menus/
+    # - assets/images/items/sushis/miniyanarolls/
+    # - assets/images/items/sushis/nigiris/
+    # - assets/images/items/sushis/sashimis/
+    # - assets/images/items/sushis/specialroll/
+    # - assets/images/items/sushis/temakis/
+    # - assets/images/items/sushis/yanarolls/
+    # - assets/images/items/warmekueche/
+    # - assets/images/items/warmekueche/chopsuey/
+    # - assets/images/items/warmekueche/erdnussgerichte/
+    # - assets/images/items/warmekueche/extrasWarm/
+    # - assets/images/items/warmekueche/gebratenenudel/
+    # - assets/images/items/warmekueche/gebratenerreis/
+    # - assets/images/items/warmekueche/gebratengemuse/
+    # - assets/images/items/warmekueche/mangocutney/
+    # - assets/images/items/warmekueche/redcurry/
+    # - assets/images/items/warmekueche/suesssauersauce/
+    # - assets/images/items/warmekueche/yellowcurry/
     - assets/icons/
     - .env
 

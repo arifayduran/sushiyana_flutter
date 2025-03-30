@@ -22,6 +22,7 @@ class Item {
   bool weissensee;
   bool zehlendorf;
   bool ffo;
+  String imagePath;
 
   Item({
     required this.id,
@@ -29,7 +30,7 @@ class Item {
     required this.artikelname,
     required this.preis,
     required this.beschreibung,
-   required this.allergeneZusatz,
+    required this.allergeneZusatz,
     required this.pikant,
     required this.vegetarisch,
     required this.vegan,
@@ -47,6 +48,7 @@ class Item {
     required this.weissensee,
     required this.zehlendorf,
     required this.ffo,
+    required this.imagePath,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -80,6 +82,7 @@ class Item {
       weissensee: json['weissensee'] == "1",
       zehlendorf: json['zehlendorf'] == "1",
       ffo: json['FFO'] == "1",
+      imagePath: json['image_path'].toString(),
     );
   }
 }

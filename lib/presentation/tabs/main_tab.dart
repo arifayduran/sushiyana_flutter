@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
+import 'package:sushiyana_flutter/application/get_image_url_cdn.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
 import 'package:sushiyana_flutter/presentation/animated_tab_switcher.dart';
@@ -131,7 +132,7 @@ class _MainTabState extends State<MainTab> {
                                             ),
                                             child: Center(
                                               child: Text(
-                                                "Zurück",
+                                                "Zur Übersicht",
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontFamily: "Julee",
@@ -198,10 +199,34 @@ class _MainTabState extends State<MainTab> {
                                           ),
                                           child: Hero(
                                             tag: title,
-                                            child: Image.asset(
-                                              imagePath,
+                                            child: Image.network(
+                                              getImageUrlCdn(imagePath),
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Image.asset(
+                                                    'assets/images/noimage_sushiyana.jpg');
+                                              },
                                               alignment: Alignment.center,
                                               fit: BoxFit.cover,
+                                              loadingBuilder: (context, child,
+                                                      loadingProgress) =>
+                                                  loadingProgress == null
+                                                      ? child
+                                                      : Center(
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            color: yanaColor,
+                                                            value: loadingProgress
+                                                                        .expectedTotalBytes !=
+                                                                    null
+                                                                ? loadingProgress
+                                                                        .cumulativeBytesLoaded /
+                                                                    (loadingProgress
+                                                                            .expectedTotalBytes ??
+                                                                        1)
+                                                                : null,
+                                                          ),
+                                                        ),
                                             ),
                                           ),
                                         ),
@@ -335,7 +360,7 @@ class _MainTabState extends State<MainTab> {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          "Zurück",
+                                          "Zur Übersicht",
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontFamily: "Julee",
@@ -402,10 +427,34 @@ class _MainTabState extends State<MainTab> {
                                     ),
                                     child: Hero(
                                       tag: title,
-                                      child: Image.asset(
-                                        imagePath,
+                                      child: Image.network(
+                                        getImageUrlCdn(imagePath),
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Image.asset(
+                                              'assets/images/noimage_sushiyana.jpg');
+                                        },
                                         alignment: Alignment.center,
                                         fit: BoxFit.cover,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) =>
+                                                loadingProgress == null
+                                                    ? child
+                                                    : Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: yanaColor,
+                                                          value: loadingProgress
+                                                                      .expectedTotalBytes !=
+                                                                  null
+                                                              ? loadingProgress
+                                                                      .cumulativeBytesLoaded /
+                                                                  (loadingProgress
+                                                                          .expectedTotalBytes ??
+                                                                      1)
+                                                              : null,
+                                                        ),
+                                                      ),
                                       ),
                                     ),
                                   ),
@@ -499,9 +548,31 @@ class _MainTabState extends State<MainTab> {
                               ),
                               child: Hero(
                                 tag: title,
-                                child: Image.asset(
-                                  imagePath,
+                                child: Image.network(
+                                  getImageUrlCdn(imagePath),
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.asset(
+                                        'assets/images/noimage_sushiyana.jpg');
+                                  },
                                   alignment: Alignment.center,
+                                  loadingBuilder: (context, child,
+                                          loadingProgress) =>
+                                      loadingProgress == null
+                                          ? child
+                                          : Center(
+                                              child: CircularProgressIndicator(
+                                                color: yanaColor,
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        (loadingProgress
+                                                                .expectedTotalBytes ??
+                                                            1)
+                                                    : null,
+                                              ),
+                                            ),
                                 ),
                               ),
                             ),

@@ -6,6 +6,7 @@ import 'package:sushiyana_flutter/data/is_data_fetched.dart';
 
 Future<void> fetchDataWithRetry(BuildContext context,
     {int retryCount = 3}) async {
+  await Future.delayed(Duration(seconds: 1)); // Warte 1 Sekunde am Anfang
   DatabaseService dbService = DatabaseService();
   Exception? lastError;
   bool success = false;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/application/fetch_data_with_retry.dart';
+import 'package:sushiyana_flutter/application/get_image_url_cdn.dart';
 import 'package:sushiyana_flutter/application/scroll_state_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/is_data_fetched.dart';
@@ -91,8 +92,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _pulsingController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000), // Pulsfrequenz
-      lowerBound: 0.9,
-      upperBound: 1.1,
+      lowerBound: 0.8,
+      upperBound: 1,
     )..repeat(reverse: true);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -391,16 +392,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   titlePadding: const EdgeInsets.all(3),
                   centerTitle: true,
                   collapseMode: CollapseMode.parallax,
-                  title: AnimatedTextWidget(
-                      text: _appBarTitle,
-                      initColor: Colors.white,
-                      hoverColor: Colors.white,
-                      minSize: 20,
-                      midSize: 15,
-                      maxSize: 12,
-                      fontFamily: "Julee",
-                      enableFirstAnimation: true, // !_isFirstAnimationDone,
-                      fontWeight: FontWeight.w100),
+                  title: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    child: AnimatedTextWidget(
+                        text: _appBarTitle,
+                        initColor: Colors.white,
+                        hoverColor: Colors.white,
+                        minSize: 20,
+                        midSize: 15,
+                        maxSize: 12,
+                        fontFamily: "Julee",
+                        enableFirstAnimation: true, // !_isFirstAnimationDone,
+                        fontWeight: FontWeight.w100),
+                  ),
 
                   //  Text(
                   //   _appBarTitle,
@@ -431,12 +435,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             child: child,
                           );
                         },
-                        child: Image.asset(
-                          _dynamicLogo,
-                          key: ValueKey<String>(
-                              _dynamicLogo), // Logo-Wechsel auslösen
-                          cacheHeight: 130,
-                        ),
+                        child: _dynamicLogo == "assets/images/logo2.png"
+                            ? Image.asset(
+                                _dynamicLogo,
+                                key: ValueKey<String>(_dynamicLogo),
+                                cacheHeight: 130,
+                              )
+                            : Image.network(
+                                getImageUrlCdn(_dynamicLogo),
+                                key: ValueKey<String>(
+                                    _dynamicLogo), // Logo-Wechsel auslösen
+                                cacheHeight: 130,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                      'assets/images/noimage_sushiyana.jpg');
+                                },
+                                loadingBuilder: (context, child,
+                                        loadingProgress) =>
+                                    loadingProgress == null
+                                        ? child
+                                        : Center(
+                                            child: CircularProgressIndicator(
+                                              color: yanaColor,
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      (loadingProgress
+                                                              .expectedTotalBytes ??
+                                                          1)
+                                                  : null,
+                                            ),
+                                          ),
+                              ),
                       ),
                     ),
                   ),
@@ -451,8 +483,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     indicatorWeight: 6,
                     labelColor: indicatorColor,
                     dividerColor: indicatorColor,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: logicalWidth > 650 ? logicalWidth / 8 : 0),
                     unselectedLabelColor: unselectedLabelColor,
                     tabs: _tabs,
                     onTap: (value) {
@@ -652,6 +682,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         : ItemsTab(
                             heroTag: _selectedHeroTag!,
                             onBack: _onBack,
+                            outerController: outerController,
+                            // innerController: innerController,
                           ),
                   ],
                 ),
@@ -701,7 +733,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             _selectedHeroTag == "null"
                         ? SizedBox()
                         : Positioned(
-                            top: 80,
+                            top: _tabController.index == 1 ? 140 : 80,
                             right: logicalWidth > 650
                                 ? logicalWidth / 2 - 45 - 300
                                 : -18,
@@ -739,8 +771,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ? _selectedHeroTag == null || _selectedHeroTag == "null"
                         ? SizedBox()
                         : Positioned(
-                            bottom: 10,
-                            // MediaQuery.of(context).size.height / 2 - 100,
+                            bottom: 100,
+                            // bottom: 10,
+                            // bottom: MediaQuery.of(context).size.height / 5,
 
                             left: logicalWidth > 650
                                 ? logicalWidth / 2 - 45 - 300

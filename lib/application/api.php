@@ -66,9 +66,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             http_response_code(400); // Bad Request
             echo json_encode(array("error" => "Tabelle '$table' existiert nicht."));
         }
+    } elseif (isset($_GET['all'])) { // Neue Funktionalität für alle Tabellen
+        $tablesResult = $conn->query("SHOW TABLES");
+        $allData = array();
+
+        while ($tableRow = $tablesResult->fetch_array()) {
+            $tableName = $tableRow[0];
+            $tableDataResult = $conn->query("SELECT * FROM `$tableName`");
+            $tableData = array();
+
+            while ($row = $tableDataResult->fetch_assoc()) {
+                $tableData[] = $row;
+            }
+
+            $allData[$tableName] = $tableData;
+        }
+
+        echo json_encode($allData);
     } else {
         http_response_code(400); // Bad Request
-        echo json_encode(array("error" => "Parameter 'table' fehlt."));
+        echo json_encode(array("error" => "Parameter 'table' oder 'all' fehlt."));
     }
 } else {
     http_response_code(405); // Method Not Allowed
