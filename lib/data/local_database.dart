@@ -122,39 +122,39 @@ Map<String, dynamic> localDatabase = {
       "Yellow Curry": {
         "origin": "yellowcurry",
         "imagePath": 'assets/images/maincategory_warmekueche/yellow_curry.jpg',
-        "infoText": "Alle Gerichte werden mit Kokosmilch-Sahne und frischem Gemüse zubereitet und mit Jasmin-Reis serviert.\n\nYellow Curry mit:",
+        "infoText": "Alle Gerichte werden mit Kokosmilch-Sahne und frischem Gemüse zubereitet und mit Jasmin-Reis serviert.", //\n\nYellow Curry mit:
         "items": <Item>[],
       },
       "Mango Chutney": {
         "origin": "mangochutney",
         "imagePath": 'assets/images/maincategory_warmekueche/mango_chutney.jpg',
-        "infoText": " Alle Gerichte werden mit Kokosmilch-Sahne und frischem Gemüse zubereitet und mit Jasmin-Reis serviert.\n\nMango Chutney mit:",
+        "infoText": " Alle Gerichte werden mit Kokosmilch-Sahne und frischem Gemüse zubereitet und mit Jasmin-Reis serviert.", //\n\nMango Chutney mit:
         "items": <Item>[],
       },
       "Erdnussgericht": {
         "origin": "erdnussgericht",
         "imagePath":
             'assets/images/maincategory_warmekueche/erdnussgericht.jpg',
-        "infoText": "Alle Gerichte werden mit Kokosmilch-Sahne und frischem Gemüse zubereitet und mit Jasmin-Reis serviert.\n\nErdnussgericht mit:",
+        "infoText": "Alle Gerichte werden mit Kokosmilch-Sahne und frischem Gemüse zubereitet und mit Jasmin-Reis serviert.", //\n\nErdnussgericht mit:
         "items": <Item>[],
       },
       "Chop Suey": {
         "origin": "chopsuey",
         "imagePath": 'assets/images/maincategory_warmekueche/chop_suey.jpg',
-        "infoText": "Alle Gerichte werden mit frischem Gemüse und Sojasprossen zubereitet und mit Jasmin-Reis serviert.\n\nChop Suey mit:",
+        "infoText": "Alle Gerichte werden mit frischem Gemüse und Sojasprossen zubereitet und mit Jasmin-Reis serviert.", //\n\nChop Suey mit:
         "items": <Item>[],
       },
       "Red Curry": {
         "origin": "redcurry",
         "imagePath": 'assets/images/maincategory_warmekueche/red_curry.jpg',
-        "infoText": "Alle Gerichte werden mit mit Kokosmilch, Sahne, frischem Gemüse und Thai-Basilikum zubereitet und mit Jasmin-Reis serviert.\n\nRed Curry mit:",
+        "infoText": "Alle Gerichte werden mit mit Kokosmilch, Sahne, frischem Gemüse und Thai-Basilikum zubereitet und mit Jasmin-Reis serviert.", //\n\nRed Curry mit:
         "items": <Item>[],
       },
       "Süß-Sauer Sauce": {
         "origin": "suesssauersauce",
         "imagePath":
             'assets/images/maincategory_warmekueche/suess_sauer_sauce.jpg',
-        "infoText": "Alle Gerichte werden mit Ananas, Tomaten, Paprika und Karotten zubereitet und mit Jasmin-Reis serviert.\n\nSüß-Sauer Sauce mit:",
+        "infoText": "Alle Gerichte werden mit Ananas, Tomaten, Paprika und Karotten zubereitet und mit Jasmin-Reis serviert.", //\n\nSüß-Sauer Sauce mit:
         "items": <Item>[],
       },
       "Extras": {

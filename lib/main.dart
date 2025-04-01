@@ -4,12 +4,13 @@ import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/application/scroll_state_provider.dart';
 import 'package:sushiyana_flutter/config/scroll_configuration_behavior.dart';
 // import 'package:sushiyana_flutter/presentation/d__splash_screen.dart';
-import 'package:sushiyana_flutter/presentation/home_screen.dart';
+import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   String subdomain = _getSubdomain(BranchProvider());
+
 
   runApp(
     MultiProvider(

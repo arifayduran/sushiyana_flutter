@@ -47,6 +47,7 @@ class BranchProvider extends ChangeNotifier {
     },
     "mitte": {
       "name": "Mall of Berlin GmbH",
+      "display_name": "Mitte",
       "address":
           "Sushi Yana Mall of Berlin GmbH\nLeipziger Platz 12\n10117 Berlin",
       "contact":
@@ -67,6 +68,7 @@ class BranchProvider extends ChangeNotifier {
     },
     "rudow": {
       "name": "Rudow GmbH & Co. KG",
+      "display_name": "Rudow",
       "address":
           "Sushi Yana Rudow GmbH & Co. KG\nHugo-Heimann-Straße 10\n12353 Berlin",
       "contact":
@@ -75,6 +77,7 @@ class BranchProvider extends ChangeNotifier {
     },
     "spandau": {
       "name": "Spandau",
+
       "address": "Sushi Yana Spandau\nPichelsdorferstraße 120\n13595 Berlin",
       "contact": "Geschäftsführer: Ibrahim Hamade\nSteuernummer: 19/929/00826",
       "email": "spandau@sushi-yana.de",

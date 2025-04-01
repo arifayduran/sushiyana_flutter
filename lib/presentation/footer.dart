@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sushiyana_flutter/application/fade_page_route.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/presentation/branch_selector.dart';
-import 'package:sushiyana_flutter/presentation/datenschutz_screen.dart';
-import 'package:sushiyana_flutter/presentation/impressum_screen.dart';
+import 'package:sushiyana_flutter/presentation/screens/datenschutz_screen.dart';
+import 'package:sushiyana_flutter/presentation/screens/impressum_screen.dart';
 
 class Footer extends StatelessWidget {
   const Footer({super.key, required this.onResetHome});

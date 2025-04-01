@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sushiyana_flutter/application/fade_page_route.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/presentation/branch_selector.dart';
-import 'package:sushiyana_flutter/presentation/impressum_screen.dart';
+import 'package:sushiyana_flutter/presentation/screens/impressum_screen.dart';
 
 class DatenschutzScreen extends StatelessWidget {
   const DatenschutzScreen({super.key, required this.onResetHome});
@@ -98,7 +98,7 @@ class DatenschutzScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(
                       Icons.cancel,
-                      color: Colors.white,
+                      color: Colors.red,
                     ),
                     onPressed: () {
                       // onResetHome();
@@ -108,17 +108,20 @@ class DatenschutzScreen extends StatelessWidget {
                     },
                   ),
                   TextButton(
-                      onPressed: () {
-                        // onResetHome();
-                        Navigator.of(context).popUntil(
-                          (route) => route.isFirst,
-                        );
-                      },
-                      child: Text("Schliessen",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "Julee",
-                              fontSize: 20)))
+                    onPressed: () {
+                      // onResetHome();
+                      Navigator.of(context).popUntil(
+                        (route) => route.isFirst,
+                      );
+                    },
+                    child: Text(
+                      "Schliessen",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Julee",
+                          fontSize: 20),
+                    ),
+                  )
                 ],
               ),
               Container(

@@ -28,11 +28,24 @@ class BranchSelector extends StatelessWidget {
       items: branchProvider.branches.keys.map((String key) {
         return DropdownMenuItem<String>(
           value: key,
-          child: Text(
-            branchProvider.branches[key]!["name"]!,
-            style: TextStyle(
-              color: color,
-            ),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 3,
+                backgroundColor: key == branchProvider.currentBranch
+                    ? Colors.red
+                    : Colors.transparent, // Nur für den aktuellen Branch rot
+              ),
+              const SizedBox(
+                  width: 8), // Abstand zwischen CircleAvatar und Text
+              Text(
+                branchProvider.branches[key]!["display_name"] ??
+                    branchProvider.branches[key]!["name"]!,
+                style: TextStyle(
+                  color: color,
+                ),
+              ),
+            ],
           ),
         );
       }).toList(),

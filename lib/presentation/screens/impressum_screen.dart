@@ -4,7 +4,7 @@ import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/application/fade_page_route.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/presentation/branch_selector.dart';
-import 'package:sushiyana_flutter/presentation/datenschutz_screen.dart';
+import 'package:sushiyana_flutter/presentation/screens/datenschutz_screen.dart';
 // ignore: deprecated_member_use, avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -84,7 +84,7 @@ class ImpressumScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 9, color: Colors.white),
                     ),
                   ),
-                  const Text(
+                   const Text(
                     "-",
                     style: TextStyle(fontSize: 9, color: Colors.white),
                   ),
@@ -118,7 +118,7 @@ class ImpressumScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(
                       Icons.cancel,
-                      color: Colors.white,
+                      color: Colors.red,
                     ),
                     onPressed: () {
                       // onResetHome();
@@ -128,17 +128,20 @@ class ImpressumScreen extends StatelessWidget {
                     },
                   ),
                   TextButton(
-                      onPressed: () {
-                        // onResetHome();
-                        Navigator.of(context).popUntil(
-                          (route) => route.isFirst,
-                        );
-                      },
-                      child: Text("Schliessen",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "Julee",
-                              fontSize: 20)))
+                    onPressed: () {
+                      // onResetHome();
+                      Navigator.of(context).popUntil(
+                        (route) => route.isFirst,
+                      );
+                    },
+                    child: Text(
+                      "Schliessen",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Julee",
+                          fontSize: 20),
+                    ),
+                  )
                 ],
               ),
               Container(

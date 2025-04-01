@@ -6,24 +6,28 @@ import 'package:sushiyana_flutter/data/is_data_fetched.dart';
 
 Future<void> fetchDataWithRetry(BuildContext context,
     {int retryCount = 3}) async {
-  await Future.delayed(Duration(seconds: 1)); // Warte 1 Sekunde am Anfang
   DatabaseService dbService = DatabaseService();
   Exception? lastError;
   bool success = false;
 
-  for (int i = 0; i < retryCount; i++) {
-    try {
-      await dbService.fetchAndStoreItems();
-      isDataFetched = true;
-      success = true;
-      break;
-    } catch (e) {
-      lastError = e is Exception ? e : Exception(e.toString());
-      await Future.delayed(Duration(seconds: 2));
-    }
-  }
+  // Starte die 1 Sekunde Wartezeit und den Ladevorgang gleichzeitig
+  await Future.wait([
+    Future.delayed(Duration(milliseconds: 1000)),
+    (() async {
+      for (int i = 0; i < retryCount; i++) {
+        try {
+          await dbService.fetchAndStoreItems();
+          isDataFetched = true;
+          success = true;
+          break;
+        } catch (e) {
+          lastError = e is Exception ? e : Exception(e.toString());
+          await Future.delayed(Duration(seconds: 2));
+        }
+      }
+    })()
+  ]);
 
-  // SnackBar außerhalb der Schleife platzieren
   if (!success && context.mounted && lastError != null) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -35,5 +39,5 @@ Future<void> fetchDataWithRetry(BuildContext context,
     );
   }
 
-  isDataFetched = success; // Setze den Status entsprechend des Erfolgs
+  isDataFetched = success;
 }

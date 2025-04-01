@@ -1,3 +1,3 @@
-String getImageUrlCdn(String imageName) {
-  return 'https://cdn.sushiyanaspeisekarte.com/$imageName';
+String getImageUrlCdn(String imagePath) {
+  return 'https://cdn.sushiyanaspeisekarte.com/$imagePath';
 }
