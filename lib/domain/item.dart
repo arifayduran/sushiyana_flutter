@@ -1,3 +1,5 @@
+import 'package:sushiyana_flutter/application/get_image_url_cdn.dart';
+
 class Item {
   String id;
   String artikelnummer;
@@ -82,7 +84,7 @@ class Item {
       weissensee: json['weissensee'] == "1",
       zehlendorf: json['zehlendorf'] == "1",
       ffo: json['FFO'] == "1",
-      imagePath: json['image_path'].toString(),
+      imagePath: getImageUrlCdn(json['image_path'].toString()),
     );
   }
 }

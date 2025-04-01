@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/application/scroll_state_provider.dart';
+import 'package:sushiyana_flutter/application/show_zoom_animation.dart';
 import 'package:sushiyana_flutter/config/scroll_configuration_behavior.dart';
 // import 'package:sushiyana_flutter/presentation/d__splash_screen.dart';
 import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
@@ -11,7 +13,13 @@ void main() async {
 
   String subdomain = _getSubdomain(BranchProvider());
 
+  final secureStorage = const FlutterSecureStorage();
+  showZoomAnimation =
+      (await secureStorage.read(key: 'showZoomHandAnimation')) == 'true';
 
+  showTapHandAnimation =
+      (await secureStorage.read(key: 'showTapHandAnimation')) == 'true';
+ 
   runApp(
     MultiProvider(
       providers: [

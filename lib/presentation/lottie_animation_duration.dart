@@ -35,6 +35,7 @@ class _LottieAnimationDurationState extends State<LottieAnimationDuration>
   @override
   Widget build(BuildContext context) {
     return Lottie.asset(
+      
       widget.path,
       controller: animationController,
     );

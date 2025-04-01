@@ -424,6 +424,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
+  pinch_zoom_image_last:
+    dependency: "direct main"
+    description:
+      name: pinch_zoom_image_last
+      sha256: "6f479b487c62ea050fcd8a66fb2934e6e510af082361c327361bcb71173217d9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   platform:
     dependency: transitive
     description:

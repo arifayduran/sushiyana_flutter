@@ -31,7 +31,13 @@ class ImpressumScreen extends StatelessWidget {
       html.window.open(emailUri.toString(), '_blank');
     }
 
-    return Center(
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        return false;
+      },
+      child: Center(
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -213,7 +219,7 @@ class ImpressumScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      ),),
     );
   }
 }
