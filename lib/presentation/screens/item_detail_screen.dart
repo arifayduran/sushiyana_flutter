@@ -35,11 +35,15 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _setAnimationStatus(false);
 
-      Future.delayed(Duration(milliseconds: 2000), () {
-        setState(() {
-          showZoomAnimation = false;
+      if (showZoomAnimation) {
+        Future.delayed(Duration(milliseconds: 2000), () {
+          if (mounted) {
+            setState(() {
+              showZoomAnimation = false;
+            });
+          }
         });
-      });
+      }
     });
   }
 

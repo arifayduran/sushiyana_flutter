@@ -86,14 +86,23 @@ class _ItemsTabState extends State<ItemsTab> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _setAnimationStatus(false);
 
-      Future.delayed(Duration(milliseconds: 2000), () {
-        setState(() {
-          showTapHandAnimation = false;
-        });
-      });
       Future.delayed(const Duration(milliseconds: 1000), () {
-        ItemsTab.lockItemsTabFiltersPadding = true;
+        if (mounted) {
+          setState(() {
+            ItemsTab.lockItemsTabFiltersPadding = true;
+          });
+        }
       });
+
+      if (showZoomAnimation) {
+        Future.delayed(Duration(milliseconds: 2000), () {
+          if (mounted) {
+            setState(() {
+              showTapHandAnimation = false;
+            });
+          }
+        });
+      }
     });
   }
 

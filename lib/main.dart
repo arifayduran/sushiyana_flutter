@@ -14,12 +14,25 @@ void main() async {
   String subdomain = _getSubdomain(BranchProvider());
 
   final secureStorage = const FlutterSecureStorage();
-  showZoomAnimation =
-      (await secureStorage.read(key: 'showZoomHandAnimation')) == 'true';
 
-  showTapHandAnimation =
-      (await secureStorage.read(key: 'showTapHandAnimation')) == 'true';
- 
+  String showZoomAnimationString =
+      (await secureStorage.read(key: 'showZoomHandAnimation')) ?? '';
+  String showTapHandAnimationString =
+      (await secureStorage.read(key: 'showTapHandAnimation')) ?? '';
+
+  if (showTapHandAnimationString == "false") {
+    showZoomAnimation = false;
+  } else {
+    showZoomAnimation = true;
+  }
+
+  if (showZoomAnimationString == "false") {
+    showTapHandAnimation = false;
+  } else {
+    showTapHandAnimation = true;
+  }
+
+
   runApp(
     MultiProvider(
       providers: [
