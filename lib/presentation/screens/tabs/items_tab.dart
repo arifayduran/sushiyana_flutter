@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/application/convert_to_rich_text.dart';
-import 'package:sushiyana_flutter/application/convert_to_rich_text_description.dart';
+import 'package:sushiyana_flutter/application/convert_to_rich_text_description_max_lines.dart';
 import 'package:sushiyana_flutter/application/get_image_url_cdn.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
@@ -231,7 +231,7 @@ class _ItemsTabState extends State<ItemsTab> {
                     // crossAxisCount: 2,
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 20,
-                    childAspectRatio: .50,
+                    childAspectRatio: .70,
                   ),
                   itemCount: _items.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -309,8 +309,12 @@ class _ItemsTabState extends State<ItemsTab> {
                                 flex: 3,
                                 child: Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 7.0, right: 7.0, bottom: 15.0),
+                                      left: 4.0, right: 4.0, bottom: 15.0),
                                   child: Column(
+                                    mainAxisAlignment:
+                                        _items[index].beschreibung.isEmpty
+                                            ? MainAxisAlignment.spaceEvenly
+                                            : MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         _items[index].artikelnummer,
@@ -460,33 +464,43 @@ class _ItemsTabState extends State<ItemsTab> {
                                           ),
                                         ),
                                       ),
-                                      Expanded(
-                                        child: _items[index]
-                                                .beschreibung
-                                                .isEmpty
-                                            ? SizedBox()
-                                            : Center(
-                                                child:
-                                                    convertToRichTextDescription(
-                                                  _items[index].beschreibung,
-                                                  const Color.fromARGB(
-                                                      255, 184, 184, 184),
-                                                  logicalWidth < 560
-                                                      ? logicalWidth < 490
-                                                          ? logicalWidth < 450
-                                                              ? logicalWidth <
-                                                                      410
-                                                                  ? 9
-                                                                  : 11
-                                                              : 12
-                                                          : 14
-                                                      : 16,
-                                                  "Julee",
-                                                  FontWeight.w100,
-                                                  true,
-                                                ),
-                                              ),
-                                      ),
+                                      _items[index].beschreibung.isNotEmpty
+                                          ? Expanded(
+                                              child: _items[index]
+                                                      .beschreibung
+                                                      .isEmpty
+                                                  ? SizedBox()
+                                                  : Center(
+                                                      child:
+                                                          convertToRichTextDescriptionMaxLines(
+                                                        _items[index]
+                                                            .beschreibung,
+                                                        const Color.fromARGB(
+                                                            255, 184, 184, 184),
+                                                        logicalWidth < 560
+                                                            ? logicalWidth < 490
+                                                                ? logicalWidth <
+                                                                        450
+                                                                    ? logicalWidth <
+                                                                            420
+                                                                        ? 9
+                                                                        : 11
+                                                                    : 11.5
+                                                                : 14
+                                                            : 15,
+                                                        "Julee",
+                                                        FontWeight.w100,
+                                                        true,
+                                                        logicalWidth < 420
+                                                            ? 3
+                                                            : 4,
+                                                        ((logicalWidth - 65) /
+                                                                2) -
+                                                            8,
+                                                      ),
+                                                    ),
+                                            )
+                                          : SizedBox(),
                                       Text(
                                         _items[index]
                                             .preis
