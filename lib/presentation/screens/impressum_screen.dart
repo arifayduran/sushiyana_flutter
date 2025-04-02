@@ -38,188 +38,185 @@ class ImpressumScreen extends StatelessWidget {
         return false;
       },
       child: Center(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: SizedBox(
-            height: 150,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Image.asset(
-                "assets/images/logo2.png",
-                fit: BoxFit.fitHeight,
-              ),
-            ),
-          ),
-          toolbarHeight: 180,
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new,
-              color: Colors.black,
-            ),
-            onPressed: () {},
-          ),
-        ),
-        bottomNavigationBar: Container(
-          color: yanaColor,
-          height: 50,
-          child: Center(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  const BranchSelector(fontSize: 9, color: Colors.white),
-                  SizedBox(width: 9),
-                  const Text(
-                    "-",
-                    style: TextStyle(fontSize: 9, color: Colors.white),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // onResetHome();
-                      Navigator.of(context).popUntil(
-                        (route) => route.isFirst,
-                      );
-                    },
-                    child: const Text(
-                      "Zurück zur Speisekarte",
-                      style: TextStyle(fontSize: 9, color: Colors.white),
-                    ),
-                  ),
-                   const Text(
-                    "-",
-                    style: TextStyle(fontSize: 9, color: Colors.white),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        FadePageRoute(
-                            page: DatenschutzScreen(
-                          onResetHome: onResetHome,
-                        )),
-                      );
-                    },
-                    child: const Text(
-                      "Datenschutz",
-                      style: TextStyle(fontSize: 9, color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.cancel,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      // onResetHome();
-                      Navigator.of(context).popUntil(
-                        (route) => route.isFirst,
-                      );
-                    },
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // onResetHome();
-                      Navigator.of(context).popUntil(
-                        (route) => route.isFirst,
-                      );
-                    },
-                    child: Text(
-                      "Schliessen",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "Julee",
-                          fontSize: 20),
-                    ),
-                  )
-                ],
-              ),
-              Container(
-                constraints: BoxConstraints(maxWidth: 600, minHeight: 400),
-                padding: EdgeInsets.all(25),
-                margin: EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            title: SizedBox(
+              height: 150,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Image.asset(
+                  "assets/images/app_logo1024.png",
+                  fit: BoxFit.fitHeight,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+            ),
+            toolbarHeight: 180,
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+          ),
+          bottomNavigationBar: Container(
+            color: yanaColor,
+            height: 50,
+            child: Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
                   children: [
-                    Text(
-                      "Impressum Sushi Yana ${branchProvider.branchData["name"]}",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    const BranchSelector(fontSize: 9, color: Colors.white),
+                    SizedBox(width: 9),
+                    const Text(
+                      "-",
+                      style: TextStyle(fontSize: 9, color: Colors.white),
                     ),
-                    SizedBox(height: 30),
-                    Text(
-                      "Verantwortlich für die Startseite und die weiteren Informationsseiten (ohne Onlineshops) dieser Webseite ist:",
-                      style: TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                    SizedBox(height: 20),
-                    Text(branchProvider.branchData["address"]),
-                    InkWell(
-                      onTap: () =>
-                          sendEmail(branchProvider.branchData["email"]),
-                      child: Text(
-                        branchProvider.branchData["email"],
-                        style: TextStyle(
-                            color: Colors.blue,
-                            height: 1,
-                            decoration: TextDecoration.underline),
+                    TextButton(
+                      onPressed: () {
+                        // onResetHome();
+                        Navigator.of(context).popUntil(
+                          (route) => route.isFirst,
+                        );
+                      },
+                      child: const Text(
+                        "Zurück zur Speisekarte",
+                        style: TextStyle(fontSize: 9, color: Colors.white),
                       ),
                     ),
-                    SizedBox(height: 30),
-                    Text(branchProvider.branchData["contact"]),
-                    SizedBox(height: 20),
-                    Text(
-                      "Jede Sushi Yana Filiale wird von einem selbstständig tätigen Gewerbetreibenden als Franchisenehmer bewirtschaftet. Dieser organisiert Produktion und Auslieferung seiner Produkte für seinen Betrieb in eigener Verantwortung. Wenn du Fragen oder Anliegen zu deiner Lieferung hast, wende dich bitte an den Verantwortlichen des jeweiligen Betriebes, den du in vorstehender Liste finden kannst.",
-                      style: TextStyle(fontSize: 12),
+                    const Text(
+                      "-",
+                      style: TextStyle(fontSize: 9, color: Colors.white),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      "Unsere Franchisezentrale erreichen Sie über die Mailadresse:",
-                    ),
-                    SizedBox(height: 10),
-                    InkWell(
-                      onTap: () => sendEmail("buero@sushi-yana.de"),
-                      child: Text(
-                        "buero@sushi-yana.de",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            height: 1,
-                            decoration: TextDecoration.underline),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          FadePageRoute(
+                              page: DatenschutzScreen(
+                            onResetHome: onResetHome,
+                          )),
+                        );
+                      },
+                      child: const Text(
+                        "Datenschutz",
+                        style: TextStyle(fontSize: 9, color: Colors.white),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                        "Bitte nutzen Sie diese ausschließlich für allgemeine Anfragen."),
-                    SizedBox(height: 16),
                   ],
                 ),
               ),
-            ],
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.cancel,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        // onResetHome();
+                        Navigator.of(context).popUntil(
+                          (route) => route.isFirst,
+                        );
+                      },
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // onResetHome();
+                        Navigator.of(context).popUntil(
+                          (route) => route.isFirst,
+                        );
+                      },
+                      child: Text(
+                        "Schliessen",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: "Julee",
+                            fontSize: 20),
+                      ),
+                    )
+                  ],
+                ),
+                Container(
+                  constraints: BoxConstraints(maxWidth: 600, minHeight: 400),
+                  padding: EdgeInsets.all(25),
+                  margin: EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black12, blurRadius: 4)
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Impressum Sushi Yana ${branchProvider.branchData["name"]}",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 30),
+                      Text(
+                        "Verantwortlich für die Startseite und die weiteren Informationsseiten (ohne Onlineshops) dieser Webseite ist:",
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      SizedBox(height: 20),
+                      Text(branchProvider.branchData["address"]),
+                      InkWell(
+                        onTap: () =>
+                            sendEmail(branchProvider.branchData["email"]),
+                        child: Text(
+                          branchProvider.branchData["email"],
+                          style: TextStyle(
+                              color: Colors.blue,
+                              height: 1,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Text(branchProvider.branchData["contact"]),
+                      SizedBox(height: 20),
+                      Text(
+                        "Jede Sushi Yana Filiale wird von einem selbstständig tätigen Gewerbetreibenden als Franchisenehmer bewirtschaftet. Dieser organisiert Produktion und Auslieferung seiner Produkte für seinen Betrieb in eigener Verantwortung. Wenn du Fragen oder Anliegen zu deiner Lieferung hast, wende dich bitte an den Verantwortlichen des jeweiligen Betriebes, den du in vorstehender Liste finden kannst.",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        "Unsere Franchisezentrale erreichen Sie über die Mailadresse:",
+                      ),
+                      SizedBox(height: 10),
+                      InkWell(
+                        onTap: () => sendEmail("buero@sushi-yana.de"),
+                        child: Text(
+                          "buero@sushi-yana.de",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              height: 1,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                          "Bitte nutzen Sie diese ausschließlich für allgemeine Anfragen."),
+                      SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),),
+      ),
     );
   }
 }

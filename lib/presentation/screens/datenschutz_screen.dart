@@ -19,9 +19,9 @@ class DatenschutzScreen extends StatelessWidget {
       },
       child: Center(
         child: Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.transparent,
             title: SizedBox(
               height: 150,
               child: GestureDetector(
@@ -29,20 +29,14 @@ class DatenschutzScreen extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 child: Image.asset(
-                  "assets/images/logo2.png",
-                  fit: BoxFit.fitHeight,
+                  "assets/images/app_logo1024.png",
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ),
             toolbarHeight: 180,
             centerTitle: true,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
+            automaticallyImplyLeading: false,
           ),
           bottomNavigationBar: Container(
             color: yanaColor,

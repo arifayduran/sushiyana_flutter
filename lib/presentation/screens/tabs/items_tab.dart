@@ -7,7 +7,6 @@ import 'package:sushiyana_flutter/application/branch_provider.dart';
 import 'package:sushiyana_flutter/application/fade_page_route.dart';
 import 'package:sushiyana_flutter/application/show_zoom_animation.dart';
 import 'package:sushiyana_flutter/application/text_methods/calculate_line_count_for_description.dart';
-import 'package:sushiyana_flutter/application/text_methods/convert_to_rich_text.dart';
 import 'package:sushiyana_flutter/application/text_methods/convert_to_rich_text_description_max_lines.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
@@ -15,6 +14,7 @@ import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
 import 'package:sushiyana_flutter/presentation/lottie_animation_duration.dart';
 import 'package:sushiyana_flutter/presentation/screens/item_detail_screen.dart';
+import 'package:sushiyana_flutter/presentation/show_alert_dialog.dart';
 
 // Material(
 //                             color: Colors.transparent,
@@ -190,37 +190,6 @@ class _ItemsTabState extends State<ItemsTab> {
     }
   }
 
-  void _showAllergenDialog(BuildContext context, index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // ignore: deprecated_member_use
-        return WillPopScope(
-          onWillPop: () async {
-            Navigator.of(context).pop();
-            return false;
-          },
-          child: AlertDialog(
-            title: Text(
-              "Allergene und Zusatzstoffe",
-              style: TextStyle(fontFamily: "Julee"),
-            ),
-            content: convertToRichText(_items[index].allergeneZusatz,
-                Colors.black, 13, "Julee", FontWeight.normal, false),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("Schließen"),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   void _getInfoText() {
     if (localDatabase["Sushis"]["categories"].containsKey(widget.heroTag)) {
       setState(() {
@@ -291,44 +260,45 @@ class _ItemsTabState extends State<ItemsTab> {
                       textAlign: TextAlign.center,
                       maxWidth: descriptionMaxWidth,
                     );
-                    return Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.black,
-                            border: Border(
-                              top: BorderSide(
-                                  color: Colors.white,
-                                  width: 0.1,
-                                  strokeAlign: BorderSide.strokeAlignOutside),
-                              left: BorderSide(
-                                  color: Colors.white,
-                                  width: 0.1,
-                                  strokeAlign: BorderSide.strokeAlignOutside),
-                              right: BorderSide(
-                                  color: Colors.white,
-                                  width: 0.1,
-                                  strokeAlign: BorderSide.strokeAlignOutside),
-                              bottom: BorderSide(color: Colors.white, width: 1),
+                    return Hero(
+                      tag: index,
+                      transitionOnUserGestures: true,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.black,
+                              border: Border(
+                                top: BorderSide(
+                                    color: Colors.white,
+                                    width: 0.1,
+                                    strokeAlign: BorderSide.strokeAlignOutside),
+                                left: BorderSide(
+                                    color: Colors.white,
+                                    width: 0.1,
+                                    strokeAlign: BorderSide.strokeAlignOutside),
+                                right: BorderSide(
+                                    color: Colors.white,
+                                    width: 0.1,
+                                    strokeAlign: BorderSide.strokeAlignOutside),
+                                bottom:
+                                    BorderSide(color: Colors.white, width: 1),
+                              ),
                             ),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                FadePageRoute(
-                                  page: ItemDetailScreen(
-                                    items: _items,
-                                    initialIndex: index,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  FadePageRoute(
+                                    page: ItemDetailScreen(
+                                      items: _items,
+                                      initialIndex: index,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            child: Hero(
-                              tag: index,
-                              transitionOnUserGestures: true,
+                                );
+                              },
                               child: Column(
                                 children: [
                                   Expanded(
@@ -385,7 +355,7 @@ class _ItemsTabState extends State<ItemsTab> {
                                         mainAxisAlignment: _items[index]
                                                     .beschreibung
                                                     .isEmpty ||
-                                                descriptionLineCount <= 2
+                                                descriptionLineCount <= 3
                                             ? MainAxisAlignment.spaceEvenly
                                             : MainAxisAlignment.spaceBetween,
                                         children: [
@@ -503,8 +473,9 @@ class _ItemsTabState extends State<ItemsTab> {
                                                               HitTestBehavior
                                                                   .opaque,
                                                           onTap: () {
-                                                            _showAllergenDialog(
-                                                                context, index);
+                                                            showAllergenDialog(
+                                                                context,
+                                                                _items[index]);
                                                           },
                                                           child: Icon(
                                                             size: logicalWidth <
@@ -523,7 +494,7 @@ class _ItemsTabState extends State<ItemsTab> {
                                             ),
                                           ),
                                           _items[index].beschreibung.isNotEmpty
-                                              ? descriptionLineCount <= 2
+                                              ? descriptionLineCount <= 3
                                                   ? Center(
                                                       child:
                                                           convertToRichTextDescriptionMaxLines(
@@ -599,40 +570,40 @@ class _ItemsTabState extends State<ItemsTab> {
                               ),
                             ),
                           ),
-                        ),
-                        if (showTapHandAnimation && index == 0)
-                          Positioned.fill(
-                            child: Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: ClipRRect(
-                                clipBehavior: Clip.hardEdge,
-                                borderRadius: BorderRadius.circular(20),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 6,
-                                    sigmaY: 6,
-                                  ),
-                                  child: Container(
-                                    color: Colors.black.withValues(alpha: 0),
-                                    child: LottieAnimationDuration(
-                                      duration: Duration(milliseconds: 1000),
-                                      path: "assets/animations/tap_hand.json",
+                          if (showTapHandAnimation && index == 0)
+                            Positioned.fill(
+                              child: Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: ClipRRect(
+                                  clipBehavior: Clip.hardEdge,
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 6,
+                                      sigmaY: 6,
+                                    ),
+                                    child: Container(
+                                      color: Colors.black.withValues(alpha: 0),
+                                      child: LottieAnimationDuration(
+                                        duration: Duration(milliseconds: 1000),
+                                        path: "assets/animations/tap_hand.json",
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
+                          Positioned(
+                            bottom: -6,
+                            right: 0,
+                            left: 0,
+                            child: CircleAvatar(
+                              radius: 6,
+                              backgroundColor: Colors.red,
+                            ),
                           ),
-                        Positioned(
-                          bottom: -6,
-                          right: 0,
-                          left: 0,
-                          child: CircleAvatar(
-                            radius: 6,
-                            backgroundColor: Colors.red,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   }),
             )),
