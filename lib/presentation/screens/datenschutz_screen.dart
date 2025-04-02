@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sushiyana_flutter/application/fade_page_route.dart';
+import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
-import 'package:sushiyana_flutter/presentation/branch_selector.dart';
+import 'package:sushiyana_flutter/presentation/widgets/branch_selector.dart';
 import 'package:sushiyana_flutter/presentation/screens/impressum_screen.dart';
 
 class DatenschutzScreen extends StatelessWidget {

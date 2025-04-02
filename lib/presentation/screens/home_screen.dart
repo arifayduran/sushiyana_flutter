@@ -2,16 +2,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sushiyana_flutter/application/branch_provider.dart';
-import 'package:sushiyana_flutter/application/fetch_data_with_retry.dart';
+import 'package:sushiyana_flutter/application/providers/branch_provider.dart';
+import 'package:sushiyana_flutter/application/services/fetch_data_with_retry.dart';
 import 'package:sushiyana_flutter/application/get_image_url_cdn.dart';
-import 'package:sushiyana_flutter/application/scroll_state_provider.dart';
+import 'package:sushiyana_flutter/application/providers/scroll_state_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/is_data_fetched.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
-import 'package:sushiyana_flutter/presentation/animated_text_widget.dart';
-import 'package:sushiyana_flutter/presentation/footer.dart';
-import 'package:sushiyana_flutter/presentation/lottie_animation_duration.dart';
+import 'package:sushiyana_flutter/presentation/widgets/animated_text_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/fancy_cart_button.dart';
+import 'package:sushiyana_flutter/presentation/screens/footer.dart';
+import 'package:sushiyana_flutter/presentation/widgets/lottie_animation_duration.dart';
 import 'package:sushiyana_flutter/presentation/screens/tabs/items_tab.dart';
 import 'package:sushiyana_flutter/presentation/screens/tabs/main_tab.dart';
 
@@ -21,7 +22,7 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   static int previousIndex = 0;
-  static double botPadding = 0;
+  static double botPadding = 35;
   static double topPadding = 0;
 
   @override
@@ -366,6 +367,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final branchProvider = Provider.of<BranchProvider>(context);
+
     final scrollStateProvider = Provider.of<ScrollStateProvider>(context);
 
     double logicalWidth = MediaQuery.of(context).size.width;
@@ -390,504 +392,524 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // ignore: deprecated_member_use
     return WillPopScope(
-        onWillPop: () async {
-          setState(() {
-            if (_tabController.index == 0) {
-              if (MainTab.mainTabMode == 2 || MainTab.mainTabMode == 1) {
-                _scrollToTop(true, true);
-                MainTab.mainTabMode = 0;
+      onWillPop: () async {
+        setState(() {
+          if (_tabController.index == 0) {
+            if (MainTab.mainTabMode == 2 || MainTab.mainTabMode == 1) {
+              _scrollToTop(true, true);
+              MainTab.mainTabMode = 0;
+            } else {
+              _scrollToTop(true, true);
+            }
+          } else {
+            if (_selectedHeroTag != null && _selectedHeroTag != "null") {
+              if (innerController.hasClients && outerController.hasClients) {
+                if (innerController.offset == 0 &&
+                    outerController.offset == 0) {
+                  _onBack();
+                }
+                _scrollToTop(true, false);
               } else {
-                _scrollToTop(true, true);
+                debugPrint(
+                    "ScrollController is not attached to any scroll views.");
               }
             } else {
-              if (_selectedHeroTag != null && _selectedHeroTag != "null") {
-                if (innerController.hasClients && outerController.hasClients) {
-                  if (innerController.offset == 0 &&
-                      outerController.offset == 0) {
-                    _onBack();
-                  }
-                  _scrollToTop(true, false);
-                } else {
-                  debugPrint(
-                      "ScrollController is not attached to any scroll views.");
-                }
-              } else {
-                _onBack();
-              }
+              _onBack();
             }
-          });
-          return false;
-        },
-        child: DefaultTabController(
-          length: _tabs.length,
-          child: Scaffold(
-            backgroundColor: tabBackground,
-            bottomNavigationBar: Footer(
-              onResetHome: () =>
-                  _resetToHome(_tabController.index == 0 ? true : false),
-            ),
-            body: NestedScrollView(
-              floatHeaderSlivers: false,
-              key: scrollControlerKey,
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    expandedHeight: 150.0,
-                    toolbarHeight: 25,
-                    floating: false,
-                    leading: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {},
+          }
+        });
+        return false;
+      },
+      child: DefaultTabController(
+        length: _tabs.length,
+        child: Scaffold(
+          backgroundColor: tabBackground,
+          // bottomNavigationBar: Footer(
+          //   onResetHome: () =>
+          //       _resetToHome(_tabController.index == 0 ? true : false),
+          // ),
+          body: NestedScrollView(
+            floatHeaderSlivers: false,
+            key: scrollControlerKey,
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  expandedHeight: 150.0,
+                  toolbarHeight: 25,
+                  floating: false,
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.black,
                     ),
-                    pinned: true,
-                    stretch: true,
-                    backgroundColor: Colors.black,
-                    flexibleSpace: FlexibleSpaceBar(
-                      titlePadding: const EdgeInsets.all(3),
-                      centerTitle: true,
-                      collapseMode: CollapseMode.parallax,
-                      title: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: AnimatedTextWidget(
-                            text: _appBarTitle,
-                            initColor: Colors.white,
-                            hoverColor: Colors.white,
-                            minSize: 20,
-                            midSize: 15,
-                            maxSize: 12,
-                            fontFamily: "Julee",
-                            enableFirstAnimation:
-                                true, // !_isFirstAnimationDone,
-                            fontWeight: FontWeight.w100),
-                      ),
+                    onPressed: () {},
+                  ),
+                  pinned: true,
+                  stretch: true,
+                  backgroundColor: Colors.black,
+                  flexibleSpace: FlexibleSpaceBar(
+                    titlePadding: const EdgeInsets.all(3),
+                    centerTitle: true,
+                    collapseMode: CollapseMode.parallax,
+                    title: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: AnimatedTextWidget(
+                          text: _appBarTitle,
+                          initColor: Colors.white,
+                          hoverColor: Colors.white,
+                          minSize: 20,
+                          midSize: 15,
+                          maxSize: 12,
+                          fontFamily: "Julee",
+                          enableFirstAnimation: true, // !_isFirstAnimationDone,
+                          fontWeight: FontWeight.w100),
+                    ),
 
-                      //  Text(
-                      //   _appBarTitle,
-                      //   style: TextStyle(
-                      //       color: Colors.white,
-                      //       fontFamily: "Julee",
-                      //       fontSize: 11.5,
-                      //       fontWeight: FontWeight.w100),
-                      // ),
-                      background: GestureDetector(
-                        onTap: () => _resetToHome(false),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: AnimatedSwitcher(
-                            duration: const Duration(
-                                milliseconds: 600), // Sanfter Wechsel
-                            transitionBuilder: (child, animation) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: ScaleTransition(
-                                    scale: animation, child: child),
+                    //  Text(
+                    //   _appBarTitle,
+                    //   style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontFamily: "Julee",
+                    //       fontSize: 11.5,
+                    //       fontWeight: FontWeight.w100),
+                    // ),
+                    background: GestureDetector(
+                      onTap: () => _resetToHome(false),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(
+                              milliseconds: 600), // Sanfter Wechsel
+                          transitionBuilder: (child, animation) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: ScaleTransition(
+                                  scale: animation, child: child),
+                            );
+                          },
+                          child: AnimatedBuilder(
+                            animation: _pulsingController,
+                            builder: (context, child) {
+                              return Transform.scale(
+                                scale: _pulsingController
+                                    .value, // Endlose Puls-Animation
+                                child: child,
                               );
                             },
-                            child: AnimatedBuilder(
-                              animation: _pulsingController,
-                              builder: (context, child) {
-                                return Transform.scale(
-                                  scale: _pulsingController
-                                      .value, // Endlose Puls-Animation
-                                  child: child,
-                                );
-                              },
-                              child: _dynamicLogo == "assets/images/logo2.png"
-                                  ? Image.asset(
-                                      _dynamicLogo,
-                                      key: ValueKey<String>(_dynamicLogo),
-                                      cacheHeight: 130,
-                                    )
-                                  : Image.network(
-                                      getImageUrlCdn(_dynamicLogo),
-                                      key: ValueKey<String>(
-                                          _dynamicLogo), // Logo-Wechsel auslösen
-                                      cacheHeight: 130,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Image.asset(
-                                            'assets/images/noimage_sushiyana.jpg');
-                                      },
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) =>
-                                              loadingProgress == null
-                                                  ? child
-                                                  : Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        color: yanaColor,
-                                                        value: loadingProgress
-                                                                    .expectedTotalBytes !=
-                                                                null
-                                                            ? loadingProgress
-                                                                    .cumulativeBytesLoaded /
-                                                                (loadingProgress
-                                                                        .expectedTotalBytes ??
-                                                                    1)
-                                                            : null,
-                                                      ),
+                            child: _dynamicLogo == "assets/images/logo2.png"
+                                ? Image.asset(
+                                    _dynamicLogo,
+                                    key: ValueKey<String>(_dynamicLogo),
+                                    cacheHeight: 130,
+                                  )
+                                : Image.network(
+                                    getImageUrlCdn(_dynamicLogo),
+                                    key: ValueKey<String>(
+                                        _dynamicLogo), // Logo-Wechsel auslösen
+                                    cacheHeight: 130,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                          'assets/images/noimage_sushiyana.jpg');
+                                    },
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) =>
+                                            loadingProgress == null
+                                                ? child
+                                                : Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: yanaColor,
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              (loadingProgress
+                                                                      .expectedTotalBytes ??
+                                                                  1)
+                                                          : null,
                                                     ),
-                                    ),
-                            ),
+                                                  ),
+                                  ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SliverPersistentHeader(
-                    delegate: _SliverAppBarDelegate(
-                      TabBar(
-                        controller: _tabController,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        indicatorColor: indicatorColor,
-                        indicatorWeight: 6,
-                        labelColor: indicatorColor,
-                        dividerColor: indicatorColor,
-                        unselectedLabelColor: unselectedLabelColor,
-                        tabs: _tabs,
-                        onTap: (value) {
-                          if (!isDataFetched ||
-                              _isFetchingData ||
-                              !_isControllerInitialized) {
-                            // Prevent tab bar interaction
-                            _tabController.animateTo(0);
-                          } else {
-                            if (value == 0 && HomeScreen.previousIndex == 1) {
-                              _scrollToTop(true, false);
-                            }
-                            if (value == 1 && HomeScreen.previousIndex == 0) {
-                              _scrollToTop(true, false);
-                            }
-
-                            if (value == 0 && HomeScreen.previousIndex == 0) {
-                              // _resetToHome(true);
-
-                              if (MainTab.mainTabMode == 1 ||
-                                  MainTab.mainTabMode == 2) {
-                                MainTab.mainTabMode = 0;
-                                _scrollToTop(true, true);
-                              } else {
-                                _scrollToTop(true, true);
-                              }
-                            }
-
-                            if (value == 1 && HomeScreen.previousIndex == 1) {
-                              _scrollToTop(true, true);
-                            }
-
-                            HomeScreen.previousIndex = value;
-                          }
-                        },
-                      ),
-                      _tabController.index,
-                    ),
-                    pinned: true,
-                  ),
-                ];
-              },
-              body: Center(
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    PageView(
-                      controller: _pageController,
-                      onPageChanged: (index) {
+                ),
+                SliverPersistentHeader(
+                  delegate: _SliverAppBarDelegate(
+                    TabBar(
+                      controller: _tabController,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicatorColor: indicatorColor,
+                      indicatorWeight: 6,
+                      labelColor: indicatorColor,
+                      dividerColor: indicatorColor,
+                      unselectedLabelColor: unselectedLabelColor,
+                      tabs: _tabs,
+                      onTap: (value) {
                         if (!isDataFetched ||
                             _isFetchingData ||
                             !_isControllerInitialized) {
-                          // Prevent swiping to other tabs
-                          _pageController.jumpToPage(0);
+                          // Prevent tab bar interaction
+                          _tabController.animateTo(0);
                         } else {
-                          _tabController.animateTo(index);
-
-                          if (index == 0) {
-                            _onBack();
-                          } else {
-                            _onItemTapped(_selectedHeroTag ?? "null");
+                          if (value == 0 && HomeScreen.previousIndex == 1) {
+                            _scrollToTop(true, false);
+                          }
+                          if (value == 1 && HomeScreen.previousIndex == 0) {
+                            _scrollToTop(true, false);
                           }
 
-                          _scrollToTop(true, false);
-                          scrollStateProvider.setBotScrollButtonEnabled(true);
+                          if (value == 0 && HomeScreen.previousIndex == 0) {
+                            // _resetToHome(true);
+
+                            if (MainTab.mainTabMode == 1 ||
+                                MainTab.mainTabMode == 2) {
+                              MainTab.mainTabMode = 0;
+                              _scrollToTop(true, true);
+                            } else {
+                              _scrollToTop(true, true);
+                            }
+                          }
+
+                          if (value == 1 && HomeScreen.previousIndex == 1) {
+                            _scrollToTop(true, true);
+                          }
+
+                          HomeScreen.previousIndex = value;
                         }
                       },
-                      physics: (!isDataFetched ||
-                              _isFetchingData ||
-                              !_isControllerInitialized)
-                          ? const NeverScrollableScrollPhysics()
-                          : null,
-                      children: [
-                        Stack(
-                          children: [
-                            MainTab(
-                              onItemTapped: _onItemTapped,
-                              scrollToTopOnBack: () => _scrollToTop(true, true),
-                            ),
-                            if (!isDataFetched || _isFetchingData)
-                              BackdropFilter(
-                                filter: ImageFilter.blur(
-                                    sigmaX: 20.0, sigmaY: 20.0),
-                                child: Container(
-                                  color: Colors.black.withValues(
-                                      alpha: !_isFetchingData && !isDataFetched
-                                          ? 0.6
-                                          : 0.2),
-                                ),
-                              ),
-                            if (_isFetchingData)
-                              Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircularProgressIndicator(),
-                                    SizedBox(
-                                      height: 50,
-                                    ),
-                                    Text(
-                                      "Daten werden geladen...",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontFamily: "Julee",
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            if (!_isFetchingData && !isDataFetched)
-                              Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: Icon(
-                                          Icons.error_outline_outlined,
-                                          color: yanaColor,
-                                          size: 50,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      "Daten konnten nicht geladen werden.",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontFamily: "Julee",
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 30,
-                                    ),
-                                    const Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Divider(
-                                          color: Colors.white,
-                                          thickness: 0.5,
-                                          height: 12,
-                                          endIndent: 25,
-                                          indent: 25,
-                                        ),
-                                        Positioned(
-                                          top: 0,
-                                          child: CircleAvatar(
-                                            radius: 6,
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 30,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          _isFetchingData = true;
-                                        });
-
-                                        await fetchDataWithRetry(context);
-
-                                        setState(() {
-                                          _isFetchingData = false;
-                                        });
-                                      },
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              WidgetStateProperty.all(
-                                                  yanaColor),
-                                          elevation: WidgetStateProperty.all(5),
-                                          foregroundColor:
-                                              WidgetStateProperty.all(
-                                                  Colors.white),
-                                          shadowColor: WidgetStateProperty.all(
-                                              yanaColor)),
-                                      child: const Text("Wiederholen"),
-                                    ),
-                                    const SizedBox(
-                                      height: 100,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                        _selectedHeroTag == null || _selectedHeroTag == "null"
-                            ? EmptyTab(
-                                onBack: _onBack,
-                              )
-                            : ItemsTab(
-                                heroTag: _selectedHeroTag!,
-                                // onBack: _onBack,
-                                outerController: outerController,
-                                // innerController: innerController,
-                              ),
-                      ],
                     ),
-                    scrollStateProvider.isBotScrollButtonEnabled
-                        ? _tabController.index == 1 &&
-                                (_selectedHeroTag == null ||
-                                    _selectedHeroTag == "null") &&
-                                _innerOffset <
-                                    innerController.position.maxScrollExtent
-                            ? SizedBox()
-                            : Positioned(
-                                bottom: _tabController.index == 1
-                                    ? HomeScreen.botPadding
-                                    : 0,
-                                // right: logicalWidth > 650
-                                //     ? logicalWidth / 2 - 45 - 300
-                                //     : -18,
-                                right: logicalWidth > 650
-                                    ? logicalWidth > 1100
-                                        ? logicalWidth / 2 - 70 - 500
-                                        : -8
-                                    : -18,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _scrollToBottom(true, true);
-
-                                    setState(() {
-                                      scrollStateProvider
-                                          .setBotScrollButtonEnabled(false);
-                                      _isBotScrollButtonLocked = true;
-                                    });
-
-                                    Future.delayed(Duration(milliseconds: 2000),
-                                        () {
-                                      if (mounted) {
-                                        setState(() {
-                                          _isBotScrollButtonLocked = false;
-                                        });
-                                      }
-                                    });
-                                  },
-                                  child: SizedBox(
-                                      width: 70,
-                                      child: LottieAnimationDuration(
-                                          duration: Duration(seconds: 3),
-                                          path:
-                                              "assets/animations/scroll_down_white.json")),
-                                ),
-                              )
-                        : SizedBox(),
-                    scrollStateProvider.isTopScrollButtonEnabled
-                        ? _tabController.index == 1 &&
-                                _selectedHeroTag == null &&
-                                _selectedHeroTag == "null"
-                            ? SizedBox()
-                            : Positioned(
-                                top: _tabController.index == 1
-                                    ? HomeScreen.topPadding
-                                    : 80,
-                                // right: logicalWidth > 650
-                                //     ? logicalWidth / 2 - 45 - 300
-                                //     : -18,
-
-                                right: logicalWidth > 650
-                                    ? logicalWidth > 1100
-                                        ? logicalWidth / 2 - 70 - 500
-                                        : -8
-                                    : -18,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _scrollToTop(true, true);
-                                    scrollStateProvider
-                                        .setTopScrollButtonEnabled(false);
-                                    setState(() {
-                                      _isTopScrollButtonLocked = true;
-                                    });
-
-                                    Future.delayed(Duration(milliseconds: 500),
-                                        () {
-                                      if (mounted) {
-                                        setState(() {
-                                          _isTopScrollButtonLocked = false;
-                                        });
-                                      }
-                                    });
-                                  },
-                                  child: RotatedBox(
-                                    quarterTurns: 2,
-                                    child: SizedBox(
-                                      width: 70,
-                                      child: LottieAnimationDuration(
-                                          duration: Duration(seconds: 3),
-                                          path:
-                                              "assets/animations/scroll_down_white.json"),
-                                    ),
-                                  ),
-                                ),
-                              )
-                        : SizedBox(),
-                    _tabController.index == 1
-                        ? _selectedHeroTag == null || _selectedHeroTag == "null"
-                            ? SizedBox()
-                            : Positioned(
-                                bottom: 100,
-                                // bottom: 10,
-                                // bottom: MediaQuery.of(context).size.height / 5,
-
-                                // left: logicalWidth > 650
-                                //     ? logicalWidth / 2 - 45 - 300
-                                //     : -5,
-                                left: logicalWidth > 650
-                                    ? logicalWidth > 1100
-                                        ? logicalWidth / 2 - 70 - 500
-                                        : 0
-                                    : -5,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _onBack();
-                                  },
-                                  child: RotatedBox(
-                                    quarterTurns: 1,
-                                    child: SizedBox(
-                                      width: logicalWidth > 650 ? 70 : 45,
-                                      child: LottieAnimationDuration(
-                                          duration: Duration(seconds: 3),
-                                          path:
-                                              "assets/animations/scroll_down_white.json"),
-                                    ),
-                                  ),
-                                ),
-                              )
-                        : SizedBox(),
-                  ],
+                    _tabController.index,
+                  ),
+                  pinned: true,
                 ),
+              ];
+            },
+            body: Center(
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      if (!isDataFetched ||
+                          _isFetchingData ||
+                          !_isControllerInitialized) {
+                        // Prevent swiping to other tabs
+                        _pageController.jumpToPage(0);
+                      } else {
+                        _tabController.animateTo(index);
+
+                        if (index == 0) {
+                          _onBack();
+                        } else {
+                          _onItemTapped(_selectedHeroTag ?? "null");
+                        }
+
+                        _scrollToTop(true, false);
+                        scrollStateProvider.setBotScrollButtonEnabled(true);
+                      }
+                    },
+                    physics: (!isDataFetched ||
+                            _isFetchingData ||
+                            !_isControllerInitialized)
+                        ? const NeverScrollableScrollPhysics()
+                        : null,
+                    children: [
+                      Stack(
+                        children: [
+                          MainTab(
+                            onItemTapped: _onItemTapped,
+                            scrollToTopOnBack: () => _scrollToTop(true, true),
+                          ),
+                          if (!isDataFetched || _isFetchingData)
+                            BackdropFilter(
+                              filter:
+                                  ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                              child: Container(
+                                color: Colors.black.withValues(
+                                    alpha: !_isFetchingData && !isDataFetched
+                                        ? 0.6
+                                        : 0.2),
+                              ),
+                            ),
+                          if (_isFetchingData)
+                            Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Text(
+                                    "Daten werden geladen...",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: "Julee",
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          if (!_isFetchingData && !isDataFetched)
+                            Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: Icon(
+                                        Icons.error_outline_outlined,
+                                        color: yanaColor,
+                                        size: 50,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Daten konnten nicht geladen werden.",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: "Julee",
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  const Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Divider(
+                                        color: Colors.white,
+                                        thickness: 0.5,
+                                        height: 12,
+                                        endIndent: 25,
+                                        indent: 25,
+                                      ),
+                                      Positioned(
+                                        top: 0,
+                                        child: CircleAvatar(
+                                          radius: 6,
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        _isFetchingData = true;
+                                      });
+
+                                      await fetchDataWithRetry(context);
+
+                                      setState(() {
+                                        _isFetchingData = false;
+                                      });
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            WidgetStateProperty.all(yanaColor),
+                                        elevation: WidgetStateProperty.all(5),
+                                        foregroundColor:
+                                            WidgetStateProperty.all(
+                                                Colors.white),
+                                        shadowColor:
+                                            WidgetStateProperty.all(yanaColor)),
+                                    child: const Text("Wiederholen"),
+                                  ),
+                                  const SizedBox(
+                                    height: 100,
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                      _selectedHeroTag == null || _selectedHeroTag == "null"
+                          ? EmptyTab(
+                              onBack: _onBack,
+                            )
+                          : ItemsTab(
+                              heroTag: _selectedHeroTag!,
+                              // onBack: _onBack,
+                              outerController: outerController,
+                              // innerController: innerController,
+                            ),
+                    ],
+                  ),
+                  scrollStateProvider.isBotScrollButtonEnabled
+                      ? _tabController.index == 1 &&
+                              (_selectedHeroTag == null ||
+                                  _selectedHeroTag == "null") &&
+                              _innerOffset <
+                                  innerController.position.maxScrollExtent
+                          ? SizedBox()
+                          : Positioned(
+                              bottom: _tabController.index == 1
+                                  ? HomeScreen.botPadding
+                                  : 35,
+                              // right: logicalWidth > 650
+                              //     ? logicalWidth / 2 - 45 - 300
+                              //     : -18,
+                              right: logicalWidth > 650
+                                  ? logicalWidth > 1100
+                                      ? logicalWidth / 2 - 70 - 500
+                                      : -8
+                                  : -18,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _scrollToBottom(true, true);
+
+                                  setState(() {
+                                    scrollStateProvider
+                                        .setBotScrollButtonEnabled(false);
+                                    _isBotScrollButtonLocked = true;
+                                  });
+
+                                  Future.delayed(Duration(milliseconds: 2000),
+                                      () {
+                                    if (mounted) {
+                                      setState(() {
+                                        _isBotScrollButtonLocked = false;
+                                      });
+                                    }
+                                  });
+                                },
+                                child: SizedBox(
+                                    width: 70,
+                                    child: LottieAnimationDuration(
+                                        duration: Duration(seconds: 3),
+                                        path:
+                                            "assets/animations/scroll_down_white.json")),
+                              ),
+                            )
+                      : SizedBox(),
+                  scrollStateProvider.isTopScrollButtonEnabled
+                      ? _tabController.index == 1 &&
+                              _selectedHeroTag == null &&
+                              _selectedHeroTag == "null"
+                          ? SizedBox()
+                          : Positioned(
+                              top: _tabController.index == 1
+                                  ? HomeScreen.topPadding
+                                  : 80,
+                              // right: logicalWidth > 650
+                              //     ? logicalWidth / 2 - 45 - 300
+                              //     : -18,
+
+                              right: logicalWidth > 650
+                                  ? logicalWidth > 1100
+                                      ? logicalWidth / 2 - 70 - 500
+                                      : -8
+                                  : -18,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _scrollToTop(true, true);
+                                  scrollStateProvider
+                                      .setTopScrollButtonEnabled(false);
+                                  setState(() {
+                                    _isTopScrollButtonLocked = true;
+                                  });
+
+                                  Future.delayed(Duration(milliseconds: 500),
+                                      () {
+                                    if (mounted) {
+                                      setState(() {
+                                        _isTopScrollButtonLocked = false;
+                                      });
+                                    }
+                                  });
+                                },
+                                child: RotatedBox(
+                                  quarterTurns: 2,
+                                  child: SizedBox(
+                                    width: 70,
+                                    child: LottieAnimationDuration(
+                                        duration: Duration(seconds: 3),
+                                        path:
+                                            "assets/animations/scroll_down_white.json"),
+                                  ),
+                                ),
+                              ),
+                            )
+                      : SizedBox(),
+                  _tabController.index == 1
+                      // ? _selectedHeroTag == null || _selectedHeroTag == "null"
+                      ? Positioned(
+                          bottom: 135,
+                          // bottom: 10,
+                          // bottom: MediaQuery.of(context).size.height / 5,
+
+                          // left: logicalWidth > 650
+                          //     ? logicalWidth / 2 - 45 - 300
+                          //     : -5,
+                          left: logicalWidth > 650
+                              ? logicalWidth > 1100
+                                  ? logicalWidth / 2 - 70 - 500
+                                  : 0
+                              : -5,
+                          child: GestureDetector(
+                            onTap: () {
+                              _onBack();
+                            },
+                            child: RotatedBox(
+                              quarterTurns: 1,
+                              child: SizedBox(
+                                width: logicalWidth > 650 ? 70 : 45,
+                                child: LottieAnimationDuration(
+                                    duration: Duration(seconds: 3),
+                                    path:
+                                        "assets/animations/scroll_down_white.json"),
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+
+                  // : SizedBox(),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    child: Footer(
+                      onResetHome: () => _resetToHome(
+                          _tabController.index == 0 ? true : false),
+                    ),
+                  ),
+                  Positioned(
+                    bottom:
+                        _tabController.index == 1 ? HomeScreen.botPadding : 35,
+                    right: 0,
+                    left: 0,
+                    child: FancyCartButton(
+                     
+                      buttonFillColor: yanaColor,
+                      height: 40,
+                      size: 45,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 

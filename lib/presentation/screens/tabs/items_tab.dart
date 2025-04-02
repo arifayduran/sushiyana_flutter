@@ -3,18 +3,19 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:sushiyana_flutter/application/branch_provider.dart';
-import 'package:sushiyana_flutter/application/fade_page_route.dart';
-import 'package:sushiyana_flutter/application/show_zoom_animation.dart';
-import 'package:sushiyana_flutter/application/text_methods/calculate_line_count_for_description.dart';
-import 'package:sushiyana_flutter/application/text_methods/convert_to_rich_text_description_max_lines.dart';
+import 'package:sushiyana_flutter/application/providers/branch_provider.dart';
+import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
+import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
+import 'package:sushiyana_flutter/application/show_animations_variables.dart';
+import 'package:sushiyana_flutter/presentation/text_methods/calculate_line_count_for_description.dart';
+import 'package:sushiyana_flutter/presentation/text_methods/convert_to_rich_text_description_max_lines.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
-import 'package:sushiyana_flutter/presentation/lottie_animation_duration.dart';
+import 'package:sushiyana_flutter/presentation/widgets/lottie_animation_duration.dart';
 import 'package:sushiyana_flutter/presentation/screens/item_detail_screen.dart';
-import 'package:sushiyana_flutter/presentation/show_alert_dialog.dart';
+import 'package:sushiyana_flutter/presentation/widgets/show_alert_dialog.dart';
 
 // Material(
 //                             color: Colors.transparent,
@@ -94,7 +95,7 @@ class _ItemsTabState extends State<ItemsTab> {
         }
       });
 
-      if (showZoomAnimation) {
+      if (showTapHandAnimation) {
         Future.delayed(Duration(milliseconds: 2000), () {
           if (mounted) {
             setState(() {
@@ -207,13 +208,14 @@ class _ItemsTabState extends State<ItemsTab> {
         _infoText = localDatabase[widget.heroTag]["infoText"];
       });
     }
-    HomeScreen.botPadding = _infoText.isNotEmpty ? 40 : 0;
+    HomeScreen.botPadding = _infoText.isNotEmpty ? 75.5 : 35;
     HomeScreen.topPadding = _showFilters ? 140 : 80;
   }
 
   @override
   Widget build(BuildContext context) {
     double logicalWidth = MediaQuery.of(context).size.width;
+    final cartProvider = Provider.of<CartProvider>(context);
     return Container(
         color: tabBackground,
         // padding: const EdgeInsets.only(top: 10, left: 0, right: 0, bottom: 0),
@@ -221,15 +223,15 @@ class _ItemsTabState extends State<ItemsTab> {
         child: Stack(
           children: [
             Center(
-                child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: logicalWidth < 1000 ? 600 : 882.5,
-              ),
-              child: GridView.builder(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: logicalWidth < 1000 ? 600 : 882.5,
+                ),
+                child: GridView.builder(
                   padding: EdgeInsets.only(
                       left: 25,
                       right: 25,
-                      bottom: _infoText.isNotEmpty ? 70 : 30,
+                      bottom: _infoText.isNotEmpty ? 115 : 75,
                       top: _showFilters ? 80 : 30),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: logicalWidth < 1000 ? 2 : 3,
@@ -289,6 +291,7 @@ class _ItemsTabState extends State<ItemsTab> {
                               ),
                             ),
                             child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 Navigator.of(context).push(
                                   FadePageRoute(
@@ -471,7 +474,7 @@ class _ItemsTabState extends State<ItemsTab> {
                                                       child: GestureDetector(
                                                           behavior:
                                                               HitTestBehavior
-                                                                  .opaque,
+                                                                  .translucent,
                                                           onTap: () {
                                                             showAllergenDialog(
                                                                 context,
@@ -594,6 +597,15 @@ class _ItemsTabState extends State<ItemsTab> {
                               ),
                             ),
                           Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: IconButton(
+                                onPressed: () {
+                                  cartProvider.addItem(_items[index].id);
+                                },
+                                icon: Icon(Icons.add)),
+                          ),
+                          Positioned(
                             bottom: -6,
                             right: 0,
                             left: 0,
@@ -605,17 +617,21 @@ class _ItemsTabState extends State<ItemsTab> {
                         ],
                       ),
                     );
-                  }),
-            )),
+                  },
+                ),
+              ),
+            ),
             if (_infoText.isNotEmpty)
-              Align(
-                alignment: Alignment.bottomCenter,
+              Positioned(
+                bottom: 35,
+                right: 0,
+                left: 0,
                 child: ClipRRect(
                   clipBehavior: Clip.hardEdge,
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                    child: SizedBox(
-                      // color: yanaColor.withValues(alpha: 0.3),
+                    child: Container(
+                      color: barColor.withValues(alpha: 0.5),
                       height: 40,
                       child: Center(
                         child: Padding(
@@ -639,27 +655,32 @@ class _ItemsTabState extends State<ItemsTab> {
               ),
             if (_infoText.isNotEmpty)
               Positioned(
-                bottom: 40,
+                bottom: 75,
                 right: 0,
                 left: 0,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.center,
-                  children: [
-                    Divider(
-                      color: Colors.white,
-                      thickness: 0.5,
-                      height: 0.5,
-                    ),
-                    Positioned(
-                      top: -6,
-                      child: CircleAvatar(
-                        radius: 6,
-                        backgroundColor: Colors.red,
-                      ),
-                    ),
-                  ],
+                child: Divider(
+                  color: Colors.white,
+                  thickness: 0.5,
+                  height: 0.5,
                 ),
+                // Stack(
+                //   clipBehavior: Clip.none,
+                //   alignment: Alignment.center,
+                //   children: [
+                //     Divider(
+                //       color: Colors.white,
+                //       thickness: 0.5,
+                //       height: 0.5,
+                //     ),
+                //     Positioned(
+                //       top: -6,
+                //       child: CircleAvatar(
+                //         radius: 6,
+                //         backgroundColor: Colors.red,
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ),
             if (_showFilters)
               Positioned(
@@ -673,7 +694,7 @@ class _ItemsTabState extends State<ItemsTab> {
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                         child: AnimatedContainer(
-                          // color: yanaColor.withValues(alpha: 0.3),
+                          color: barColor.withValues(alpha: 0.5),
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                           height: 52.5 +
@@ -835,67 +856,77 @@ class EmptyTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double logicalWidth = MediaQuery.of(context).size.width;
     HomeScreen.previousIndex = 0;
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: LottieAnimationDuration(
-                duration: Duration(seconds: 3),
-                path: "assets/animations/no_selection_sushi.json"),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Keine Kategorie ausgewählt.",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "Julee",
-                      fontSize: 18,
-                      height: 0),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Stack(
-                  alignment: Alignment.center,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 35.0 + 40),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: LottieAnimationDuration(
+                  duration: Duration(seconds: 3),
+                  path: "assets/animations/no_selection_sushi.json"),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: logicalWidth < 1000 ? 600 : 882.5,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Divider(
-                      color: Colors.white,
-                      thickness: 0.5,
-                      height: 12,
-                      endIndent: 25,
-                      indent: 25,
+                    const Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Divider(
+                          color: Colors.white,
+                          thickness: 0.5,
+                          height: 12,
+                          endIndent: 25,
+                          indent: 25,
+                        ),
+                        Positioned(
+                          top: 0,
+                          child: CircleAvatar(
+                            radius: 6,
+                            backgroundColor: Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
-                    Positioned(
-                      top: 0,
-                      child: CircleAvatar(
-                        radius: 6,
-                        backgroundColor: Colors.red,
-                      ),
+                    const SizedBox(
+                      height: 20,
                     ),
+                    Text(
+                      "Keine Kategorie ausgewählt.",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Julee",
+                          fontSize: 18,
+                          height: 0),
+                    ),
+
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
+                    // ElevatedButton(
+                    //   onPressed: onBack,
+                    //   style: ButtonStyle(
+                    //       backgroundColor: WidgetStateProperty.all(yanaColor),
+                    //       elevation: WidgetStateProperty.all(5),
+                    //       foregroundColor: WidgetStateProperty.all(Colors.white),
+                    //       shadowColor: WidgetStateProperty.all(yanaColor)),
+                    //   child: const Icon(Icons.arrow_back_ios_new),
+                    // ),
                   ],
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  onPressed: onBack,
-                  style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(yanaColor),
-                      elevation: WidgetStateProperty.all(5),
-                      foregroundColor: WidgetStateProperty.all(Colors.white),
-                      shadowColor: WidgetStateProperty.all(yanaColor)),
-                  child: const Icon(Icons.arrow_back_ios_new),
-                ),
-              ],
+              ),
             ),
-          )
-        ]);
+          ]),
+    );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sushiyana_flutter/application/fade_page_route.dart';
+import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
 
 // DEACTIVATED

@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:sushiyana_flutter/application/text_methods/convert_to_rich_text.dart';
+import 'package:sushiyana_flutter/presentation/text_methods/convert_to_rich_text.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
 
 void showAllergenDialog(BuildContext context, Item item) {

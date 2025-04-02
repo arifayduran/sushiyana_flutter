@@ -77,7 +77,6 @@ class BranchProvider extends ChangeNotifier {
     },
     "spandau": {
       "name": "Spandau",
-
       "address": "Sushi Yana Spandau\nPichelsdorferstraße 120\n13595 Berlin",
       "contact": "Geschäftsführer: Ibrahim Hamade\nSteuernummer: 19/929/00826",
       "email": "spandau@sushi-yana.de",
@@ -115,18 +114,19 @@ class BranchProvider extends ChangeNotifier {
     }
   }
 
-  void setBranch(String subdomain) {
-    _currentBranch = subdomain;
+  Future<void> setBranch(String newBranch) async {
+    _currentBranch = newBranch;
     _branchData["name"] =
-        (_branches[subdomain]?["name"] ?? _branches["neukoelln"]!["name"])!;
-    _branchData["address"] = (_branches[subdomain]?["address"] ??
+        (_branches[newBranch]?["name"] ?? _branches["neukoelln"]!["name"])!;
+    _branchData["address"] = (_branches[newBranch]?["address"] ??
         _branches["neukoelln"]!["address"])!;
-    _branchData["contact"] = (_branches[subdomain]?["contact"] ??
+    _branchData["contact"] = (_branches[newBranch]?["contact"] ??
         _branches["neukoelln"]!["contact"])!;
     _branchData["email"] =
-        (_branches[subdomain]?["email"] ?? _branches["neukoelln"]!["email"])!;
+        (_branches[newBranch]?["email"] ?? _branches["neukoelln"]!["email"])!;
 
-    _storage.write(key: 'currentBranch', value: subdomain);
     notifyListeners();
+
+    await _storage.write(key: 'currentBranch', value: newBranch);
   }
 }

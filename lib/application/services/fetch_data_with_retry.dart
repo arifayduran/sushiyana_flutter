@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sushiyana_flutter/application/database_service.dart';
+import 'package:sushiyana_flutter/application/services/database_service.dart';
 import 'dart:async';
 
 import 'package:sushiyana_flutter/data/is_data_fetched.dart';

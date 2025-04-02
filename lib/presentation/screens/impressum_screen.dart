@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sushiyana_flutter/application/branch_provider.dart';
-import 'package:sushiyana_flutter/application/fade_page_route.dart';
+import 'package:sushiyana_flutter/application/providers/branch_provider.dart';
+import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
-import 'package:sushiyana_flutter/presentation/branch_selector.dart';
+import 'package:sushiyana_flutter/presentation/widgets/branch_selector.dart';
 import 'package:sushiyana_flutter/presentation/screens/datenschutz_screen.dart';
 // ignore: deprecated_member_use, avoid_web_libraries_in_flutter
 import 'dart:html' as html;

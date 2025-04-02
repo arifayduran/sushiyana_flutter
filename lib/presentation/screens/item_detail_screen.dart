@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
-import 'package:sushiyana_flutter/application/show_zoom_animation.dart';
-import 'package:sushiyana_flutter/application/text_methods/convert_to_rich_text.dart';
+import 'package:sushiyana_flutter/application/show_animations_variables.dart';
+import 'package:sushiyana_flutter/presentation/text_methods/convert_to_rich_text.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
-import 'package:sushiyana_flutter/presentation/lottie_animation_duration.dart';
-import 'package:sushiyana_flutter/presentation/my_small_circle_button_widget.dart';
-import 'package:sushiyana_flutter/presentation/show_alert_dialog.dart';
+import 'package:sushiyana_flutter/presentation/widgets/lottie_animation_duration.dart';
+import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_small_circle_button_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/show_alert_dialog.dart';
 
 class ItemDetailScreen extends StatefulWidget {
   final List<Item> items;

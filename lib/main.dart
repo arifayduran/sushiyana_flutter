@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:sushiyana_flutter/application/branch_provider.dart';
-import 'package:sushiyana_flutter/application/scroll_state_provider.dart';
-import 'package:sushiyana_flutter/application/show_zoom_animation.dart';
+import 'package:sushiyana_flutter/application/providers/branch_provider.dart';
+import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
+import 'package:sushiyana_flutter/application/providers/scroll_state_provider.dart';
+import 'package:sushiyana_flutter/application/show_animations_variables.dart';
 import 'package:sushiyana_flutter/config/scroll_configuration_behavior.dart';
 // import 'package:sushiyana_flutter/presentation/d__splash_screen.dart';
 import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
@@ -11,12 +12,20 @@ import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  String subdomain = _getSubdomain(BranchProvider());
+  final branchProvider = BranchProvider();
+
+  String subdomain = _getSubdomain(branchProvider);
+  await branchProvider.setBranch(subdomain);
+
+  final cartProvider = CartProvider();
+  cartProvider.setBranch(branchProvider.currentBranch);
+  await cartProvider.loadCartFromStorage();
 
   final secureStorage = const FlutterSecureStorage();
 
   String showZoomAnimationString =
       (await secureStorage.read(key: 'showZoomHandAnimation')) ?? '';
+
   String showTapHandAnimationString =
       (await secureStorage.read(key: 'showTapHandAnimation')) ?? '';
 
@@ -32,13 +41,12 @@ void main() async {
     showTapHandAnimation = true;
   }
 
-
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (context) => BranchProvider()..setBranch(subdomain)),
+        ChangeNotifierProvider(create: (context) => branchProvider),
         ChangeNotifierProvider(create: (context) => ScrollStateProvider()),
+        ChangeNotifierProvider(create: (context) => cartProvider),
       ],
       child: const MyApp(),
     ),
