@@ -28,7 +28,7 @@ class _MainTabState extends State<MainTab> {
     final branchProvider = Provider.of<BranchProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0 + 10),
+      padding: const EdgeInsets.only(bottom: 35),
       child: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 600),

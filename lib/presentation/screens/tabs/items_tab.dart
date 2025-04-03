@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/providers/branch_provider.dart';
-import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
 import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/application/show_animations_variables.dart';
 import 'package:sushiyana_flutter/presentation/text_methods/calculate_line_count_for_description.dart';
@@ -15,16 +14,8 @@ import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
 import 'package:sushiyana_flutter/presentation/widgets/lottie_animation_duration.dart';
 import 'package:sushiyana_flutter/presentation/screens/item_detail_screen.dart';
+import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/cart_quantity_button.dart';
 import 'package:sushiyana_flutter/presentation/widgets/show_alert_dialog.dart';
-
-// Material(
-//                             color: Colors.transparent,
-//                             child: InkWell(
-//                               highlightColor: yanaColor.withValues(alpha: .5),
-//                               splashColor: yanaColor,
-//                               onTap: () {},
-//                               child:
-//                             ),),
 
 class ItemsTab extends StatefulWidget {
   final String heroTag;
@@ -208,14 +199,14 @@ class _ItemsTabState extends State<ItemsTab> {
         _infoText = localDatabase[widget.heroTag]["infoText"];
       });
     }
-    HomeScreen.botPadding = _infoText.isNotEmpty ? 75.5 - 0.1 : 34.5;
+    HomeScreen.botPadding = _infoText.isNotEmpty ? 75.4 : 34.9;
     HomeScreen.topPadding = _showFilters ? 140 : 80;
   }
 
   @override
   Widget build(BuildContext context) {
     double logicalWidth = MediaQuery.of(context).size.width;
-    final cartProvider = Provider.of<CartProvider>(context);
+
     return Container(
         color: tabBackground,
         // padding: const EdgeInsets.only(top: 10, left: 0, right: 0, bottom: 0),
@@ -237,7 +228,7 @@ class _ItemsTabState extends State<ItemsTab> {
                     crossAxisCount: logicalWidth < 1000 ? 2 : 3,
                     // crossAxisCount: 2,
                     crossAxisSpacing: 15,
-                    mainAxisSpacing: 20,
+                    mainAxisSpacing: 30,
                     childAspectRatio: .70,
                   ),
                   itemCount: _items.length,
@@ -249,7 +240,7 @@ class _ItemsTabState extends State<ItemsTab> {
                                     ? logicalWidth < 370
                                         ? 7
                                         : 9
-                                    : 11
+                                    : 10.5
                                 : 11.5
                             : 14
                         : 15;
@@ -365,6 +356,7 @@ class _ItemsTabState extends State<ItemsTab> {
                                           Text(
                                             _items[index].artikelnummer,
                                             style: TextStyle(
+                                                decoration: TextDecoration.none,
                                                 color: Colors.grey,
                                                 fontFamily: "Julee",
                                                 fontWeight: FontWeight.w900,
@@ -379,121 +371,113 @@ class _ItemsTabState extends State<ItemsTab> {
                                             textAlign: TextAlign.center,
                                             maxLines: 2,
                                             style: TextStyle(
+                                                decoration: TextDecoration.none,
                                                 color: Colors.white,
                                                 fontFamily: "Julee",
+                                                height: 0,
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: logicalWidth < 560
                                                     ? logicalWidth < 390
                                                         ? 9
-                                                        : 11
+                                                        : 10.5
                                                     : 13),
                                           ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 5.0),
-                                            child: SizedBox(
-                                              height: logicalWidth < 560
-                                                  ? logicalWidth < 390
-                                                      ? 17
-                                                      : 20
-                                                  : 25,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                spacing:
-                                                    logicalWidth < 450 ? 2 : 4,
-                                                children: [
-                                                  if (_items[index].pikant)
-                                                    Tooltip(
-                                                      message: "Pikant",
-                                                      child: SizedBox(
-                                                        height: logicalWidth <
-                                                                560
-                                                            ? logicalWidth < 390
-                                                                ? 12
-                                                                : 15
-                                                            : 20,
-                                                        width: logicalWidth <
-                                                                560
-                                                            ? logicalWidth < 390
-                                                                ? 12
-                                                                : 15
-                                                            : 20,
-                                                        child: Image.asset(
-                                                            "assets/icons/pikant.png"),
-                                                      ),
+                                          SizedBox(
+                                            height: logicalWidth < 560
+                                                ? logicalWidth < 390
+                                                    ? 17
+                                                    : 20
+                                                : 25,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              spacing:
+                                                  logicalWidth < 450 ? 2 : 4,
+                                              children: [
+                                                if (_items[index].pikant)
+                                                  Tooltip(
+                                                    message: "Pikant",
+                                                    child: SizedBox(
+                                                      height: logicalWidth < 560
+                                                          ? logicalWidth < 390
+                                                              ? 12
+                                                              : 15
+                                                          : 20,
+                                                      width: logicalWidth < 560
+                                                          ? logicalWidth < 390
+                                                              ? 12
+                                                              : 15
+                                                          : 20,
+                                                      child: Image.asset(
+                                                          "assets/icons/pikant.png"),
                                                     ),
-                                                  if (_items[index].vegetarisch)
-                                                    Tooltip(
-                                                      message: "Vegetarisch",
-                                                      child: SizedBox(
-                                                        height: logicalWidth <
-                                                                560
-                                                            ? logicalWidth < 390
-                                                                ? 12
-                                                                : 15
-                                                            : 20,
-                                                        width: logicalWidth <
-                                                                560
-                                                            ? logicalWidth < 390
-                                                                ? 12
-                                                                : 15
-                                                            : 20,
-                                                        child: Image.asset(
-                                                            "assets/icons/vegetarisch.png"),
-                                                      ),
+                                                  ),
+                                                if (_items[index].vegetarisch)
+                                                  Tooltip(
+                                                    message: "Vegetarisch",
+                                                    child: SizedBox(
+                                                      height: logicalWidth < 560
+                                                          ? logicalWidth < 390
+                                                              ? 12
+                                                              : 15
+                                                          : 20,
+                                                      width: logicalWidth < 560
+                                                          ? logicalWidth < 390
+                                                              ? 12
+                                                              : 15
+                                                          : 20,
+                                                      child: Image.asset(
+                                                          "assets/icons/vegetarisch.png"),
                                                     ),
-                                                  if (_items[index].vegan)
-                                                    Tooltip(
-                                                      message: "Vegan",
-                                                      child: SizedBox(
-                                                        height: logicalWidth <
-                                                                560
-                                                            ? logicalWidth < 390
-                                                                ? 12
-                                                                : 15
-                                                            : 20,
-                                                        width: logicalWidth <
-                                                                560
-                                                            ? logicalWidth < 390
-                                                                ? 12
-                                                                : 15
-                                                            : 20,
-                                                        child: Image.asset(
-                                                            "assets/icons/vegan.png"),
-                                                      ),
+                                                  ),
+                                                if (_items[index].vegan)
+                                                  Tooltip(
+                                                    message: "Vegan",
+                                                    child: SizedBox(
+                                                      height: logicalWidth < 560
+                                                          ? logicalWidth < 390
+                                                              ? 12
+                                                              : 15
+                                                          : 20,
+                                                      width: logicalWidth < 560
+                                                          ? logicalWidth < 390
+                                                              ? 12
+                                                              : 15
+                                                          : 20,
+                                                      child: Image.asset(
+                                                          "assets/icons/vegan.png"),
                                                     ),
-                                                  if (_items[index]
-                                                      .allergeneZusatz
-                                                      .isNotEmpty)
-                                                    Tooltip(
-                                                      message:
-                                                          "Allergene und Zusatzstoffe",
-                                                      child: GestureDetector(
-                                                          behavior:
-                                                              HitTestBehavior
-                                                                  .translucent,
-                                                          onTap: () {
-                                                            showAllergenDialog(
-                                                                context,
-                                                                _items[index]);
-                                                          },
-                                                          child: Icon(
-                                                            size: logicalWidth <
-                                                                    560
-                                                                ? logicalWidth <
-                                                                        390
-                                                                    ? 17
-                                                                    : 20
-                                                                : 25,
-                                                            Icons.info,
-                                                            color: yanaColor,
-                                                          )),
-                                                    )
-                                                ],
-                                              ),
+                                                  ),
+                                                if (_items[index]
+                                                    .allergeneZusatz
+                                                    .isNotEmpty)
+                                                  Tooltip(
+                                                    message:
+                                                        "Allergene und Zusatzstoffe",
+                                                    child: GestureDetector(
+                                                        behavior:
+                                                            HitTestBehavior
+                                                                .translucent,
+                                                        onTap: () {
+                                                          showAllergenDialog(
+                                                              context,
+                                                              _items[index]);
+                                                        },
+                                                        child: Icon(
+                                                          size: logicalWidth <
+                                                                  560
+                                                              ? logicalWidth <
+                                                                      390
+                                                                  ? 17
+                                                                  : 20
+                                                              : 25,
+                                                          Icons.info,
+                                                          color: yanaColor,
+                                                        )),
+                                                  )
+                                              ],
                                             ),
                                           ),
                                           _items[index].beschreibung.isNotEmpty
@@ -550,6 +534,7 @@ class _ItemsTabState extends State<ItemsTab> {
                                                 .replaceAll(".", ","),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
+                                              decoration: TextDecoration.none,
                                               color: Colors.white,
                                               letterSpacing: 2,
                                               fontFamily: "Julee",
@@ -597,23 +582,21 @@ class _ItemsTabState extends State<ItemsTab> {
                               ),
                             ),
                           Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: IconButton(
-                                onPressed: () {
-                                  cartProvider.addItem(_items[index].id);
-                                },
-                                icon: Icon(Icons.add)),
-                          ),
-                          Positioned(
-                            bottom: -6,
-                            right: 0,
-                            left: 0,
-                            child: CircleAvatar(
-                              radius: 6,
-                              backgroundColor: Colors.red,
-                            ),
-                          ),
+                              bottom: -25,
+                              right: 0,
+                              left: 0,
+                              child: CartQuantityButton(
+                                id: _items[index].id,
+                              )),
+                          // Positioned(
+                          //   bottom: -6,
+                          //   right: 0,
+                          //   left: 0,
+                          //   child: CircleAvatar(
+                          //     radius: 6,
+                          //     backgroundColor: Colors.red,
+                          //   ),
+                          // ),
                         ],
                       ),
                     );
@@ -640,6 +623,7 @@ class _ItemsTabState extends State<ItemsTab> {
                             _infoText,
                             textAlign: TextAlign.center,
                             style: TextStyle(
+                              decoration: TextDecoration.none,
                               color: Colors.white,
                               fontFamily: "Julee",
                               fontStyle: FontStyle.italic,
@@ -758,6 +742,8 @@ class _ItemsTabState extends State<ItemsTab> {
                                                 SizedBox(width: 5),
                                                 Text(filter,
                                                     style: TextStyle(
+                                                        decoration:
+                                                            TextDecoration.none,
                                                         color: Colors.white,
                                                         fontFamily: "Julee",
                                                         fontSize: 14)),
@@ -904,6 +890,7 @@ class EmptyTab extends StatelessWidget {
                     Text(
                       "Keine Kategorie ausgewählt.",
                       style: TextStyle(
+                          decoration: TextDecoration.none,
                           color: Colors.white,
                           fontFamily: "Julee",
                           fontSize: 18,

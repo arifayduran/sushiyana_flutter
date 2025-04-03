@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:sushiyana_flutter/application/parse_price_to_double.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
 
@@ -16,6 +17,7 @@ class CartProvider with ChangeNotifier {
   final _storage = const FlutterSecureStorage();
   final Map<String, Map<String, CartItem>> _branchCarts = {};
   late String _currentBranch;
+  final Map<String, String> _notes = {};
 
   void setBranch(String branch) {
     _currentBranch = branch;
@@ -41,7 +43,7 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(String id) {
+  void removeSingleItem(String id) {
     if (items.containsKey(id)) {
       items[id]!.quantity--;
       if (items[id]!.quantity <= 0) {
@@ -50,6 +52,20 @@ class CartProvider with ChangeNotifier {
       saveCartToStorage();
       notifyListeners();
     }
+  }
+
+  void removeItemQuantity(String id) {
+    if (items.containsKey(id)) {
+      items.remove(id);
+      saveCartToStorage();
+      notifyListeners();
+    }
+  }
+
+  void clearCart() {
+    _branchCarts[_currentBranch] = {};
+    saveCartToStorage();
+    notifyListeners();
   }
 
   Future<void> saveCartToStorage() async {
@@ -87,10 +103,17 @@ class CartProvider with ChangeNotifier {
         List<Item> items, Map<String, CartItem> cartItems) {
       for (var item in items) {
         if (cartItems.containsKey(item.id)) {
-          matchedItemsWithQuantity.add({
-            'item': item,
-            'quantity': cartItems[item.id]!.quantity,
-          });
+          if (item.bestellbar) {
+            matchedItemsWithQuantity.add({
+              'item': item,
+              'quantity': cartItems[item.id]!.quantity,
+            });
+          } else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              cartItems.remove(item.id);
+              notifyListeners();
+            });
+          }
         }
       }
     }
@@ -116,6 +139,51 @@ class CartProvider with ChangeNotifier {
       }
     });
 
+    matchedItemsWithQuantity.sort((a, b) {
+      double parsePrice(String price) {
+        return double.parse(price.replaceAll(',', '.').split(' ')[0]);
+      }
+
+      double priceA = parsePrice(a['item'].preis);
+      double priceB = parsePrice(b['item'].preis);
+      return priceB.compareTo(priceA);
+    });
+
     return matchedItemsWithQuantity;
+  }
+
+  String getNoteForItem(String id) {
+    return _notes[id] ?? '';
+  }
+
+  void setNoteForItem(String id, String note) {
+    _notes[id] = note;
+    saveNotesToStorage();
+    notifyListeners();
+  }
+
+  Future<void> saveNotesToStorage() async {
+    await _storage.write(key: 'itemNotes', value: jsonEncode(_notes));
+  }
+
+  Future<void> loadNotesFromStorage() async {
+    final notesString = await _storage.read(key: 'itemNotes');
+    if (notesString != null) {
+      final Map<String, dynamic> notesData = jsonDecode(notesString);
+      _notes.clear();
+      notesData.forEach((key, value) {
+        _notes[key] = value;
+      });
+      notifyListeners();
+    }
+  }
+
+  int getAmountForItem(String id) {
+    return items[id]?.quantity ?? 0;
+  }
+
+  double getTotalPriceForItem(String id, String pricePerUnit) {
+    double? pricePerUnitParsed = parsePriceToDouble(pricePerUnit);
+    return (items[id]?.quantity ?? 0) * pricePerUnitParsed!;
   }
 }

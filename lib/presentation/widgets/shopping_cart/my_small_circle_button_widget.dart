@@ -29,7 +29,9 @@ class MySmallCircleButtonWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
         color: Colors.transparent,
         child: InkWell(
+          
           onTap: onTap,
+          
           highlightColor: highlightColor,
           splashColor: splashColor,
           child: Ink(

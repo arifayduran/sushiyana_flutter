@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
+import 'package:sushiyana_flutter/data/is_data_fetched.dart';
 import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_small_circle_button_widget.dart';
 import 'package:sushiyana_flutter/presentation/screens/shopping_cart_screen.dart';
@@ -24,52 +25,54 @@ class FancyCartButton extends StatelessWidget {
       required this.size,
       required this.height});
 
-  // Removed the misplaced Provider.of<CartProvider> call
-
   void onTap(BuildContext context, CartProvider cartProvider) {
-    if (cartProvider.items.isEmpty) {
-      Navigator.of(context).push(FadePageRoute(
-          popOnTap: true,
-          page: Stack(
-            children: [
-              AlertDialog(
-                backgroundColor: yanaColor.withValues(alpha: .8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                content: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-                  child: const Text(
-                    "Keine Artikel im Warenkorb",
-                    style: TextStyle(color: Colors.white),
+    if (isDataFetched) {
+      if (cartProvider.items.isEmpty) {
+        Navigator.of(context).push(FadePageRoute(
+            popOnTap: true,
+            page: Stack(
+              children: [
+                AlertDialog(
+                  backgroundColor: yanaColor.withValues(alpha: .8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child:
-                        const Text("OK", style: TextStyle(color: Colors.white)),
-                  ),
-                ],
-              ),
-              Positioned(
-                  top: 20,
-                  right: 20,
-                  child: MySmallCircleButtonWidget(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    strokewidth: 0.5,
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
+                  content: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
+                    child: const Text(
+                      "Keine Artikel im Warenkorb",
+                      style:
+                          TextStyle(color: Colors.white, fontFamily: "Julee"),
                     ),
-                  )),
-            ],
-          )));
-    } else {
-      Navigator.of(context).push(FadePageRoute(
-          page: ShoppingCartScreen(), popOnTap: false, sigmaX: 3, sigmaY: 3));
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("OK",
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: "Julee")),
+                    ),
+                  ],
+                ),
+                Positioned(
+                    top: 20,
+                    right: 20,
+                    child: MySmallCircleButtonWidget(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      strokewidth: 0.5,
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    )),
+              ],
+            )));
+      } else {
+        Navigator.of(context).push(FadePageRoute(
+            page: ShoppingCartScreen(), popOnTap: false, sigmaX: 4, sigmaY: 4));
+      }
     }
   }
 

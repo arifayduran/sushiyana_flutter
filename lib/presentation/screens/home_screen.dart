@@ -377,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           "Willkommen in Sushi Yana ${branchProvider.branches[branchProvider.currentBranch]!["display_name"] ?? branchProvider.branches[branchProvider.currentBranch]!["name"]}!";
     } else if (_tabController.index == 1 &&
         (_selectedHeroTag != null && _selectedHeroTag != "null")) {
-      _appBarTitle = "$_selectedHeroTag";
+      _appBarTitle = _selectedHeroTag!.toUpperCase();
     } else {
       _appBarTitle =
           "Willkommen in Sushi Yana ${branchProvider.branches[branchProvider.currentBranch]!["display_name"] ?? branchProvider.branches[branchProvider.currentBranch]!["name"]}!";
@@ -893,7 +893,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   Positioned(
                     bottom:
-                        _tabController.index == 1 ? HomeScreen.botPadding : 34.5,
+                        _tabController.index == 1 ? HomeScreen.botPadding : 34.9,
                     right: 0,
                     left: 0,
                     child: FancyCartButton(

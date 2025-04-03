@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:sushiyana_flutter/application/navigator_key.dart';
 import 'package:sushiyana_flutter/application/providers/branch_provider.dart';
 import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
 import 'package:sushiyana_flutter/application/providers/scroll_state_provider.dart';
@@ -20,6 +21,7 @@ void main() async {
   final cartProvider = CartProvider();
   cartProvider.setBranch(branchProvider.currentBranch);
   await cartProvider.loadCartFromStorage();
+    await cartProvider.loadNotesFromStorage();
 
   final secureStorage = const FlutterSecureStorage();
 
@@ -53,6 +55,7 @@ void main() async {
   );
 }
 
+
 String _getSubdomain(dynamic branchProvider) {
   String host = Uri.base.host;
   List<String> parts = host.split(".");
@@ -72,6 +75,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: Colors.black,
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       // theme: ThemeData(
       //   fontFamily: "Julee",

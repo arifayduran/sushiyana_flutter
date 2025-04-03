@@ -452,18 +452,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     ),
                   )),
             ),
-
-          Positioned.fill(
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onVerticalDragUpdate: (details) {
-                if (details.primaryDelta != null &&
-                    details.primaryDelta! > 20) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-          ),
         ],
       ),
     );

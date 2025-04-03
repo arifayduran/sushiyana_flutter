@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
-RichText convertToRichTextDescription(String input, Color color,
-    double fontSize, String fontFamily, FontWeight fontWeight, bool isCenter) {
+RichText convertToRichTextDescription(
+    String input,
+    Color color,
+    double fontSize,
+    String fontFamily,
+    FontWeight fontWeight,
+    bool isCenter,
+    int? maxLines,
+    TextOverflow? overFlow,
+    double? height,
+    double? letterSpacing) {
   List<TextSpan> spans = [];
 
   List<String> lines = input.split("<br>");
@@ -46,13 +55,16 @@ RichText convertToRichTextDescription(String input, Color color,
   }
 
   return RichText(
+    maxLines: maxLines,
+    overflow: overFlow ?? TextOverflow.clip,
     textAlign: isCenter ? TextAlign.center : TextAlign.start,
     text: TextSpan(
       children: spans,
       style: TextStyle(
         fontSize: fontSize,
+        height: height,
         color: color,
-        letterSpacing: 0.0,
+        letterSpacing: letterSpacing ?? 0.0,
         fontFamily: fontFamily,
         fontWeight: fontWeight,
         overflow: TextOverflow.ellipsis,
