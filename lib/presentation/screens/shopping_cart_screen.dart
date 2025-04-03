@@ -6,8 +6,11 @@ import 'package:shimmer/shimmer.dart';
 import 'package:sushiyana_flutter/application/navigator_key.dart';
 import 'package:sushiyana_flutter/application/parse_price_to_double.dart';
 import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
+import 'package:sushiyana_flutter/application/services/order_service.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
+import 'package:sushiyana_flutter/domain/order_item.dart';
+import 'package:sushiyana_flutter/presentation/screens/table_and_notes_screen.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/blur_gradient.dart';
 import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_gradient_button_widget.dart';
@@ -254,6 +257,9 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
     double logicalHeight = MediaQuery.of(context).size.height;
     double logicalWidth = MediaQuery.of(context).size.width;
 
+    CartProvider cartProvider =
+        Provider.of<CartProvider>(context, listen: false);
+
     return Container(
       width: logicalWidth,
       height: logicalHeight,
@@ -443,9 +449,54 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                           color: Colors.white),
                     ),
                   ),
-                  onPressed: () {
-                    _customAlertDialog(context,
-                        "Zurzeit arbeiten wie an dieser Funktion. Bitte bestellen Sie bei unseren Mitarbeitern.");
+                  onPressed: () async {
+                    final result = await Navigator.of(context).push(
+                      FadePageRoute(
+                        popOnTap: true,
+                        page: TableAndNotesScreen(),
+                      ),
+                    );
+
+                    if (result != null) {
+                      final tableNumber = result['tableNumber'];
+                      final notes = result['notes'];
+
+                      final orderService = OrderService();
+
+                      bool success = await orderService.sendOrder(
+                        customerName: tableNumber,
+                        items: _cartItems
+                            .map((entry) => OrderItem(
+                                  name: entry['item'].artikelname,
+                                  quantity: entry['quantity'],
+                                  price:
+                                      parsePriceToDouble(entry['item'].preis)!,
+                                ))
+                            .toList(),
+                        totalPrice: _cartTotal,
+                        notes: notes ?? '',
+                      );
+
+                      if (success && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Bestellung erfolgreich gesendet!')),
+                        );
+                        cartProvider.clearCart();
+                        _cartItems.clear();
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Fehler bei der Bestellung.')),
+                          );
+                        }
+                      }
+                    }
+
+                    // _customAlertDialog(context,
+                    //     "Zurzeit arbeiten wie an dieser Funktion. Bitte bestellen Sie bei unseren Mitarbeitern.");
                   },
                 ),
               ),

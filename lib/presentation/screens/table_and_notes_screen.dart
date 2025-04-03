@@ -1,28 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sushiyana_flutter/application/navigator_key.dart';
-import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
-import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/presentation/widgets/my_small_circle_button_widget.dart';
 
-class NotesScreen extends StatelessWidget {
-  final Item item;
 
-  const NotesScreen({super.key, required this.item});
+class TableAndNotesScreen extends StatelessWidget {
+  final TextEditingController tableNumberController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
+
+  TableAndNotesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cartProvider = Provider.of<CartProvider>(context);
-    final TextEditingController notesController = TextEditingController(
-      text: cartProvider.getNoteForItem(item.id),
-    );
-
     return Stack(
       children: [
         Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 330, maxHeight: 450),
+            constraints: const BoxConstraints(maxWidth: 330, maxHeight: 500),
             child: Material(
               color: Colors.transparent,
               child: Container(
@@ -36,13 +29,31 @@ class NotesScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Notiz für Artikel "${item.artikelname}"...',
+                      'Tisch Nummer und Notizen...',
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: "Julee",
                         decoration: TextDecoration.none,
                         fontWeight: FontWeight.w900,
                         color: Colors.white.withValues(alpha: 0.6),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: tableNumberController,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white.withValues(alpha: .1),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintText: 'Tisch Nummer eingeben...',
+                        hintStyle: const TextStyle(
+                            color: Colors.white70,
+                            fontFamily: "Julee",
+                            fontSize: 12),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -69,11 +80,12 @@ class NotesScreen extends StatelessWidget {
                       children: [
                         TextButton(
                           onPressed: () {
-                            cartProvider.setNoteForItem(item.id, "");
-                            navigatorKey.currentState?.pop();
+                            tableNumberController.clear();
+                            notesController.clear();
+                            Navigator.pop(context);
                           },
                           child: Text(
-                            "Notiz löschen",
+                            "Abbrechen",
                             style: TextStyle(
                               fontSize: 13,
                               fontFamily: "Julee",
@@ -85,9 +97,10 @@ class NotesScreen extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            cartProvider.setNoteForItem(
-                                item.id, notesController.text);
-                            navigatorKey.currentState?.pop();
+                            final tableNumber = tableNumberController.text;
+                            final notes = notesController.text;
+                            Navigator.pop(context,
+                                {'tableNumber': tableNumber, 'notes': notes});
                           },
                           child: Text(
                             "Speichern",
@@ -125,4 +138,3 @@ class NotesScreen extends StatelessWidget {
     );
   }
 }
-
