@@ -20,7 +20,7 @@ class MySmallCircleButtonWidget extends StatelessWidget {
   final Color bgColor;
   final double strokewidth;
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(50),
