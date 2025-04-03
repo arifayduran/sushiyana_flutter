@@ -474,7 +474,8 @@ class _ItemsTabState extends State<ItemsTab> {
                                                                   : 20
                                                               : 25,
                                                           Icons.info,
-                                                          color: yanaColor,
+                                                          color:
+                                                              barColor, // yanaColor
                                                         )),
                                                   )
                                               ],
@@ -581,22 +582,22 @@ class _ItemsTabState extends State<ItemsTab> {
                                 ),
                               ),
                             ),
+                         
                           Positioned(
-                              bottom: -25,
-                              right: 0,
-                              left: 0,
+                              bottom: 10,
+                              right: 10,
                               child: CartQuantityButton(
-                                id: _items[index].id,
+                                id: _items[index].id, size: 43,
                               )),
-                          // Positioned(
-                          //   bottom: -6,
-                          //   right: 0,
-                          //   left: 0,
-                          //   child: CircleAvatar(
-                          //     radius: 6,
-                          //     backgroundColor: Colors.red,
-                          //   ),
-                          // ),
+                          Positioned(
+                            bottom: -6,
+                            right: 0,
+                            left: 0,
+                            child: CircleAvatar(
+                              radius: 6,
+                              backgroundColor: Colors.red,
+                            ),
+                          ),
                         ],
                       ),
                     );

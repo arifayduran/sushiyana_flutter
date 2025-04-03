@@ -7,7 +7,7 @@ import 'package:sushiyana_flutter/application/services/fetch_data_with_retry.dar
 import 'package:sushiyana_flutter/application/get_image_url_cdn.dart';
 import 'package:sushiyana_flutter/application/providers/scroll_state_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
-import 'package:sushiyana_flutter/data/is_data_fetched.dart';
+import 'package:sushiyana_flutter/data/is_data_fetched_notifier.dart';
 import 'package:sushiyana_flutter/data/local_database.dart';
 import 'package:sushiyana_flutter/presentation/widgets/animated_text_widget.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/fancy_cart_button.dart';
@@ -124,23 +124,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final scrollStateProvider =
         Provider.of<ScrollStateProvider>(context, listen: false);
 
+    if (!innerController.hasClients) return;
+
     setState(() {
       _innerOffset = innerController.positions.last.pixels;
     });
 
     if (!_isTopScrollButtonLocked) {
-      if (_innerOffset > 0) {
-        scrollStateProvider.setTopScrollButtonEnabled(true);
-      } else {
-        scrollStateProvider.setTopScrollButtonEnabled(false);
-      }
+      scrollStateProvider.setTopScrollButtonEnabled(_innerOffset > 0);
     }
+
     if (!_isBotScrollButtonLocked) {
-      if (_innerOffset <= innerController.position.maxScrollExtent - 50) {
-        scrollStateProvider.setBotScrollButtonEnabled(true);
-      } else {
-        scrollStateProvider.setBotScrollButtonEnabled(false);
-      }
+      scrollStateProvider.setBotScrollButtonEnabled(
+        _innerOffset <= innerController.position.maxScrollExtent - 50,
+      );
     }
   }
 
@@ -550,7 +547,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       unselectedLabelColor: unselectedLabelColor,
                       tabs: _tabs,
                       onTap: (value) {
-                        if (!isDataFetched ||
+                        if (!isDataFetchedNotifier.value ||
                             _isFetchingData ||
                             !_isControllerInitialized) {
                           // Prevent tab bar interaction
@@ -596,7 +593,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   PageView(
                     controller: _pageController,
                     onPageChanged: (index) {
-                      if (!isDataFetched ||
+                      if (!isDataFetchedNotifier.value ||
                           _isFetchingData ||
                           !_isControllerInitialized) {
                         // Prevent swiping to other tabs
@@ -614,7 +611,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         scrollStateProvider.setBotScrollButtonEnabled(true);
                       }
                     },
-                    physics: (!isDataFetched ||
+                    physics: (!isDataFetchedNotifier.value ||
                             _isFetchingData ||
                             !_isControllerInitialized)
                         ? const NeverScrollableScrollPhysics()
@@ -626,13 +623,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             onItemTapped: _onItemTapped,
                             scrollToTopOnBack: () => _scrollToTop(true, true),
                           ),
-                          if (!isDataFetched || _isFetchingData)
+                          if (!isDataFetchedNotifier.value || _isFetchingData)
                             BackdropFilter(
                               filter:
                                   ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
                               child: Container(
                                 color: Colors.black.withValues(
-                                    alpha: !_isFetchingData && !isDataFetched
+                                    alpha: !_isFetchingData &&
+                                            !isDataFetchedNotifier.value
                                         ? 0.6
                                         : 0.2),
                               ),
@@ -658,7 +656,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 ],
                               ),
                             ),
-                          if (!_isFetchingData && !isDataFetched)
+                          if (!_isFetchingData && !isDataFetchedNotifier.value)
                             Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -756,8 +754,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ? _tabController.index == 1 &&
                               (_selectedHeroTag == null ||
                                   _selectedHeroTag == "null") &&
-                              _innerOffset <
-                                  innerController.position.maxScrollExtent
+                              (innerController.hasClients &&
+                                  _innerOffset <
+                                      innerController.position.maxScrollExtent)
                           ? SizedBox()
                           : Positioned(
                               bottom: _tabController.index == 1
@@ -892,8 +891,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                   ),
                   Positioned(
-                    bottom:
-                        _tabController.index == 1 ? HomeScreen.botPadding : 34.9,
+                    bottom: _tabController.index == 1
+                        ? HomeScreen.botPadding
+                        : 34.9,
                     right: 0,
                     left: 0,
                     child: FancyCartButton(

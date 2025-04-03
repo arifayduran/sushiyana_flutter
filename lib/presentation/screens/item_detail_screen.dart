@@ -7,7 +7,9 @@ import 'package:sushiyana_flutter/presentation/text_methods/convert_to_rich_text
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/presentation/widgets/lottie_animation_duration.dart';
-import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_small_circle_button_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/my_small_circle_button_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/cart_quantity_button.dart';
+import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/fancy_cart_button.dart';
 import 'package:sushiyana_flutter/presentation/widgets/show_alert_dialog.dart';
 
 class ItemDetailScreen extends StatefulWidget {
@@ -81,7 +83,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            top: logicalHeight * 0.4 / 5 * 2 - 50,
+            top: logicalHeight * 0.5 / 5 * 2 - 50,
             left: 0,
             right: 0,
             child: Text(
@@ -96,7 +98,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             ),
           ),
           Positioned(
-            top: logicalHeight * 0.4 / 5 * 2 - 20,
+            top: logicalHeight * 0.5 / 5 * 2 - 20,
             left: 0,
             right: 0,
             child: Text(
@@ -112,7 +114,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           ),
 
           Positioned(
-            bottom: logicalHeight * 0.4 / 5 * 2 - 50,
+            bottom:
+                logicalHeight * 0.25 - 75, // logicalHeight * 0.5 / 5 * 2 - 50,
             left: 0,
             right: 0,
             child: Text(
@@ -155,7 +158,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
                           maxWidth: logicalWidth * 0.9,
-                          maxHeight: logicalHeight * 0.6,
+                          maxHeight: logicalHeight * 0.5,
                         ),
                         child: Stack(
                           clipBehavior: Clip.none,
@@ -431,27 +434,52 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 ),
               )),
 
+          Positioned(
+            bottom: logicalHeight * 0.1,
+            right: logicalWidth / 4 - 25,
+            child: CartQuantityButton(
+              id: widget.items[_currentPage].id,
+              size: logicalHeight * 0.06,
+            ),
+          ),
           if (widget.items[_currentPage].allergeneZusatz.isNotEmpty)
             Positioned(
-              top: 20,
-              left: 20,
+              bottom: logicalHeight * 0.1,
+              left: logicalWidth / 4 - 25,
               child: Tooltip(
-                  message: "Allergene und Zusatzstoffe",
-                  child: MySmallCircleButtonWidget(
-                    onTap: () {
-                      showAllergenDialog(context, widget.items[_currentPage]);
-                    },
-                    size: logicalWidth < 560 ? 30 : 35,
-                    strokewidth: 0.5,
-                    child: Text(
-                      "i",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: logicalWidth < 560 ? 16 : 18,
-                          fontFamily: "Julee"),
-                    ),
-                  )),
+                message: "Allergene und Zusatzstoffe",
+                child: MySmallCircleButtonWidget(
+                  onTap: () {
+                    showAllergenDialog(context, widget.items[_currentPage]);
+                  },
+                  size: logicalWidth > 500
+                      ? logicalHeight * 0.06
+                      : logicalHeight * 0.06 * 0.7,
+                  strokewidth: 0.5,
+                  bgColor: yanaColor,
+                  child: Text(
+                    "i",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: logicalWidth < 500 ? 15 : 22,
+                        fontFamily: "Julee"),
+                  ),
+                ),
+              ),
             ),
+
+          Positioned(
+            bottom: 0,
+            right: 0,
+            left: 0,
+            child: FancyCartButton(
+              buttonFillColor: yanaColor,
+              bgColor: const Color.fromARGB(255, 142, 142, 142),
+              height: logicalHeight * 0.1,
+              size: logicalHeight * 0.09,
+              isDetailScreen: true,
+            ),
+          ),
         ],
       ),
     );

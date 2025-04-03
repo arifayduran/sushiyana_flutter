@@ -7,7 +7,7 @@ import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/presentation/screens/notes_screen.dart';
 import 'package:sushiyana_flutter/presentation/text_methods/convert_to_rich_text_description.dart';
 import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
-import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_small_circle_button_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/my_small_circle_button_widget.dart';
 
 class ShoppingCartTile extends StatelessWidget {
   const ShoppingCartTile({

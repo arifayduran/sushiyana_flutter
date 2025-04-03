@@ -4,7 +4,7 @@ import 'package:sushiyana_flutter/application/navigator_key.dart';
 import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
-import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_small_circle_button_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/my_small_circle_button_widget.dart';
 
 class NotesScreen extends StatelessWidget {
   final Item item;

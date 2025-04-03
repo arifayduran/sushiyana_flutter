@@ -7,4 +7,4 @@ const Color barColor = Color.fromARGB(255, 77, 77, 77);
 const Color barColorOld = Color.fromARGB(255, 49, 49, 49);
 const Color tabBackground = Color.fromARGB(255, 19, 19, 19);
 const Color shoppingSecondary = Color.fromARGB(255, 59, 69, 160);
-const Color mattRed =  Color.fromARGB(255, 150, 48, 41);
+const Color mattRed = Color.fromARGB(255, 176, 54, 45);

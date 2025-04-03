@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sushiyana_flutter/application/services/database_service.dart';
 import 'dart:async';
 
-import 'package:sushiyana_flutter/data/is_data_fetched.dart';
+import 'package:sushiyana_flutter/data/is_data_fetched_notifier.dart';
 
 Future<void> fetchDataWithRetry(BuildContext context,
     {int retryCount = 3}) async {
@@ -17,7 +17,7 @@ Future<void> fetchDataWithRetry(BuildContext context,
       for (int i = 0; i < retryCount; i++) {
         try {
           await dbService.fetchAndStoreItems();
-          isDataFetched = true;
+          isDataFetchedNotifier.value = true;
           success = true;
           break;
         } catch (e) {
@@ -39,5 +39,5 @@ Future<void> fetchDataWithRetry(BuildContext context,
     );
   }
 
-  isDataFetched = success;
+  isDataFetchedNotifier.value = success;
 }

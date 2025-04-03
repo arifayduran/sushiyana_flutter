@@ -1,17 +1,19 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
+import 'package:sushiyana_flutter/application/show_animations_variables.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
-import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_small_circle_button_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/my_small_circle_button_widget.dart';
 
 class CartQuantityButton extends StatefulWidget {
   final String id;
+  final double size;
 
   const CartQuantityButton({
     super.key,
     required this.id,
+    required this.size,
   });
 
   @override
@@ -23,11 +25,60 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
   bool showMenu = false;
   late CartProvider _cartProvider;
   Timer? _hideMenuTimer;
+  late AnimationController _animationController;
+  late Animation<Offset> _offsetAnimationDecrement;
+  late Animation<Offset> _offsetAnimationIncrement;
 
   @override
   void initState() {
     super.initState();
     _cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _offsetAnimationDecrement = Tween<Offset>(
+      begin: const Offset(1.0, 0.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    ));
+
+    _offsetAnimationIncrement = Tween<Offset>(
+      begin: const Offset(0.0, 1.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    ));
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (showCartQuantityButtonAnimation) {
+        setState(() {
+          showMenu = true;
+        });
+
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          _animationController.forward().then((_) {
+            Future.delayed(const Duration(milliseconds: 300), () {
+              if (mounted) {
+                _animationController.reverse().then((_) {
+                  if (mounted) {
+                    setState(() {
+                      showMenu = false;
+                      showCartQuantityButtonAnimation = false;
+                    });
+                  }
+                });
+              }
+            });
+          });
+        });
+      }
+    });
   }
 
   void timerToggleHide() {
@@ -35,8 +86,12 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
     if (showMenu) {
       _hideMenuTimer = Timer(const Duration(milliseconds: 3500), () {
         if (mounted) {
-          setState(() {
-            showMenu = false;
+          _animationController.reverse().then((_) {
+            if (mounted) {
+              setState(() {
+                showMenu = false;
+              });
+            }
           });
         }
       });
@@ -45,7 +100,18 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
 
   void toggleMenu() {
     setState(() {
-      showMenu = !showMenu;
+      if (!showMenu) {
+        showMenu = true;
+        _animationController.forward();
+      } else {
+        _animationController.reverse().then((_) {
+          if (mounted) {
+            setState(() {
+              showMenu = false;
+            });
+          }
+        });
+      }
     });
     timerToggleHide();
   }
@@ -58,8 +124,12 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
   void decrement() {
     _cartProvider.removeSingleItem(widget.id);
     if (_cartProvider.getAmountForItem(widget.id) == 0) {
-      setState(() {
-        showMenu = false;
+      _animationController.reverse().then((_) {
+        if (mounted) {
+          setState(() {
+            showMenu = false;
+          });
+        }
       });
     }
     timerToggleHide();
@@ -68,6 +138,7 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
   @override
   void dispose() {
     _hideMenuTimer?.cancel();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -76,81 +147,84 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
     CartProvider cartProvider = Provider.of<CartProvider>(context);
     final amount = cartProvider.getAmountForItem(widget.id);
     double logicalWidth = MediaQuery.of(context).size.width;
-    double circleButtonSize = logicalWidth > 500 ? 40 : 30;
-    double circleIconSize = logicalWidth > 500 ? 30 : 20;
+    double circleButtonSize =
+        logicalWidth > 500 ? widget.size : widget.size * 0.7;
+    double circleIconSize =
+        logicalWidth > 500 ? widget.size * 0.7 : widget.size * 0.7 * 0.7;
 
-    return SizedBox(
-      width: 150,
-      height: 50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: logicalWidth > 500 ? 10 : 5,
-        children: [
-          if (showMenu)
-            AnimatedOpacity(
-              opacity: showMenu ? 1 : 0,
-              duration: Duration(milliseconds: 500),
-              child: MySmallCircleButtonWidget(
-                onTap: decrement,
-                size: circleButtonSize * 0.8,
-                strokewidth: 0.5,
-                bgColor: barColor,
-                child: Icon(
-                  Icons.remove,
-                  size: circleIconSize * 0.8,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          Center(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      spacing: logicalWidth > 500 ? 7 : 3,
+      children: [
+        if (showMenu)
+          SlideTransition(
+            position: _offsetAnimationDecrement,
             child: MySmallCircleButtonWidget(
-              onTap: () {
-                if (amount == 0) {
-                  increment();
-                }
-                toggleMenu();
-              },
-              size: circleButtonSize,
+              onTap: decrement,
+              size: circleButtonSize * 0.7,
               strokewidth: 0.5,
-              bgColor: amount > 0 ? mattRed : yanaColor,
-              splashColor: amount > 0
-                  ? const Color.fromARGB(255, 117, 23, 16)
-                  : yanaColorDark,
-              child: amount > 0
-                  ? Text(
-                    amount.toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontFamily: "Julee",
-                        decoration: TextDecoration.none),
-                  )
-                  : Icon(
-                      Icons.add,
-                      size: circleIconSize,
-                      color: Colors.white,
-                    ),
+              bgColor: barColor,
+              child: Icon(
+                Icons.remove,
+                size: circleIconSize * 0.7,
+                color: Colors.white,
+              ),
             ),
           ),
-          if (showMenu)
-            AnimatedOpacity(
-              opacity: showMenu ? 1 : 0,
-              duration: Duration(milliseconds: 500),
-              child: MySmallCircleButtonWidget(
-                onTap: increment,
-                size: circleButtonSize * 0.8,
-                strokewidth: 0.5,
-                bgColor: barColor,
-                child: Icon(
-                  Icons.add,
-                  size: circleIconSize * 0.8,
-                  color: Colors.white,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          spacing: logicalWidth > 500 ? 7 : 3,
+          children: [
+            if (showMenu)
+              SlideTransition(
+                position: _offsetAnimationIncrement,
+                child: MySmallCircleButtonWidget(
+                  onTap: increment,
+                  size: circleButtonSize * 0.7,
+                  strokewidth: 0.5,
+                  bgColor: barColor,
+                  child: Icon(
+                    Icons.add,
+                    size: circleIconSize * 0.7,
+                    color: Colors.white,
+                  ),
                 ),
               ),
+            Center(
+              child: MySmallCircleButtonWidget(
+                onTap: () {
+                  if (amount == 0) {
+                    increment();
+                  }
+                  toggleMenu();
+                },
+                size: circleButtonSize,
+                strokewidth: 0.5,
+                bgColor: amount > 0 ? mattRed : yanaColor,
+                splashColor: amount > 0
+                    ? const Color.fromARGB(255, 117, 23, 16)
+                    : yanaColorDark,
+                child: amount > 0
+                    ? Text(
+                        amount.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: "Julee",
+                            decoration: TextDecoration.none),
+                      )
+                    : Icon(
+                        Icons.add,
+                        size: circleIconSize,
+                        color: Colors.white,
+                      ),
+              ),
             ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }

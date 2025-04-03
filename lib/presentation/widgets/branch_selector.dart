@@ -4,7 +4,7 @@ import 'package:sushiyana_flutter/application/providers/branch_provider.dart';
 import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
 import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
-import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_small_circle_button_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/my_small_circle_button_widget.dart';
 
 class BranchSelector extends StatelessWidget {
   const BranchSelector({

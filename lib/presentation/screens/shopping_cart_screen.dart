@@ -11,7 +11,7 @@ import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/blur_gradient.dart';
 import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_gradient_button_widget.dart';
-import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_small_circle_button_widget.dart';
+import 'package:sushiyana_flutter/presentation/widgets/my_small_circle_button_widget.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/shopping_cart_tile.dart';
 import 'package:sushiyana_flutter/presentation/widgets/waren_korb_text.dart';
 
@@ -38,6 +38,15 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
     _cartItems = _cartProvider.getMatchedCartItemsWithQuantity();
 
     calculateCartTotal();
+
+    _cartProvider.addListener(() {
+      if (mounted) {
+        setState(() {
+          _cartItems = _cartProvider.getMatchedCartItemsWithQuantity();
+          calculateCartTotal();
+        });
+      }
+    });
 
     int initialIndex = (_cartItems.length.isEven)
         ? (_cartItems.length / 2).floor() - 1
