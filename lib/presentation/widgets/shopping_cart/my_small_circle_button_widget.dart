@@ -29,9 +29,7 @@ class MySmallCircleButtonWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
         color: Colors.transparent,
         child: InkWell(
-          
           onTap: onTap,
-          
           highlightColor: highlightColor,
           splashColor: splashColor,
           child: Ink(
@@ -41,11 +39,16 @@ class MySmallCircleButtonWidget extends StatelessWidget {
                 color: bgColor,
                 borderRadius: BorderRadius.circular(50),
                 border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: Colors.white.withOpacity(0.7),
                     width: strokewidth,
                     strokeAlign: BorderSide.strokeAlignInside)),
-            child: Center(
-              child: child,
+            child: GestureDetector(
+              behavior: HitTestBehavior
+                  .opaque, // Stellt sicher, dass der gesamte Bereich des Widgets auf Taps reagiert
+              onTap: onTap,
+              child: Center(
+                child: child,
+              ),
             ),
           ),
         ),

@@ -118,16 +118,14 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
                   ? const Color.fromARGB(255, 117, 23, 16)
                   : yanaColorDark,
               child: amount > 0
-                  ? Flexible(
-                      child: Text(
-                        amount.toString(),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontFamily: "Julee",
-                            decoration: TextDecoration.none),
-                      ),
-                    )
+                  ? Text(
+                    amount.toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontFamily: "Julee",
+                        decoration: TextDecoration.none),
+                  )
                   : Icon(
                       Icons.add,
                       size: circleIconSize,
