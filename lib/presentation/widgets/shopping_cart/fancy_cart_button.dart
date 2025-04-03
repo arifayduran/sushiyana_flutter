@@ -40,7 +40,7 @@ class FancyCartButton extends StatelessWidget {
                 content: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
                   child: const Text(
-                    "Keine Artikel im Warenkorb.",
+                    "Keine Artikel im Warenkorb",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -69,7 +69,7 @@ class FancyCartButton extends StatelessWidget {
           )));
     } else {
       Navigator.of(context).push(FadePageRoute(
-          page: ShoppingCartScreen(), popOnTap: false, sigmaX: 8, sigmaY: 8));
+          page: ShoppingCartScreen(), popOnTap: false, sigmaX: 3, sigmaY: 3));
     }
   }
 

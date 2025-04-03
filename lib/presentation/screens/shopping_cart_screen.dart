@@ -14,10 +14,16 @@ import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/shopping_ca
 
 // if shopping card is empty, show a dialog and pop the bottom sheet
 // responsable
-// isvisible swipe und schliessen alle
+// swipe down mit scroll kollision
+// ALL JULEE (2x)
 // leeren
 // if   'bestellbar': value.item.bestellbar,
 // schliessen größer
+// beim laden warenkop nicht klickbar!
+// renkler?
+// links swipe löschen
+// asagi kiucuk geri button
+// item komplett löschen / decrement
 
 class ShoppingCartScreen extends StatefulWidget {
   const ShoppingCartScreen({
@@ -100,47 +106,43 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
     return Container(
       width: logicalWidth,
       height: logicalHeight,
+      color: Colors.black.withValues(alpha: 0.2),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Positioned(
-            top: -90,
-            child: SizedBox(
-              height: 1000,
-              width: logicalWidth,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 21.0),
-                child: Consumer<CartProvider>(
-                  builder: (context, provider, child) {
-                    if (provider.items.isEmpty || _cartItems.isEmpty) {
-                      _noItems(context);
-                      return const SizedBox();
-                    } else {
-                      return ListWheelScrollView.useDelegate(
-                        controller: _scrollController,
-                        squeeze: 0.92,
-                        diameterRatio: 2,
-                        itemExtent: 110,
-                        childDelegate: ListWheelChildBuilderDelegate(
-                          builder: (context, index) {
-                            return ShoppingCartTile(
-                              item: _cartItems[index]['item'],
-                            );
-                          },
-                          childCount: _cartItems.length,
-                        ),
-                      );
-                    }
-                  },
-                ),
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Consumer<CartProvider>(
+                builder: (context, provider, child) {
+                  if (provider.items.isEmpty || _cartItems.isEmpty) {
+                    _noItems(context);
+                    return const SizedBox();
+                  } else {
+                    return ListWheelScrollView.useDelegate(
+                      controller: _scrollController,
+                      squeeze: 0.92,
+                      diameterRatio: 2,
+                      itemExtent: 110,
+                      childDelegate: ListWheelChildBuilderDelegate(
+                        builder: (context, index) {
+                          return ShoppingCartTile(
+                            item: _cartItems[index]['item'],
+                          );
+                        },
+                        childCount: _cartItems.length,
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ),
           Positioned(
             top: 0,
             child: BlurGradient(
-              startColor: const Color.fromARGB(255, 202, 130, 165),
-              height: 250,
+              startColor: yanaColor.withValues(alpha: 0.8),
+              height: logicalHeight * 0.25,
               width: logicalWidth,
               blurTotal: 4,
             ),
@@ -148,34 +150,32 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
           Positioned(
             bottom: 0,
             child: BlurGradient(
-              startColor: const Color.fromARGB(255, 59, 69, 160),
-              height: 250,
+              startColor: shoppingSecondary,
+              height: logicalHeight * 0.25,
               width: logicalWidth,
               blurTotal: 4,
               reverse: true,
             ),
           ),
           Positioned(
-            top: 70,
+            top: logicalHeight * 0.07,
             right: 0,
             left: 0,
-            child: SizedBox(
-              width: logicalWidth,
-              height: 30,
-              child: Center(
-                child: Text(
-                  "Warenkorb",
-                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white.withValues(alpha: 0.6),
-                      ),
+            child: Center(
+              child: Text(
+                "Warenkorb",
+                style: TextStyle(
+                  fontSize: 20,
+                  decoration: TextDecoration.none,
+                  fontFamily: "Julee",
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white.withValues(alpha: 0.6),
                 ),
               ),
             ),
           ),
           Positioned(
-              top: 67,
+              top: 25, // logicalHeight * 0.07 - 5,
               right: 25,
               child: MySmallCircleButtonWidget(
                 onTap: () {
@@ -254,9 +254,9 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
               borderColor: Colors.grey.withValues(alpha: 0.4),
               gradient: const LinearGradient(
                 colors: [
-                  Color.fromARGB(255, 202, 130, 165),
+                  yanaColor,
                   Color.fromARGB(255, 148, 88, 207),
-                  Color.fromARGB(255, 59, 69, 160),
+                  shoppingSecondary,
                 ],
               ),
               shadowColor: Colors.black.withValues(alpha: 0.5),
@@ -345,6 +345,17 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
               },
             ),
           ),
+          // Positioned.fill(
+          //   child: GestureDetector(
+          //     behavior: HitTestBehavior.translucent,
+          //     onVerticalDragUpdate: (details) {
+          //       if (details.primaryDelta != null &&
+          //           details.primaryDelta! > 20) {
+          //         Navigator.of(context).pop();
+          //       }
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

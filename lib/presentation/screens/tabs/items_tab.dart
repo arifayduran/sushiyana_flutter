@@ -208,7 +208,7 @@ class _ItemsTabState extends State<ItemsTab> {
         _infoText = localDatabase[widget.heroTag]["infoText"];
       });
     }
-    HomeScreen.botPadding = _infoText.isNotEmpty ? 75.5 : 35;
+    HomeScreen.botPadding = _infoText.isNotEmpty ? 75.5 - 0.1 : 34.5;
     HomeScreen.topPadding = _showFilters ? 140 : 80;
   }
 

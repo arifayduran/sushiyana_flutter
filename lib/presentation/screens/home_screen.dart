@@ -893,11 +893,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                   Positioned(
                     bottom:
-                        _tabController.index == 1 ? HomeScreen.botPadding : 35,
+                        _tabController.index == 1 ? HomeScreen.botPadding : 34.5,
                     right: 0,
                     left: 0,
                     child: FancyCartButton(
-                     
                       buttonFillColor: yanaColor,
                       height: 40,
                       size: 45,
