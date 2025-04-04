@@ -32,10 +32,10 @@ if (!$env) {
 }
 
 // Database connection information from the .env file
-$servername = $env['DB_HOST'];
-$usernameDB = $env['DB_USER'];
-$passwordDB = $env['DB_PASSWORD'];
-$dbname = $env['DB_NAME'];
+$servername = $env['ORDER_DB_HOST'];
+$usernameDB = $env['ORDER_DB_USER'];
+$passwordDB = $env['ORDER_DB_PASSWORD'];
+$dbname = $env['ORDER_DB_NAME'];
 
 // Establish connection
 $conn = new mysqli($servername, $usernameDB, $passwordDB, $dbname);

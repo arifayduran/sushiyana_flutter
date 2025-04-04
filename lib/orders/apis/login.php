@@ -20,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Database connection information from the .env file
-    $servername = $env['DB_HOST'];
-    $usernameDB = $env['DB_USER'];
-    $passwordDB = $env['DB_PASSWORD'];
-    $dbname = $env['DB_NAME'];
+    $servername = $env['ORDER_DB_HOST'];
+    $usernameDB = $env['ORDER_DB_USER'];
+    $passwordDB = $env['ORDER_DB_PASSWORD'];
+    $dbname = $env['ORDER_DB_NAME'];
 
     try {
         $pdo = new PDO(

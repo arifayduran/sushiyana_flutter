@@ -50,12 +50,24 @@ class _OrdersHomeState extends State<OrdersHome> {
           ),
           centerTitle: true,
         ),
+        bottomSheet: context.read<LoginState>().errorMessage != null
+            ? Container(
+                color: Colors.red,
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  context.read<LoginState>().errorMessage!,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              )
+            : null,
         body: AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
           transitionBuilder: (Widget child, Animation<double> animation) {
             return FadeTransition(opacity: animation, child: child);
           },
-          child: loginState.isLoggedIn ? const OrdersScreen() : const LoginScreen(),
+          child: loginState.isLoggedIn
+              ? const OrdersScreen()
+              : const LoginScreen(),
         ));
   }
 }

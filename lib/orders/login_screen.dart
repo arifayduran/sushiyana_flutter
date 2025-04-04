@@ -100,13 +100,6 @@ class _LoginScreenState extends State<LoginScreen> {
               child: const Text('Login', style: TextStyle(color: Colors.white)),
             ),
           ),
-          if (loginState.errorMessage != null) ...[
-            const SizedBox(height: 10),
-            Text(
-              loginState.errorMessage!,
-              style: const TextStyle(color: Colors.red),
-            ),
-          ],
         ],
       ),
     )));

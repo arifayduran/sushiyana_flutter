@@ -1,13 +1,12 @@
 import 'package:http/http.dart' as http;
+import 'package:sushiyana_flutter/constants/main_url.dart';
 import 'dart:convert';
 
 import 'package:sushiyana_flutter/data/local_database.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
 
 class DatabaseService {
-  final String baseUrl = 'https://flutter.sushiyanaspeisekarte.com';
-
-
+  final String baseUrl = mainUrl;
 
   Future<Map<String, List<dynamic>>> fetchAllData() async {
     final response = await http.get(Uri.parse('$baseUrl/api.php?all=true'));
@@ -83,8 +82,6 @@ class DatabaseService {
       throw '${response.body} ${response.statusCode}';
     }
   }
-
-  
 
   Future<void> fetchAndStoreItemsOnebyone() async {
     Future<void> fetchItemsForCategory(Map<String, dynamic> category) async {
