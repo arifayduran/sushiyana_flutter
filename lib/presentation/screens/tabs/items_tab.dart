@@ -559,6 +559,13 @@ class _ItemsTabState extends State<ItemsTab> {
                               ),
                             ),
                           ),
+                          Positioned(
+                              bottom: 10,
+                              right: 10,
+                              child: CartQuantityButton(
+                                id: _items[index].id,
+                                size: 43,
+                              )),
                           if (showTapHandAnimation && index == 0)
                             Positioned.fill(
                               child: Padding(
@@ -582,13 +589,6 @@ class _ItemsTabState extends State<ItemsTab> {
                                 ),
                               ),
                             ),
-                         
-                          Positioned(
-                              bottom: 10,
-                              right: 10,
-                              child: CartQuantityButton(
-                                id: _items[index].id, size: 43,
-                              )),
                           Positioned(
                             bottom: -6,
                             right: 0,

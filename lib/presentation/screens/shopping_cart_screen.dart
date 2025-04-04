@@ -5,12 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sushiyana_flutter/application/navigator_key.dart';
 import 'package:sushiyana_flutter/application/parse_price_to_double.dart';
+import 'package:sushiyana_flutter/application/providers/branch_provider.dart';
 import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
 import 'package:sushiyana_flutter/application/services/order_service.dart';
 import 'package:sushiyana_flutter/constants/colors.dart';
 import 'package:sushiyana_flutter/domain/item.dart';
 import 'package:sushiyana_flutter/domain/order_item.dart';
 import 'package:sushiyana_flutter/presentation/screens/table_and_notes_screen.dart';
+import 'package:sushiyana_flutter/presentation/widgets/custom_alert_dialog.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/blur_gradient.dart';
 import 'package:sushiyana_flutter/presentation/widgets/fade_page_route.dart';
 import 'package:sushiyana_flutter/presentation/widgets/shopping_cart/my_gradient_button_widget.dart';
@@ -32,6 +34,8 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   late CartProvider _cartProvider;
   List<Map<String, dynamic>> _cartItems = [];
   double _cartTotal = 0.0;
+  bool _isOrderSent = false;
+  String _orderId = "";
 
   @override
   void initState() {
@@ -89,9 +93,9 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   void calculateCartTotal() {
     double total = 0.0;
 
-    for (var entry in _cartItems) {
-      final item = entry['item'] as Item?;
-      final quantity = entry['quantity'] ?? 1;
+    for (var cartItem in _cartItems) {
+      final item = cartItem['item'] as Item?;
+      final quantity = cartItem['quantity'] ?? 1;
 
       final priceStr = item!.preis;
       final price = parsePriceToDouble(priceStr);
@@ -147,7 +151,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
         false;
   }
 
-  void _noItems(BuildContext context) {
+  void _noItems(BuildContext context, String text) {
     if (!mounted) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -163,57 +167,8 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                 ),
                 content: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
-                  child: const Text(
-                    "Keine Artikel im Warenkorb.",
-                    style: TextStyle(color: Colors.white, fontFamily: "Julee"),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      navigatorKey.currentState?.pop();
-                    },
-                    child: const Text("OK",
-                        style: TextStyle(
-                            color: Colors.white, fontFamily: "Julee")),
-                  ),
-                ],
-              ),
-              Positioned(
-                  top: 20,
-                  right: 20,
-                  child: MySmallCircleButtonWidget(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    strokewidth: 0.5,
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
-                  )),
-            ],
-          )));
-    });
-  }
-
-  void _customAlertDialog(BuildContext context, String message) {
-    if (!mounted) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      Navigator.of(context).push(FadePageRoute(
-          popOnTap: true,
-          page: Stack(
-            children: [
-              AlertDialog(
-                backgroundColor: yanaColor.withValues(alpha: .8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                content: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
                   child: Text(
-                    message,
+                    text,
                     style: TextStyle(color: Colors.white, fontFamily: "Julee"),
                   ),
                 ),
@@ -257,8 +212,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
     double logicalHeight = MediaQuery.of(context).size.height;
     double logicalWidth = MediaQuery.of(context).size.width;
 
-    CartProvider cartProvider =
-        Provider.of<CartProvider>(context, listen: false);
+    BranchProvider branchProvider = Provider.of<BranchProvider>(context);
 
     return Container(
       width: logicalWidth,
@@ -273,7 +227,13 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
               child: Consumer<CartProvider>(
                 builder: (context, provider, child) {
                   if (provider.items.isEmpty || _cartItems.isEmpty) {
-                    _noItems(context);
+                    if (_isOrderSent) {
+                      _noItems(context,
+                          "Ihre Bestellung ist erfolgreich aufgegeben!\nBestellnummer: $_orderId");
+                    } else {
+                      _noItems(context, "Keine Artikel im Warenkorb.");
+                    }
+
                     return const SizedBox();
                   } else {
                     return ListWheelScrollView.useDelegate(
@@ -463,38 +423,38 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
 
                       final orderService = OrderService();
 
-                      bool success = await orderService.sendOrder(
+                      Map response = await orderService.sendOrder(
+                        branchName: branchProvider.currentBranch,
                         customerName: tableNumber,
-                        items: _cartItems
-                            .map((entry) => OrderItem(
-                                  name: entry['item'].artikelname,
-                                  quantity: entry['quantity'],
-                                  price:
-                                      parsePriceToDouble(entry['item'].preis)!,
-                                ))
-                            .toList(),
+                        items: _cartItems.map((cartItem) {
+                          final item = cartItem['item'];
+                          final note = _cartProvider.getNoteForItem(item.id);
+
+                          return OrderItem(
+                            name: item.artikelname,
+                            quantity: cartItem['quantity'],
+                            price: parsePriceToDouble(item.preis)!,
+                            note: note.isNotEmpty ? note : null,
+                          );
+                        }).toList(),
                         totalPrice: _cartTotal,
-                        notes: notes ?? '',
+                        notes: notes,
                       );
 
-                      if (success && context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('Bestellung erfolgreich gesendet!')),
-                        );
-                        cartProvider.clearCart();
-                        _cartItems.clear();
+                      if (response["success"] && context.mounted) {
+                        setState(() {
+                          _orderId = response["id"];
+                          _isOrderSent = true;
+                          _cartProvider.clearCart();
+                          _cartItems.clear();
+                        });
                       } else {
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Fehler bei der Bestellung.')),
-                          );
+                          customAlertDialog(context,
+                              'Fehler bei der Bestellung. ${response["response"]}');
                         }
                       }
                     }
-
                     // _customAlertDialog(context,
                     //     "Zurzeit arbeiten wie an dieser Funktion. Bitte bestellen Sie bei unseren Mitarbeitern.");
                   },

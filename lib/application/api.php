@@ -4,7 +4,8 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Custom error handler to return errors in JSON format
-function customError($errno, $errstr) {
+function customError($errno, $errstr)
+{
     echo json_encode(array("error" => "Error [$errno]: $errstr"));
     die();
 }
@@ -55,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             if ($result->num_rows > 0) {
                 $data = array();
-                while($row = $result->fetch_assoc()) {
+                while ($row = $result->fetch_assoc()) {
                     $data[] = $row;
                 }
                 echo json_encode($data);
@@ -90,6 +91,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 } else {
     http_response_code(405); // Method Not Allowed
     echo json_encode(array("error" => "Methode nicht erlaubt."));
+}
+
+if ($method === 'GET') {
+    if ($filiale === 'admin') {
+        $stmt = $pdo->query("SELECT * FROM orders ORDER BY created_at DESC");
+    } else {
+        $stmt = $pdo->prepare("SELECT * FROM orders WHERE filiale = ? ORDER BY created_at DESC");
+        $stmt->execute([$filiale]);
+    }
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+    exit;
+}
+
+if (!isset($_SESSION['username']) || !isset($_SESSION['filiale'])) {
+    echo json_encode(["error" => "Nicht eingeloggt"]);
+    http_response_code(401);
+    exit;
 }
 
 $conn->close();
