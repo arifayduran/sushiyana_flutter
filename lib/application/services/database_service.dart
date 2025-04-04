@@ -7,31 +7,7 @@ import 'package:sushiyana_flutter/domain/item.dart';
 class DatabaseService {
   final String baseUrl = 'https://flutter.sushiyanaspeisekarte.com';
 
-  Future<List<dynamic>> fetchData(String table) async {
-    final response = await http.get(Uri.parse('$baseUrl/api.php?table=$table'));
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      try {
-        // Ensure the response is in valid JSON format
-        final data = json.decode(response.body);
-        // debugPrint(data.toString());
-
-        // Check if data is a list or map
-        if (data is List) {
-          return data; // It's a List, return it directly
-        } else if (data is Map) {
-          // If it's a map (JSON object), you can extract the list if available
-          return data.values.toList(); // Example: take all values of the object
-        } else {
-          throw 'Unerwartetes Datenformat: $data';
-        }
-      } catch (e) {
-        throw 'Fehler beim Parsen der JSON-Daten: $e';
-      }
-    } else {
-      throw '${response.body} ${response.statusCode}';
-    }
-  }
 
   Future<Map<String, List<dynamic>>> fetchAllData() async {
     final response = await http.get(Uri.parse('$baseUrl/api.php?all=true'));
@@ -81,6 +57,34 @@ class DatabaseService {
       }
     }
   }
+
+  Future<List<dynamic>> fetchData(String table) async {
+    final response = await http.get(Uri.parse('$baseUrl/api.php?table=$table'));
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      try {
+        // Ensure the response is in valid JSON format
+        final data = json.decode(response.body);
+        // debugPrint(data.toString());
+
+        // Check if data is a list or map
+        if (data is List) {
+          return data; // It's a List, return it directly
+        } else if (data is Map) {
+          // If it's a map (JSON object), you can extract the list if available
+          return data.values.toList(); // Example: take all values of the object
+        } else {
+          throw 'Unerwartetes Datenformat: $data';
+        }
+      } catch (e) {
+        throw 'Fehler beim Parsen der JSON-Daten: $e';
+      }
+    } else {
+      throw '${response.body} ${response.statusCode}';
+    }
+  }
+
+  
 
   Future<void> fetchAndStoreItemsOnebyone() async {
     Future<void> fetchItemsForCategory(Map<String, dynamic> category) async {

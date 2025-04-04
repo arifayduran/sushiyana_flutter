@@ -25,6 +25,11 @@ jobs:
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "ORDER_DB_HOST=${{ secrets.ORDER_DB_HOST }}" > .env
+          echo "ORDER_DB_PORT=${{ secrets.ORDER_DB_PORT }}" >> .env
+          echo "ORDER_DB_USER=${{ secrets.ORDER_DB_USER }}" >> .env
+          echo "ORDER_DB_PASSWORD=${{ secrets.ORDER_DB_PASSWORD }}" >> .env
+          echo "ORDER_DB_NAME=${{ secrets.ORDER_DB_NAME }}" >> .env
 
       - name: Install dependencies
         run: flutter pub get # Installation der Flutter-Abhängigkeiten
@@ -63,3 +68,39 @@ jobs:
           password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
           src: ./lib/application/api.php # Der Pfad zur api.php in Ihrem Projekt
           dest: /web/flutter/api.php # Zielverzeichnis auf dem Manitu-Server
+
+      - name: Upload API (host_api.php) to Manitu
+        uses: tomasbkk/action-ftp-upload@v1.0
+        with:
+          host: ${{ secrets.MANITU_FTP_SERVER }} # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }} # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
+          src: ./lib/application/apis/host_api.php # Der Pfad zur api.php in Ihrem Projekt
+          dest: /web/flutter/host_api.php # Zielverzeichnis auf dem Manitu-Server
+
+      - name: Upload API (login.php) to Manitu
+        uses: tomasbkk/action-ftp-upload@v1.0
+        with:
+          host: ${{ secrets.MANITU_FTP_SERVER }} # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }} # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
+          src: ./lib/application/apis/login.php # Der Pfad zur api.php in Ihrem Projekt
+          dest: /web/flutter/login.php # Zielverzeichnis auf dem Manitu-Server
+
+      - name: Upload API (logout.php) to Manitu
+        uses: tomasbkk/action-ftp-upload@v1.0
+        with:
+          host: ${{ secrets.MANITU_FTP_SERVER }} # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }} # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
+          src: ./lib/application/apis/logout.php # Der Pfad zur api.php in Ihrem Projekt
+          dest: /web/flutter/logout.php # Zielverzeichnis auf dem Manitu-Server
+
+      - name: Upload API (whoami.php) to Manitu
+        uses: tomasbkk/action-ftp-upload@v1.0
+        with:
+          host: ${{ secrets.MANITU_FTP_SERVER }} # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }} # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
+          src: ./lib/application/apis/whoami.php # Der Pfad zur api.php in Ihrem Projekt
+          dest: /web/flutter/whoami.php # Zielverzeichnis auf dem Manitu-Server

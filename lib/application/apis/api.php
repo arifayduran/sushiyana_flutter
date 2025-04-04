@@ -93,22 +93,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode(array("error" => "Methode nicht erlaubt."));
 }
 
-if ($method === 'GET') {
-    if ($filiale === 'admin') {
-        $stmt = $pdo->query("SELECT * FROM orders ORDER BY created_at DESC");
-    } else {
-        $stmt = $pdo->prepare("SELECT * FROM orders WHERE filiale = ? ORDER BY created_at DESC");
-        $stmt->execute([$filiale]);
-    }
-    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-    exit;
-}
-
-if (!isset($_SESSION['username']) || !isset($_SESSION['filiale'])) {
-    echo json_encode(["error" => "Nicht eingeloggt"]);
-    http_response_code(401);
-    exit;
-}
-
 $conn->close();
-?>

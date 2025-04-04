@@ -7,10 +7,33 @@ import 'package:sushiyana_flutter/application/providers/cart_provider.dart';
 import 'package:sushiyana_flutter/application/providers/scroll_state_provider.dart';
 import 'package:sushiyana_flutter/application/show_animations_variables.dart';
 import 'package:sushiyana_flutter/config/scroll_configuration_behavior.dart';
+import 'package:sushiyana_flutter/orders/login_state.dart';
 // import 'package:sushiyana_flutter/presentation/d__splash_screen.dart';
 import 'package:sushiyana_flutter/presentation/screens/home_screen.dart';
+import 'package:sushiyana_flutter/orders/orders_home.dart';
 
 void main() async {
+  bool isOrders = isOrdersVersion();
+  if (isOrders || true) {
+    runApp(ChangeNotifierProvider(
+      create: (context) => LoginState(),
+      child: MaterialApp(
+        color: Colors.black,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: "Julee",
+        ),
+        title: 'Sushi Yana - Digitale Speisekarte',
+        // theme: ThemeData(
+        //   primarySwatch: yanaColor,
+        // ),
+        home: ScrollConfiguration(
+            behavior: ScrollConfigurationBehavior(), child: OrdersHome()),
+      ),
+    ));
+    return;
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
 
   final branchProvider = BranchProvider();
@@ -21,7 +44,7 @@ void main() async {
   final cartProvider = CartProvider();
   cartProvider.setBranch(branchProvider.currentBranch);
   await cartProvider.loadCartFromStorage();
-    await cartProvider.loadNotesFromStorage();
+  await cartProvider.loadNotesFromStorage();
 
   final secureStorage = const FlutterSecureStorage();
 
@@ -55,6 +78,16 @@ void main() async {
   );
 }
 
+bool isOrdersVersion() {
+  String host = Uri.base.host;
+  List<String> parts = host.split(".");
+  String subdomain = (parts.length > 2) ? parts[0].toLowerCase() : "";
+  if (subdomain == "bestellungen") {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 String _getSubdomain(dynamic branchProvider) {
   String host = Uri.base.host;
