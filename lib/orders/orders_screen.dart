@@ -4,6 +4,11 @@ import 'package:sushiyana_flutter/orders/orders_service.dart';
 import 'package:sushiyana_flutter/orders/login_state.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
+import 'dart:convert';
+
+// saniye
+
+
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -49,6 +54,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
         setState(() {
           _newOrderIds = newOrderIds.cast<int>();
         });
+      }
+    }
+
+    // Parse the 'items' field in each order to ensure it is a List
+    for (var order in orders) {
+      if (order['items'] is String) {
+        order['items'] = json.decode(order['items']);
       }
     }
 
