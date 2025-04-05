@@ -5,10 +5,9 @@ import 'package:sushiyana_flutter/orders/login_state.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 import 'dart:convert';
-
-// saniye
-
-
+import 'package:flutter/foundation.dart';
+// ignore: deprecated_member_use, avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -29,7 +28,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     super.initState();
     _ordersFuture = _fetchAndHighlightOrders();
 
-    _refreshTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       _refreshOrders();
     });
   }
@@ -38,6 +37,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
   void dispose() {
     _refreshTimer?.cancel();
     super.dispose();
+  }
+
+  void _playNotificationSound() {
+    if (kIsWeb) {
+      // Use the HTML AudioElement for web compatibility
+      final audio =
+          html.AudioElement('assets/sounds/sushi_yana_japanese_ping_long.mp3');
+      audio.play();
+    } else {
+      _audioPlayer
+          .play(AssetSource('assets/sounds/sushi_yana_japanese_ping_long.mp3'));
+    }
   }
 
   Future<List<dynamic>> _fetchAndHighlightOrders() async {
@@ -49,8 +60,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     } else {
       final newOrders = newOrderIds.difference(_newOrderIds);
       if (newOrders.isNotEmpty) {
-        _audioPlayer.play(
-            AssetSource('assets/sounds/sushi_yana_japanese_ping_long.mp3'));
+        _playNotificationSound();
         setState(() {
           _newOrderIds = newOrderIds.cast<int>();
         });
@@ -133,12 +143,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     final loginState = Provider.of<LoginState>(context);
 
-    return SizedBox.expand(
-      child: Column(
-        children: [
-          Text(loginState.username == "admin"
-              ? "🔑 Admin-Modus – Zentrale Übersicht"
-              : "📍 Eingeloggt als: ${loginState.username}"),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(loginState.username == "admin"
+            ? "🔑 Admin-Modus – Zentrale Übersicht"
+            : "📍 Eingeloggt als: ${loginState.username}"),
+        actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _refreshOrders,
@@ -147,64 +157,99 @@ class _OrdersScreenState extends State<OrdersScreen> {
             icon: const Icon(Icons.logout),
             onPressed: loginState.logout,
           ),
-          Expanded(
-            child: FutureBuilder<List<dynamic>>(
-              future: _ordersFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Fehler beim Laden der Bestellungen:'),
-                        Text(snapshot.error.toString(),
-                            style: const TextStyle(color: Colors.red)),
-                        ElevatedButton(
-                          onPressed: _refreshOrders,
-                          child: const Text('Erneut versuchen'),
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                      child: Text('Keine Bestellungen verfügbar.'));
-                }
-
-                final orders = snapshot.data!;
-
-                return ListView.builder(
-                  itemCount: orders.length,
-                  itemBuilder: (context, index) {
-                    final order = orders[index];
-                    final isNew = _newOrderIds.contains(order['id']);
-
-                    return GestureDetector(
-                      onTap: () => _markOrderAsInteracted(order['id']),
-                      child: Container(
-                        color: isNew ? Colors.green.withValues(alpha: .3) : null,
-                        child: ListTile(
-                          title: Text('Bestellung #${order['id']}'),
-                          subtitle: Text('Filiale: ${order['filiale']}'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => _deleteOrder(order['id']),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-          FloatingActionButton(
-            onPressed: _deleteAllOrders,
-            child: const Icon(Icons.delete_forever),
-          ),
         ],
+      ),
+      body: FutureBuilder<List<dynamic>>(
+        future: _ordersFuture,
+        builder: (context, snapshot) {
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return const Center(child: CircularProgressIndicator());
+          // } else
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Fehler beim Laden der Bestellungen:'),
+                  Text(snapshot.error.toString(),
+                      style: const TextStyle(color: Colors.red)),
+                  ElevatedButton(
+                    onPressed: _refreshOrders,
+                    child: const Text('Erneut versuchen'),
+                  ),
+                ],
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('Keine Bestellungen verfügbar.'));
+          }
+
+          final orders = snapshot.data!
+            ..sort((a, b) => (a['id'] as int).compareTo(b['id'] as int));
+
+          return IntrinsicWidth(
+            child: DataTable(
+              columnSpacing: 20.0,
+              columns: const [
+                DataColumn(label: Text('ID')),
+                DataColumn(label: Text('Filiale')),
+                DataColumn(label: Text('Tisch')),
+                DataColumn(label: Text('Artikel')),
+                DataColumn(label: Text('Preis (€)')),
+                DataColumn(label: Text('Notizen')),
+                DataColumn(label: Text('Datum/Uhrzeit')),
+                DataColumn(label: Text('Aktion')),
+              ],
+              rows: orders.map((order) {
+                final itemsList = (order['items'] as List<dynamic>).map((item) {
+                  final name = item['name'] ?? 'Unbekannt';
+                  final quantity = item['quantity'] ?? 1;
+                  final price =
+                      (item['price'] as num?)?.toStringAsFixed(2) ?? '0.00';
+                  final note = item['note'] != null
+                      ? ' -- (Notiz: ${item['note']})'
+                      : '';
+                  return '$quantity x $name – $price €$note';
+                }).join('\n');
+
+                final isNewOrder = _newOrderIds.contains(order['id']);
+
+                return DataRow(
+                  color: isNewOrder
+                      ? WidgetStateProperty.all(
+                          Colors.yellow.withOpacity(0.3))
+                      : null,
+                  cells: [
+                    DataCell(
+                      GestureDetector(
+                        onTap: () {
+                          _markOrderAsInteracted(order['id']);
+                        },
+                        child: Text(order['id'].toString()),
+                      ),
+                    ),
+                    DataCell(Text(order['filiale'] ?? 'Unbekannt')),
+                    DataCell(Text(order['customer_name'] ?? 'Unbekannt')),
+                    DataCell(Text(itemsList, softWrap: true)),
+                    DataCell(Text(order['total_price'] ?? '0.00')),
+                    DataCell(Text(order['notes'] ?? '')),
+                    DataCell(Text(order['created_at'] ?? 'Unbekannt')),
+                    DataCell(
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _deleteOrder(order['id']),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _deleteAllOrders,
+        child: const Icon(Icons.delete_forever),
       ),
     );
   }

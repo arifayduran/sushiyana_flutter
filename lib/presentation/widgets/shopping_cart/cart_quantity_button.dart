@@ -40,7 +40,7 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
     );
 
     _offsetAnimationDecrement = Tween<Offset>(
-      begin: const Offset(1.0, 0.0),
+      begin: const Offset(1.5, 0.0),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _animationController,
@@ -48,7 +48,7 @@ class _CartQuantityButtonState extends State<CartQuantityButton>
     ));
 
     _offsetAnimationIncrement = Tween<Offset>(
-      begin: const Offset(0.0, 1.0),
+      begin: const Offset(0.0, 1.5),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _animationController,

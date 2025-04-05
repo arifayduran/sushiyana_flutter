@@ -24,9 +24,13 @@ class OrdersService {
       url,
       headers: {'Authorization': 'Bearer $token'},
     );
-
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      final responseBody = json.decode(response.body);
+      if (responseBody is Map && responseBody['data'] is List) {
+        return responseBody['data'];
+      } else {
+        throw Exception('Unexpected response format: ${response.body}');
+      }
     } else {
       throw Exception('Failed to load orders: ${response.body}');
     }

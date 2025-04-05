@@ -7,9 +7,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class LoginState extends ChangeNotifier {
   final _storage = const FlutterSecureStorage();
   String? _errorMessage;
-  bool _isLoggedIn = true;
+  bool _isLoggedIn = false;
   String? _username;
-  String? _token;
+  String? _token; 
 
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _isLoggedIn;

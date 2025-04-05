@@ -14,7 +14,7 @@ import 'package:sushiyana_flutter/orders/orders_home.dart';
 
 void main() async {
   bool isOrders = isOrdersVersion();
-  if (isOrders) {
+  if (true) {
     runApp(ChangeNotifierProvider(
       create: (context) => LoginState(),
       child: MaterialApp(
