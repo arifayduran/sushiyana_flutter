@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sushiyana_flutter/constants/main_url.dart';
 import 'package:sushiyana_flutter/domain/order_item.dart';
 
 class OrderService {
-  final String apiUrl = 'https://stream.sushiyanaspeisekarte.com/host_api.php';
+  final String apiUrl = '$mainUrl/host_api.php';
 
   Future<Map> sendOrder({
     required String branchName,

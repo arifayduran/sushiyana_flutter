@@ -31,7 +31,7 @@ class LoginState extends ChangeNotifier {
       if (response.statusCode <= 200 && response.statusCode < 300) {
         final responseData = json.decode(response.body);
 
-        if (responseData['success'] == true) {
+        if (responseData['success'] == true && responseData['token'] != null) {
           _isLoggedIn = true;
           _errorMessage = null;
           _username = username;

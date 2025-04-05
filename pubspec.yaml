@@ -44,6 +44,7 @@ dependencies:
   pinch_zoom_image_last: ^0.4.1
   flutter_svg: ^2.0.17
   shimmer: ^3.0.0
+  audioplayers: ^6.4.0
 
 dev_dependencies:
   flutter_test:
@@ -101,6 +102,7 @@ flutter:
     # - assets/images/items/warmekueche/yellowcurry/
     - assets/icons/
     - .env
+    - assets/sounds/
 
   fonts:
     - family: Julee

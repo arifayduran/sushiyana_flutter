@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $token = bin2hex(random_bytes(32));
-        $stmt = $pdo->prepare("UPDATE logins SET token = ? WHERE id = ?");
-        $stmt->execute([$token, $user['id']]);
+        $stmt = $pdo->prepare("INSERT INTO user_tokens (user_id, token) VALUES (?, ?)");
+        $stmt->execute([$user['id'], $token]);
 
         echo json_encode(["success" => true, "token" => $token, "filiale" => $user['filiale']]);
 

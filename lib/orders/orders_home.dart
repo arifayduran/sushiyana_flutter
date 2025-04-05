@@ -44,12 +44,11 @@ class _OrdersHomeState extends State<OrdersHome> {
                 left: 0,
                 right: 0,
                 child: AnimatedTextWidget(
-                  text:
-                      'Sushi Yana - Bestellungen Übersicht}',
+                  text: 'Sushi Yana - Bestellungen Übersicht}',
                   initColor: Colors.white,
                   hoverColor: Colors.white,
-                  minSize: 30,
-                  midSize: 25,
+                  minSize: 25,
+                  midSize: 23,
                   maxSize: 20,
                   fontFamily: "Julee",
                   enableFirstAnimation: true,
