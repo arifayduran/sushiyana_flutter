@@ -36,7 +36,7 @@ class _OrdersHomeState extends State<OrdersHome> {
               Center(
                 child: Image.asset(
                   'assets/images/app_logo1024.png',
-                  height: 150,
+                  height: 130,
                 ),
               ),
               Positioned(
@@ -44,7 +44,7 @@ class _OrdersHomeState extends State<OrdersHome> {
                 left: 0,
                 right: 0,
                 child: AnimatedTextWidget(
-                  text: 'Sushi Yana - Bestellungen Übersicht}',
+                  text: 'Sushi Yana - Bestellungen Übersicht',
                   initColor: Colors.white,
                   hoverColor: Colors.white,
                   minSize: 25,
@@ -69,14 +69,33 @@ class _OrdersHomeState extends State<OrdersHome> {
                 ),
               )
             : null,
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          child: loginState.isLoggedIn
-              ? const OrdersScreen()
-              : const LoginScreen(),
-        ));
+        body: loginState.isLoading
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: yanaColor,
+                    ),
+                    const SizedBox(height: 50),
+                    const Text(
+                      'Benutzer wird eingeloggt...',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: loginState.isLoggedIn
+                    ? const OrdersScreen()
+                    : const LoginScreen(),
+              ));
   }
 }

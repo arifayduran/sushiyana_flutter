@@ -9,14 +9,19 @@ class LoginState extends ChangeNotifier {
   String? _errorMessage;
   bool _isLoggedIn = false;
   String? _username;
-  String? _token; 
+  String? _token;
+  bool _isLoading = false;
 
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _isLoggedIn;
   String? get username => _username;
   String? get token => _token;
+  bool get isLoading => _isLoading;
 
   Future<void> login(String username, String password) async {
+    _isLoading = true;
+    notifyListeners();
+
     final url = Uri.parse('$mainUrl/login.php');
 
     try {
@@ -34,7 +39,7 @@ class LoginState extends ChangeNotifier {
         if (responseData['success'] == true && responseData['token'] != null) {
           _isLoggedIn = true;
           _errorMessage = null;
-          _username = username;
+          _username = username.toLowerCase();
           _token = responseData['token'];
 
           // Save token and username securely
@@ -51,12 +56,16 @@ class LoginState extends ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = 'Netzwerkfehler: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();
+
     _isLoggedIn = false;
     _username = null;
     _token = null;
@@ -66,10 +75,14 @@ class LoginState extends ChangeNotifier {
     await _storage.delete(key: 'token');
     await _storage.delete(key: 'login_timestamp');
 
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> checkStoredLogin() async {
+    _isLoading = true;
+    notifyListeners();
+
     final username = await _storage.read(key: 'username');
     final token = await _storage.read(key: 'token');
     final loginTimestamp = await _storage.read(key: 'login_timestamp');
@@ -85,6 +98,7 @@ class LoginState extends ChangeNotifier {
       }
     }
 
+    _isLoading = false;
     notifyListeners();
   }
 }

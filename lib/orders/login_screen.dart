@@ -46,61 +46,66 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       width: MediaQuery.of(context).size.width * 0.9,
       constraints: const BoxConstraints(maxWidth: 400, maxHeight: 500),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            'Filial-Login',
-            style: TextStyle(
-              fontSize: 24,
-              color: Color(0xFF333333),
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextField(
-            focusNode: _focusNode,
-            controller: _usernameController,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-            decoration: const InputDecoration(
-              hintText: 'Benutzername',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            focusNode: _passwordFocusNode,
-            onEditingComplete: () => loginState.login(
-                _usernameController.text, _passwordController.text),
-            controller: _passwordController,
-            keyboardType: TextInputType.visiblePassword,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (value) => loginState.login(
-                _usernameController.text, _passwordController.text),
-            obscureText: true,
-            decoration: const InputDecoration(
-              hintText: 'Passwort',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 15),
-          SizedBox(
-            height: 50,
-            width: 80,
-            child: ElevatedButton(
-              onPressed: () => loginState.login(
-                  _usernameController.text, _passwordController.text),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: yanaColor,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                textStyle: const TextStyle(fontSize: 16),
+      child: AutofillGroup(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              'Filial-Login',
+              style: TextStyle(
+                fontSize: 24,
+                color: Color(0xFF333333),
               ),
-              child: const Text('Login', style: TextStyle(color: Colors.white)),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            TextField(
+              focusNode: _focusNode,
+              autofillHints: [AutofillHints.username],
+              controller: _usernameController,
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+              onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+              decoration: const InputDecoration(
+                hintText: 'Benutzername',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              focusNode: _passwordFocusNode,
+              autofillHints: [AutofillHints.password],
+              onEditingComplete: () => loginState.login(
+                  _usernameController.text, _passwordController.text),
+              controller: _passwordController,
+              keyboardType: TextInputType.visiblePassword,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (value) => loginState.login(
+                  _usernameController.text, _passwordController.text),
+              obscureText: true,
+              decoration: const InputDecoration(
+                hintText: 'Passwort',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 15),
+            SizedBox(
+              height: 50,
+              width: 80,
+              child: ElevatedButton(
+                onPressed: () => loginState.login(
+                    _usernameController.text, _passwordController.text),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: yanaColor,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
+                child:
+                    const Text('Login', style: TextStyle(color: Colors.white)),
+              ),
+            ),
+          ],
+        ),
       ),
     )));
   }

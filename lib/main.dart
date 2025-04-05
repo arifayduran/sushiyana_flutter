@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,7 @@ import 'package:sushiyana_flutter/orders/orders_home.dart';
 
 void main() async {
   bool isOrders = isOrdersVersion();
-  if (true) {
+  if (isOrders || kDebugMode) {
     runApp(ChangeNotifierProvider(
       create: (context) => LoginState(),
       child: MaterialApp(
