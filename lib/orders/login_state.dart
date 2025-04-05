@@ -7,10 +7,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class LoginState extends ChangeNotifier {
   final _storage = const FlutterSecureStorage();
   String? _errorMessage;
-  bool _isLoggedIn = true;
+  bool _isLoggedIn = false;
+  String? _username;
+  String? _token;
 
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _isLoggedIn;
+  String? get username => _username;
+  String? get token => _token;
 
   Future<void> login(String username, String password) async {
     final url = Uri.parse('$mainUrl/login.php');
@@ -30,10 +34,12 @@ class LoginState extends ChangeNotifier {
         if (responseData['success'] == true) {
           _isLoggedIn = true;
           _errorMessage = null;
+          _username = username;
+          _token = responseData['token'];
 
-          // Save credentials securely
+          // Save token and username securely
           await _storage.write(key: 'username', value: username);
-          await _storage.write(key: 'password', value: password);
+          await _storage.write(key: 'token', value: _token);
           await _storage.write(
               key: 'login_timestamp', value: DateTime.now().toIso8601String());
         } else {
@@ -51,59 +57,34 @@ class LoginState extends ChangeNotifier {
   }
 
   Future<void> logout() async {
-    final url = Uri.parse('$mainUrl/logout.php');
+    _isLoggedIn = false;
+    _username = null;
+    _token = null;
 
-    try {
-      final response = await http.post(url);
-
-      if (response.statusCode <= 200 && response.statusCode < 300) {
-        _isLoggedIn = false;
-        _errorMessage = null;
-
-        // Clear stored credentials
-        await _storage.deleteAll();
-      } else {
-        _errorMessage = 'Serverfehler beim Logout: ${response.statusCode}';
-      }
-    } catch (e) {
-      _errorMessage = 'Netzwerkfehler beim Logout: $e';
-    }
+    // Clear stored credentials
+    await _storage.delete(key: 'username');
+    await _storage.delete(key: 'token');
+    await _storage.delete(key: 'login_timestamp');
 
     notifyListeners();
   }
 
   Future<void> checkStoredLogin() async {
     final username = await _storage.read(key: 'username');
-    final password = await _storage.read(key: 'password');
+    final token = await _storage.read(key: 'token');
     final loginTimestamp = await _storage.read(key: 'login_timestamp');
 
-    if (username != null && password != null && loginTimestamp != null) {
+    if (username != null && token != null && loginTimestamp != null) {
       final loginTime = DateTime.parse(loginTimestamp);
       if (DateTime.now().difference(loginTime).inDays < 4) {
-        await login(username, password);
+        _isLoggedIn = true;
+        _username = username;
+        _token = token;
       } else {
-        await _storage.deleteAll();
+        await logout();
       }
-    }
-  }
-
-  Future<String?> whoami() async {
-    final url = Uri.parse('$mainUrl/whoami.php');
-
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode <= 200 && response.statusCode < 300) {
-        final responseData = json.decode(response.body);
-        return responseData['filiale'];
-      } else {
-        _errorMessage = 'Serverfehler bei whoami: ${response.statusCode}';
-      }
-    } catch (e) {
-      _errorMessage = 'Netzwerkfehler bei whoami: $e';
     }
 
     notifyListeners();
-    return null;
   }
 }

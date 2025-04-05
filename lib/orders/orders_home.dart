@@ -14,6 +14,15 @@ class OrdersHome extends StatefulWidget {
 }
 
 class _OrdersHomeState extends State<OrdersHome> {
+  late LoginState _loginState;
+
+  @override
+  void initState() {
+    _loginState = Provider.of<LoginState>(context, listen: false);
+    _loginState.checkStoredLogin();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final loginState = Provider.of<LoginState>(context);
@@ -34,8 +43,9 @@ class _OrdersHomeState extends State<OrdersHome> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: const AnimatedTextWidget(
-                  text: 'Sushi Yana - Bestellungen Übersicht',
+                child: AnimatedTextWidget(
+                  text:
+                      'Sushi Yana - Bestellungen Übersicht}',
                   initColor: Colors.white,
                   hoverColor: Colors.white,
                   minSize: 30,

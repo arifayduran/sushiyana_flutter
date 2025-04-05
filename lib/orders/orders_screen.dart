@@ -80,10 +80,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     final loginState = Provider.of<LoginState>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bestellungen'),
-        actions: [
+    return SizedBox.expand(
+      child: Column(
+        children: [
+          Text(loginState.username == "admin"
+              ? "🔑 Admin-Modus – Zentrale Übersicht"
+              : "📍 Eingeloggt als: ${loginState.username}"),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _refreshOrders,
@@ -92,40 +94,43 @@ class _OrdersScreenState extends State<OrdersScreen> {
             icon: const Icon(Icons.logout),
             onPressed: loginState.logout,
           ),
+          Expanded(
+            child: FutureBuilder<List<dynamic>>(
+              future: _ordersFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Fehler: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                      child: Text('Keine Bestellungen verfügbar.'));
+                }
+
+                final orders = snapshot.data!;
+
+                return ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    final order = orders[index];
+                    return ListTile(
+                      title: Text('Bestellung #${order['id']}'),
+                      subtitle: Text('Filiale: ${order['filiale']}'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _deleteOrder(order['id']),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          FloatingActionButton(
+            onPressed: _deleteAllOrders,
+            child: const Icon(Icons.delete_forever),
+          ),
         ],
-      ),
-      body: FutureBuilder<List<dynamic>>(
-        future: _ordersFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Fehler: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Keine Bestellungen verfügbar.'));
-          }
-
-          final orders = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              return ListTile(
-                title: Text('Bestellung #${order['id']}'),
-                subtitle: Text('Filiale: ${order['filiale']}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => _deleteOrder(order['id']),
-                ),
-              );
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _deleteAllOrders,
-        child: const Icon(Icons.delete_forever),
       ),
     );
   }
