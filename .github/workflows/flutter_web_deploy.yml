@@ -86,3 +86,12 @@ jobs:
           password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
           src: ./lib/orders/apis/login.php # Der Pfad zur api.php in Ihrem Projekt
           dest: /web/flutter/login.php # Zielverzeichnis auf dem Manitu-Server
+
+      - name: Upload API (.htaccess) to Manitu
+        uses: tomasbkk/action-ftp-upload@v1.0
+        with:
+          host: ${{ secrets.MANITU_FTP_SERVER }} # FTP-Server-Adresse (als Secret gespeichert)
+          user: ${{ secrets.MANITU_FTP_USERNAME }} # FTP-Benutzername (als Secret gespeichert)
+          password: ${{ secrets.MANITU_FTP_PASSWORD }} # FTP-Passwort (als Secret gespeichert)
+          src: ./lib/orders/apis/.htaccess # Der Pfad zur api.php in Ihrem Projekt
+          dest: /web/flutter/.htaccess # Zielverzeichnis auf dem Manitu-Server

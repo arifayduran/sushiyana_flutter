@@ -2,12 +2,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:sushiyana_flutter/constants/main_url.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:sushiyana_flutter/orders/login_state.dart';
 
 class OrdersService {
   final _storage = const FlutterSecureStorage();
+  final LoginState _loginState = LoginState();
 
   Future<String?> _getToken() async {
-    return await _storage.read(key: 'token');
+    final token = await _storage.read(key: 'token');
+    if (token == null || token.isEmpty) {
+      return _loginState.token;
+    }
+    return token;
   }
 
   Future<List<dynamic>> fetchOrders() async {

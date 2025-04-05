@@ -1,10 +1,16 @@
 <?php
+// $headers = getallheaders();
+// echo json_encode([
+//     'headers' => $headers,
+//     'server' => $_SERVER,
+//     'env' => getenv('HTTP_AUTHORIZATION')
+// ]);
+// exit;
+
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-$token = str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION']);
 
 if (!file_exists('/home/sites/site100036969/web/flutter/assets/.env')) {
     die(json_encode(["error" => "Die .env-Datei konnte nicht gefunden werden."]));
@@ -69,8 +75,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
-    echo json_encode(["error" => "Token fehlt"]);
+$headers = function_exists('apache_request_headers') ? apache_request_headers() : getallheaders();
+if (isset($headers['Authorization'])) {
+    $token = str_replace('Bearer ', '', $headers['Authorization']);
+} elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    $token = str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION']);
+} elseif (getenv('HTTP_AUTHORIZATION')) {
+    $token = str_replace('Bearer ', '', getenv('HTTP_AUTHORIZATION'));
+} else {
+    echo json_encode(["error" => "Token fehlt", "debug" => $headers]);
     http_response_code(401);
     exit;
 }

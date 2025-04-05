@@ -172,7 +172,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     return GestureDetector(
                       onTap: () => _markOrderAsInteracted(order['id']),
                       child: Container(
-                        color: isNew ? Colors.green.withOpacity(0.3) : null,
+                        color: isNew ? Colors.green.withValues(alpha: .3) : null,
                         child: ListTile(
                           title: Text('Bestellung #${order['id']}'),
                           subtitle: Text('Filiale: ${order['filiale']}'),
